@@ -1,0 +1,16 @@
+{% extends 'base_form.html.twig' %}
+{% block title %}Logowanie{% endblock %}
+{% block body %}
+    <a href="{{ path('register') }}">Zarejestruj się!</a>
+	{% if error %}
+		<div>{{ error.messageKey|trans() }}</div>
+	{% endif %}
+	<div class="loginForm">
+		{{ form_start(form) }}
+		{{ form_row(form.username) }}
+		{{ form_row(form.password) }}
+		<button type="submit" class="btn btn-success">Zaloguj się</button>
+
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
