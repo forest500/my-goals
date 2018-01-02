@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
 use App\Form\Login;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class FormController extends Controller
 {

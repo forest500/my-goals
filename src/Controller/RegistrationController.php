@@ -9,13 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class RegistrationControler extends Controller
+class RegistrationController extends Controller
 {
 
     /**
-     * @Route("/register", name="user_registration")
+     * @Route("/register", name="registration")
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         if ($this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('homepage');
@@ -25,7 +25,7 @@ class RegistrationControler extends Controller
         $form = $this->createForm(Register::class, $user);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid() && $resp->isSuccess()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
 
@@ -36,13 +36,6 @@ class RegistrationControler extends Controller
             $encodedEmail = base64_encode($user->getEmail());
 
             return $this->redirectToRoute('registration_email', array('email' => $encodedEmail));
-        }
-
-        if ($form->isSubmitted() &&  $form->isValid() && !$resp->isSuccess()) {
-            $this->addFlash(
-               'error',
-               'Proszę potwierdzić, że nie jesteś robotem'
-           );
         }
 
         return $this->render(
@@ -73,7 +66,7 @@ class RegistrationControler extends Controller
 
         $mailer->send($message);
 
-        return $this->render('default/confirm.html.twig');
+        return $this->render('forms/confirm.html.twig');
     }
 
     /**

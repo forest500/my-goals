@@ -57,7 +57,6 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $email;
 
-
     /**
      * @ORM\Column(name="isActive", type="boolean")
      */
