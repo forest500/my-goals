@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="entity_user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email", message="Użytkownik o podanym email już istnieję")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -59,8 +58,14 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(name="isActive", type="boolean")
+     * @Assert\Type("bool")
      */
     private $isActive;
+
+    public function __construct()
+    {
+        $this->isActive = false;
+    }    
 
     /**
      * Get id
@@ -73,39 +78,44 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return User
-     */
-
+     * Get min = 6,
+     */ 
     public function getPlainPassword()
     {
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password)
+    /**
+     * Set min = 6,
+     *
+     * @return  self
+     */ 
+    public function setPlainPassword($plainPassword)
     {
-        $this->plainPassword = $password;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
 
     /**
-     * Get password
-     *
-     * @return string
-     */
+     * Get the value of password
+     */ 
     public function getPassword()
     {
         return $this->password;
     }
+
+    /**
+     * Set the value of password
+     *
+     * @return  self
+     */ 
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }    
 
     /**
      * Set email
@@ -155,11 +165,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->isActive;
     }
 
-    public function __construct()
-    {
-        $this->isActive = false;
-    }
-
     public function getSalt()
     {
         return null;
@@ -174,7 +179,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
     }
 
-    //Active/Not active accunt
     public function isAccountNonExpired()
     {
         return true;
