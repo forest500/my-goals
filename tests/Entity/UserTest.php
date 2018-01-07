@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\tests\Entity;
+namespace App\Tests\Entity;
 
 use \App\Entity\User;
 use Symfony\Component\Validator\Validation;
@@ -132,20 +132,4 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($serialized, $this->user->serialize());
     }  
-    
-    /** @test */
-    public function unserialize_data()
-    {
-        $this->user->setPassword('password');
-        $this->user->setEmail('lasekmiroslaw@gmail.com');
-        $this->user->setIsActive(true);
-        $serialized = serialize(array(
-            $this->user->getId(),
-            $this->user->getEmail(),
-            $this->user->getPassword(),
-            $this->user->getIsActive(),
-        ));
-        
-        $this->assertEquals($serialized, $this->user->serialize());
-    }     
 }
