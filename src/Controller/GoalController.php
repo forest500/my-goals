@@ -82,7 +82,7 @@ class GoalController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return new Response("Cel $name został zmodyfikowany");
+        return new Response("Cel został zmodyfikowany");
     }
 
     /**

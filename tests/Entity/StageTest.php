@@ -15,14 +15,15 @@ class stageTest extends \PHPUnit\Framework\TestCase
     public function setUp()
     {
         $this->stage = new Stage();
+        $this->stage->setName('junior developer');
         $this->validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
-    }
+    }      
 
-     /** @test */
-    public function constuct_have_set_number()
+    /** @test */
+    public function constructor_set_status_to_true()
     {
-        $this->assertEquals(1, $this->stage->getNumber());
-    }       
+        $this->assertTrue($this->stage->getStatus());
+    } 
 
      /** @test */
     public function auto_set_number_have_set_number()
@@ -47,6 +48,15 @@ class stageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(15, $this->stage->getNumber());
         $this->assertEquals(0, count($errors));
     }     
+
+    /** @test */
+    public function that_we_can_get_valid_name()
+    {
+        $errors = $this->validator->validate($this->stage);
+
+        $this->assertEquals('junior developer', $this->stage->getName());
+        $this->assertEquals(0, count($errors));
+    }        
 
     /** @test */
     public function that_we_can_get_valid_status()

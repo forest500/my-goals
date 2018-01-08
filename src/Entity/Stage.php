@@ -21,7 +21,20 @@ class Stage
      * @ORM\Column(type="integer")
      * @Assert\Type("integer")     
      */
-    private $number;  
+    private $number; 
+    
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\Type("string")
+     * @Assert\NotBlank(message = "Proszę wprowadzić nazwę")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 100,
+     *      minMessage = "Nazwa musi zawierać conajmniej 3 znaki",
+     *      maxMessage = "Nazwa może zawierać maksymalnie 100 znaków"
+     * )
+     */
+    private $name;    
 
     /**
      * @ORM\Column(type="boolean")
@@ -30,7 +43,7 @@ class Stage
     private $status;  
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Assert\Type("string")
      * @Assert\Length(
      *      min = 3,
@@ -42,7 +55,7 @@ class Stage
     private $award;
 
      /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Assert\Date(message = "Data musi mieć format YYYY-MM-DD")
      */
     private $endDate;
@@ -55,11 +68,7 @@ class Stage
 
     public function  __construct()
     {
-        if(isset($this->goal)) {
-            $this->autoSetNumber();
-        } else {
-            $this->number = 1;
-        }
+        $this->status = true;
     }
 
     public function autoSetNumber()
@@ -75,6 +84,8 @@ class Stage
     public function setGoal(Goal $goal)
     {
         $this->goal = $goal;
+
+        $this->autoSetNumber();
     }    
 
      /**
@@ -98,6 +109,26 @@ class Stage
     }
 
     /**
+     * Get min = 3,
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set min = 3,
+     *
+     * @return  self
+     */ 
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }    
+
+    /**
      * Get the value of status
      */ 
     public function getStatus()
@@ -112,6 +143,15 @@ class Stage
      */ 
     public function setStatus($status)
     {
+        switch ($status) {
+            case "true":
+                $status = true;
+            break;
+            case "false":
+                $status = false;
+            break;
+        }
+        
         $this->status = $status;
 
         return $this;

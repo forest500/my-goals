@@ -19,8 +19,7 @@ class GoalRepository extends ServiceEntityRepository
             'SELECT g.name, g.status, c.name as category
             FROM App\Entity\Goal g
             JOIN g.category c
-            WITH g.category = c.id            
-            ORDER BY g.name ASC'
+            WITH g.category = c.id'
         )
         ->getResult();
     }
