@@ -20,9 +20,9 @@ class Category
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, nullable=false)
      * @Assert\Type("string")
-     * @Assert\NotBlank(message = "Proszę wprowadzić kategorie")
+     * @Assert\NotBlank(message = "Proszę wprowadzić kategorię")
      * @Assert\Length(
      *      min = 3,
      *      max = 100,

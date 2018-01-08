@@ -13,16 +13,29 @@ class GoalRepository extends ServiceEntityRepository
         parent::__construct($registry, Goal::class);
     }
 
-    /*
-    public function findBySomething($value)
+    public function findGoals()
     {
-        return $this->createQueryBuilder('g')
-            ->where('g.something = :value')->setParameter('value', $value)
-            ->orderBy('g.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->getEntityManager()->createQuery(
+            'SELECT g.name, g.status, c.name as category
+            FROM App\Entity\Goal g
+            JOIN g.category c
+            WITH g.category = c.id            
+            ORDER BY g.name ASC'
+        )
+        ->getResult();
     }
-    */
+
+    public function findGoal($id)
+    {
+        return $this->getEntityManager()->createQuery(
+            'SELECT g.name, g.status, c.name as category
+            FROM App\Entity\Goal g
+            JOIN g.category c
+            WITH g.category = c.id            
+            WHERE g.id = :id
+            ORDER BY g.name ASC'
+        )
+        ->setParameter('id', $id)
+        ->getResult();
+    }   
 }

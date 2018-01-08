@@ -2,7 +2,7 @@
 
 namespace App\Tests\Form;
 
-use App\Form\Login;
+use App\Form\LoginType;
 use App\Entity\User;
 use Symfony\Component\Form\Test\TypeTestCase;
 
@@ -16,7 +16,7 @@ class LoginTest extends TypeTestCase
             'password' => 'pass',
         );
 
-        $form = $this->factory->create(Login::class);
+        $form = $this->factory->create(LoginType::class);
 
         $object = new User();
         $object->setEmail('lasekmiroslaw@gmail.com');

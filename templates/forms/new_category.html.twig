@@ -1,0 +1,5 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button type="submit" id="submit" class="btn btn-success">Dodaj</button>
+<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+{{ form_end(form) }}

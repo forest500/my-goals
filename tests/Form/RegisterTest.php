@@ -2,7 +2,7 @@
 
 namespace App\Tests\Form;
 
-use App\Form\Register;
+use App\Form\RegisterType;
 use App\Entity\User;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -39,7 +39,7 @@ class RegisterTest extends TypeTestCase
             'termsAccepted' => true,
         );
 
-        $form = $this->factory->create(Register::class);
+        $form = $this->factory->create(RegisterType::class);
 
         $object = new User();
         $object->setEmail('lasekmiroslaw@gmail.com');

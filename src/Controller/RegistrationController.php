@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\Register;
+use App\Form\RegisterType;
 use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,7 +22,7 @@ class RegistrationController extends Controller
         }
 
         $user = new User();
-        $form = $this->createForm(Register::class, $user);
+        $form = $this->createForm(RegisterType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

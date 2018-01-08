@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
-use App\Form\Login;
+use App\Form\LoginType;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class FormController extends Controller
@@ -22,7 +22,7 @@ class FormController extends Controller
         }
 
         $user = new User();
-        $form = $this->createForm(Login::class, $user);
+        $form = $this->createForm(LoginType::class, $user);
         $error = $authUtils->getLastAuthenticationError();
 
         $lastUsername = $authUtils->getLastUsername();

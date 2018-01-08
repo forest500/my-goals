@@ -22,12 +22,12 @@ class Goal
     /**
      * @ORM\Column(type="string", length=100)
      * @Assert\Type("string")
-     * @Assert\NotBlank(message = "Proszę wprowadzić kategorie")
+     * @Assert\NotBlank(message = "Proszę wprowadzić cel")
      * @Assert\Length(
      *      min = 3,
      *      max = 100,
-     *      minMessage = "Nazwa kategorii musi zawierać conajmniej 3 znaki",
-     *      maxMessage = "Nazwa kategorii może zawierać maksymalnie 100 znaków"
+     *      minMessage = "Nazwa celu musi zawierać conajmniej 3 znaki",
+     *      maxMessage = "Nazwa celu może zawierać maksymalnie 100 znaków"
      * )
      */
     private $name;
@@ -52,6 +52,7 @@ class Goal
     public function __construct()
     {
         $this->stages = new ArrayCollection();
+        $this->status = true;
     }    
 
     /**
@@ -115,27 +116,16 @@ class Goal
      */ 
     public function setStatus($status)
     {
+        switch ($status) {
+            case "true":
+                $status = true;
+            break;
+            case "false":
+                $status = false;
+            break;
+        }
+        
         $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of categoryId
-     */ 
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * Set the value of categoryId
-     *
-     * @return  self
-     */ 
-    public function setCategoryId($categoryId)
-    {
-        $this->categoryId = $categoryId;
 
         return $this;
     }
