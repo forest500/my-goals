@@ -17,7 +17,8 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()->createQuery(
             'SELECT c.name, c.description
-            FROM App\Entity\Category c'
+            FROM App\Entity\Category c
+            ORDER BY c.name ASC'
         )
         ->getResult();
     }
@@ -27,8 +28,7 @@ class CategoryRepository extends ServiceEntityRepository
         return $this->getEntityManager()->createQuery(
             'SELECT c.name, c.description
             FROM App\Entity\Category c
-            WHERE c.id = :id
-            ORDER BY c.name ASC'
+            WHERE c.id = :id'
         )
         ->setParameter('id', $id)
         ->getResult();

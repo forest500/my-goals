@@ -63,13 +63,24 @@ class StageController extends Controller
         $stage = $this->getDoctrine()->getRepository(Stage::class)->findStage($id);
         
         return $this->json($stage);
-    }         
+    }      
+    
+    /**
+     * @Route("/get_goal_stages/{goal}", name="get_goal_stages", options={"utf8": true})
+     * @Method("GET")
+     */
+    public function getByGoal(Goal $goal, Request $request)
+    {
+        $stage = $this->getDoctrine()->getRepository(Stage::class)->findByGoal($goal->getId());
+        
+        return $this->json($stage);
+    }     
 
     /**
      * @Route("/update_stage/{stage}", name="update_stage", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(stage $stage, Request $request, ValidatorInterface $validator)
+    public function update(Stage $stage, Request $request, ValidatorInterface $validator)
     {
         $name = $request->get('name');
         $award = $request->get('award');

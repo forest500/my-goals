@@ -61,6 +61,17 @@ class GoalController extends Controller
     }        
 
     /**
+     * @Route("/get_category_goals/{category}", name="get_category_goals", options={"utf8": true})
+     * @Method("GET")
+     */
+    public function getByCategory(Category $category, Request $request)
+    {
+        $goals = $this->getDoctrine()->getRepository(Goal::class)->findByCategory($category->getId());
+
+        return $this->json($goals);
+    }           
+
+    /**
      * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
      * @Method("PUT")
      */

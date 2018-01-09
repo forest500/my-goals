@@ -6,7 +6,7 @@ use \App\Entity\Stage;
 use Symfony\Component\Validator\Validation;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class stageTest extends \PHPUnit\Framework\TestCase
+class StageTest extends \PHPUnit\Framework\TestCase
 
 {
     protected $stage;

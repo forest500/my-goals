@@ -18,11 +18,11 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         $this->validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
     }
 
-    /** @test */
-    public function constructor_instantiate_goals_as_ArrayCollection()
-    {
-        $this->assertInstanceOf(ArrayCollection::class, $this->category->getGoals());
-    }
+    // /** @test */
+    // public function constructor_instantiate_goals_as_ArrayCollection()
+    // {
+    //     $this->assertInstanceOf(ArrayCollection::class, $this->category->getGoals());
+    // }
 
     /** @test */
     public function that_we_can_get_valid_name()

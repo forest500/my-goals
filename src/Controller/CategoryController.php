@@ -57,7 +57,7 @@ class CategoryController extends Controller
         $category = $this->getDoctrine()->getRepository(Category::class)->findCategory($id);
         
         return $this->json($category);
-    }        
+    }      
 
     /**
      * @Route("/update_category/{category}", name="update_category", options={"utf8": true})

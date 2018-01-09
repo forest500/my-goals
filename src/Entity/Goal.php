@@ -39,7 +39,7 @@ class Goal
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="goals")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
      * @ORM\JoinColumn(nullable=true)
      */
     private $category;

@@ -45,24 +45,6 @@ class Category
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Goal", mappedBy="category")
-     */
-    private $goals;
-
-    public function __construct()
-    {
-        $this->goals = new ArrayCollection();
-    }    
-
-    /**
-     * @return Collection|Goal[]
-     */
-    public function getGoals()
-    {
-        return $this->goals;
-    }
-
-    /**
      * Get the value of id
      */ 
     public function getId()

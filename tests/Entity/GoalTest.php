@@ -16,13 +16,7 @@ class GoalTest extends \PHPUnit\Framework\TestCase
     {
         $this->goal = new Goal();
         $this->validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
-    }
-
-    /** @test */
-    public function constructor_instantiate_stages_as_ArrayCollection()
-    {
-        $this->assertInstanceOf(ArrayCollection::class, $this->goal->getStages());
-    }    
+    }   
 
     /** @test */
     public function constructor_set_status_to_true()

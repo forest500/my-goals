@@ -37,4 +37,18 @@ class StageRepository extends ServiceEntityRepository
         ->setParameter('id', $id)
         ->getResult();
     }  
+
+    public function findByGoal($id)
+    {
+        return $this->getEntityManager()->createQuery(
+            'SELECT g.name as goal, s.number, s.name, s.status, s.award, s.endDate
+            FROM App\Entity\Stage s
+            JOIN s.goal g
+            WITH s.goal = g.id             
+            WHERE s.goal = :id
+            ORDER BY s.number ASC'
+        )
+        ->setParameter('id', $id)
+        ->getResult();
+    }      
 }

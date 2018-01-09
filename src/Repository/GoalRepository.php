@@ -19,7 +19,8 @@ class GoalRepository extends ServiceEntityRepository
             'SELECT g.name, g.status, c.name as category
             FROM App\Entity\Goal g
             JOIN g.category c
-            WITH g.category = c.id'
+            WITH g.category = c.id
+            ORDER BY g.id ASC'
         )
         ->getResult();
     }
@@ -31,10 +32,23 @@ class GoalRepository extends ServiceEntityRepository
             FROM App\Entity\Goal g
             JOIN g.category c
             WITH g.category = c.id            
-            WHERE g.id = :id
-            ORDER BY g.name ASC'
+            WHERE g.id = :id'
         )
         ->setParameter('id', $id)
         ->getResult();
     }   
+
+    public function findByCategory($id)
+    {
+        return $this->getEntityManager()->createQuery(
+            'SELECT g.name, g.status, c.name as category
+            FROM App\Entity\Goal g
+            JOIN g.category c
+            WITH g.category = c.id            
+            WHERE g.category = :id
+            ORDER BY g.id ASC'
+        )
+        ->setParameter('id', $id)
+        ->getResult();
+    }      
 }
