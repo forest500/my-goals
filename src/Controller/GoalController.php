@@ -27,15 +27,18 @@ class GoalController extends Controller
 
         $errors = $validator->validate($goal);
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($goal);
         $em->flush();
 
-        return new Response('Dodano cel!');
+        return $this->json('Dodano cel!');
     }
 
     /**
@@ -47,8 +50,8 @@ class GoalController extends Controller
         $categories = $this->getDoctrine()->getRepository(Goal::class)->findGoals();
 
         return $this->json($categories);
-    }   
-    
+    }
+
     /**
      * @Route("/get_goal/{id}", name="get_goal", options={"utf8": true})
      * @Method("GET")
@@ -56,9 +59,9 @@ class GoalController extends Controller
     public function getOne($id, Request $request)
     {
         $goal = $this->getDoctrine()->getRepository(Goal::class)->findGoal($id);
-        
+
         return $this->json($goal);
-    }        
+    }
 
     /**
      * @Route("/get_category_goals/{category}", name="get_category_goals", options={"utf8": true})
@@ -69,7 +72,7 @@ class GoalController extends Controller
         $goals = $this->getDoctrine()->getRepository(Goal::class)->findByCategory($category->getId());
 
         return $this->json($goals);
-    }           
+    }
 
     /**
      * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
@@ -86,14 +89,17 @@ class GoalController extends Controller
         $errors = $validator->validate($goal);
 
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return new Response("Cel został zmodyfikowany");
+        return $this->json("Cel został zmodyfikowany");
     }
 
     /**
@@ -104,21 +110,24 @@ class GoalController extends Controller
     {
         $status = $request->get('status');
         $name = $goal->getName();
-        
+
         $goal->setStatus($status);
 
         $errors = $validator->validate($goal);
 
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return new Response("Status celu $name został zmieniony na $status");
-    }    
+        return $this->json("Status celu $name został zmieniony na $status");
+    }
 
     /**
      * @Route("/delete_goal/{goal}", name="delete_goal", options={"utf8": true})
@@ -126,10 +135,10 @@ class GoalController extends Controller
      */
     public function delete(Goal $goal, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();       
+        $em = $this->getDoctrine()->getManager();
         $em->remove($goal);
         $em->flush();
 
-        return new Response("Cel został usunięty");
-    }        
+        return $this->json("Cel został usunięty");
+    }
 }

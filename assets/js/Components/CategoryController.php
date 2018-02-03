@@ -101,7 +101,7 @@ class CategoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($category);
             $em->flush();
-        } catch (\Doctrine\DBAL\DBALException $e) {
+        } catch(\Doctrine\DBAL\DBALException $e) {
             return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja");
         }
 

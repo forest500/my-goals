@@ -16,7 +16,7 @@ class GoalRepository extends ServiceEntityRepository
     public function findGoals()
     {
         return $this->getEntityManager()->createQuery(
-            'SELECT g.name, g.status, c.name as category
+            'SELECT g.id, g.name, g.status, c.name as category
             FROM App\Entity\Goal g
             JOIN g.category c
             WITH g.category = c.id
@@ -31,24 +31,24 @@ class GoalRepository extends ServiceEntityRepository
             'SELECT g.name, g.status, c.name as category
             FROM App\Entity\Goal g
             JOIN g.category c
-            WITH g.category = c.id            
+            WITH g.category = c.id
             WHERE g.id = :id'
         )
         ->setParameter('id', $id)
         ->getResult();
-    }   
+    }
 
     public function findByCategory($id)
     {
         return $this->getEntityManager()->createQuery(
-            'SELECT g.name, g.status, c.name as category
+            'SELECT g.id, g.name, g.status, c.name as category
             FROM App\Entity\Goal g
             JOIN g.category c
-            WITH g.category = c.id            
+            WITH g.category = c.id
             WHERE g.category = :id
             ORDER BY g.id ASC'
         )
         ->setParameter('id', $id)
         ->getResult();
-    }      
+    }
 }

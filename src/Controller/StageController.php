@@ -31,16 +31,20 @@ class StageController extends Controller
         $number = $stage->getNumber();
 
         $errors = $validator->validate($stage);
+        
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($stage);
         $em->flush();
 
-        return new Response("Dodano poziom $number!");
+        return $this->json("Dodano poziom $number!");
     }
 
     /**
@@ -52,8 +56,8 @@ class StageController extends Controller
         $categories = $this->getDoctrine()->getRepository(Stage::class)->findStages();
 
         return $this->json($categories);
-    }   
-    
+    }
+
     /**
      * @Route("/get_stage/{id}", name="get_stage", options={"utf8": true})
      * @Method("GET")
@@ -61,10 +65,10 @@ class StageController extends Controller
     public function getOne($id, Request $request)
     {
         $stage = $this->getDoctrine()->getRepository(Stage::class)->findStage($id);
-        
+
         return $this->json($stage);
-    }      
-    
+    }
+
     /**
      * @Route("/get_goal_stages/{goal}", name="get_goal_stages", options={"utf8": true})
      * @Method("GET")
@@ -72,9 +76,9 @@ class StageController extends Controller
     public function getByGoal(Goal $goal, Request $request)
     {
         $stage = $this->getDoctrine()->getRepository(Stage::class)->findByGoal($goal->getId());
-        
+
         return $this->json($stage);
-    }     
+    }
 
     /**
      * @Route("/update_stage/{stage}", name="update_stage", options={"utf8": true})
@@ -96,14 +100,17 @@ class StageController extends Controller
         $errors = $validator->validate($stage);
 
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return new Response("Poziom został zmodyfikowany");
+        return $this->json("Poziom został zmodyfikowany");
     }
 
     /**
@@ -114,21 +121,24 @@ class StageController extends Controller
     {
         $status = $request->get('status');
         $name = $stage->getName();
-        
+
         $stage->setStatus($status);
 
         $errors = $validator->validate($stage);
 
         if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return new Response($errorsString);
+            foreach ($errors as $error) {
+                $errorArr[] = $error->getMessage();
+            }
+
+            return $this->json($errorArr);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return new Response("$name został zmieniony na $status");
-    }    
+        return $this->json("$name został zmieniony na $status");
+    }
 
     /**
      * @Route("/delete_stage/{stage}", name="delete_stage", options={"utf8": true})
@@ -136,10 +146,10 @@ class StageController extends Controller
      */
     public function delete(Stage $stage, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();       
+        $em = $this->getDoctrine()->getManager();
         $em->remove($stage);
         $em->flush();
 
-        return new Response("Poziom został usunięty");
-    }        
+        return $this->json("Poziom został usunięty");
+    }
 }
