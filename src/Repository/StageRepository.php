@@ -16,7 +16,7 @@ class StageRepository extends ServiceEntityRepository
     public function findStages()
     {
         return $this->getEntityManager()->createQuery(
-            'SELECT s.id, g.name as goal, s.number, s.name, s.status, s.award, s.endDate
+            'SELECT s.id, g.name as goal, g.id as goalId, s.number, s.name, s.status, s.award, s.endDate
             FROM App\Entity\Stage s
             JOIN s.goal g
             WITH s.goal = g.id'
@@ -41,11 +41,27 @@ class StageRepository extends ServiceEntityRepository
     public function findByGoal($id)
     {
         return $this->getEntityManager()->createQuery(
-            'SELECT s.id, g.name as goal, s.number, s.name, s.status, s.award, s.endDate
+            'SELECT s.id, g.name as goal, g.id as goalId, s.number, s.name, s.status, s.award, s.endDate
             FROM App\Entity\Stage s
             JOIN s.goal g
             WITH s.goal = g.id
             WHERE s.goal = :id
+            ORDER BY s.number ASC'
+        )
+        ->setParameter('id', $id)
+        ->getResult();
+    }
+
+    public function findByCategory($id)
+    {
+        return $this->getEntityManager()->createQuery(
+            'SELECT s.id, g.name as goal, g.id as goalId, s.number, s.name, s.status, s.award, s.endDate
+            FROM App\Entity\Stage s
+            JOIN s.goal g
+            WITH s.goal = g.id
+            JOIN g.category c
+            WITH g.category = c.id
+            WHERE g.category = :id
             ORDER BY s.number ASC'
         )
         ->setParameter('id', $id)

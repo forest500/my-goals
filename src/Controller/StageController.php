@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Stage;
 use App\Entity\Goal;
+use App\Entity\Category;
 
 class StageController extends Controller
 {
@@ -31,7 +32,7 @@ class StageController extends Controller
         $number = $stage->getNumber();
 
         $errors = $validator->validate($stage);
-        
+
         if (count($errors) > 0) {
             foreach ($errors as $error) {
                 $errorArr[] = $error->getMessage();
@@ -76,6 +77,17 @@ class StageController extends Controller
     public function getByGoal(Goal $goal, Request $request)
     {
         $stage = $this->getDoctrine()->getRepository(Stage::class)->findByGoal($goal->getId());
+
+        return $this->json($stage);
+    }
+
+    /**
+     * @Route("/get_category_stages/{category}", name="get_category_stages", options={"utf8": true})
+     * @Method("GET")
+     */
+    public function getByCategory(Category $category, Request $request)
+    {
+        $stage = $this->getDoctrine()->getRepository(Stage::class)->findByCategory($category->getId());
 
         return $this->json($stage);
     }

@@ -46,3 +46,19 @@ form.new-category {
 }
 
 /* goal */
+#goals-list {
+
+}
+
+.goal-li {
+    font-weight: 700;
+}
+
+/* stage */
+.stage-list {
+    margin-left: 4rem;
+}
+
+.stage-li {
+    font-weight: 400;
+}

@@ -19,10 +19,10 @@ class Stage
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Type("integer")     
+     * @Assert\Type("integer")
      */
-    private $number; 
-    
+    private $number;
+
     /**
      * @ORM\Column(type="string", length=100)
      * @Assert\Type("string")
@@ -30,17 +30,17 @@ class Stage
      * @Assert\Length(
      *      min = 3,
      *      max = 100,
-     *      minMessage = "Nazwa musi zawierać conajmniej 3 znaki",
-     *      maxMessage = "Nazwa może zawierać maksymalnie 100 znaków"
+     *      minMessage = "Poziom musi zawierać conajmniej 3 znaki",
+     *      maxMessage = "Poziom może zawierać maksymalnie 100 znaków"
      * )
      */
-    private $name;    
+    private $name;
 
     /**
      * @ORM\Column(type="boolean")
      * @Assert\Type("boolean")
      */
-    private $status;  
+    private $status;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -86,11 +86,11 @@ class Stage
         $this->goal = $goal;
 
         $this->autoSetNumber();
-    }    
+    }
 
      /**
      * Get the value of number
-     */ 
+     */
     public function getNumber()
     {
         return $this->number;
@@ -100,7 +100,7 @@ class Stage
      * Set the value of number
      *
      * @return  self
-     */ 
+     */
     public function setNumber($number)
     {
         $this->number = $number;
@@ -110,7 +110,7 @@ class Stage
 
     /**
      * Get min = 3,
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -120,17 +120,17 @@ class Stage
      * Set min = 3,
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
 
         return $this;
-    }    
+    }
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
         return $this->status;
@@ -140,7 +140,7 @@ class Stage
      * Set the value of status
      *
      * @return  self
-     */ 
+     */
     public function setStatus($status)
     {
         switch ($status) {
@@ -151,7 +151,7 @@ class Stage
                 $status = false;
             break;
         }
-        
+
         $this->status = $status;
 
         return $this;
@@ -159,7 +159,7 @@ class Stage
 
     /**
      * Get min = 3,
-     */ 
+     */
     public function getAward()
     {
         return $this->award;
@@ -169,7 +169,7 @@ class Stage
      * Set min = 3,
      *
      * @return  self
-     */ 
+     */
     public function setAward($award)
     {
         $this->award = $award;
@@ -179,7 +179,7 @@ class Stage
 
     /**
      * Get the value of endDate
-     */ 
+     */
     public function getEndDate()
     {
         return $this->endDate;
@@ -189,7 +189,7 @@ class Stage
      * Set the value of endDate
      *
      * @return  self
-     */ 
+     */
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
@@ -197,4 +197,3 @@ class Stage
         return $this;
     }
 }
-     

@@ -31,7 +31,7 @@ class CategoryController extends Controller
             foreach ($errors as $error) {
                 $errorArr[] = $error->getMessage();
             }
-            
+
             return $this->json($errorArr);
         }
 
@@ -52,7 +52,7 @@ class CategoryController extends Controller
 
         return $this->json($categories);
     }
-    
+
     /**
      * @Route("/get_category/{id}", name="get_category")
      * @Method("GET")
@@ -60,7 +60,7 @@ class CategoryController extends Controller
     public function getOne($id, Request $request)
     {
         $category = $this->getDoctrine()->getRepository(Category::class)->findCategory($id);
-        
+
         return $this->json($category);
     }
 
@@ -81,7 +81,7 @@ class CategoryController extends Controller
             foreach ($errors as $error) {
                 $errorArr[] = $error->getMessage();
             }
-            
+
             return $this->json($errorArr);
         }
 
