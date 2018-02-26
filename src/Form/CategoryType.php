@@ -23,6 +23,7 @@ class CategoryType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Category::class,
+            'csrf_protection' => false,
         ));
     }
 }

@@ -12,9 +12,7 @@ Encore
 
     // uncomment to define the assets of the project
     .addEntry('js/main', './assets/js/main.js')
-    .addEntry('js/Components/category', './assets/js/Components/category.js')
-    .addEntry('js/Components/goal', './assets/js/Components/goal.js')
-    .addEntry('js/Components/stage', './assets/js/Components/stage.js')
+    .enableVueLoader()
 
     .addStyleEntry('css/app', './assets/css/main.css')
 
@@ -25,4 +23,8 @@ Encore
     // .autoProvidejQuery()
 ;
 
-module.exports = Encore.getWebpackConfig();
+var config = Encore.getWebpackConfig();
+
+config.watchOptions = { poll: true, ignored: /node_modules/ };
+
+module.exports = config;

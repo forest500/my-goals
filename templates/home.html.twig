@@ -1,33 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
 {% endblock %}
 {% block body %}
-    <div class="flex-container">
-        <header>
-            <div class="categories-container">
-                <ul id="categories-list" class="categories-list">
-                    <li id="all-goals">Wszystkie</li>
-                </ul>
-                <form class="new-category" method="post" onsubmit="return false;">
-                    <input type="text" id="category-text">
-                    <button type="button" id="category-submit">nowa kategoria</button>
-                </form>
-            </div>
-        </header>
-        <main>
-            <div class="goals-container">
-                <ul id="goals-list">
-                </ul>
-                <form id ="new-goal" class="new-goal hide" method="post" onsubmit="return false;">
-                    <input type="text" id="goal-text">
-                    <button type="button" id="goal-submit">nowy cel</button>
-                </form>
-            </div>
-        </main>
-    </div>
-{% block javascripts %}
+  <div id="app"></div>
+  {% block javascripts %}
     <script src="build/js/main.js"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-{% endblock %}
+  {% endblock %}
 {% endblock %}

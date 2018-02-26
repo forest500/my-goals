@@ -8,7 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormInterface;
 use App\Entity\Category;
+use App\Form\CategoryType;
 
 class CategoryController extends Controller
 {
@@ -18,28 +20,25 @@ class CategoryController extends Controller
      */
     public function new(Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
-        $description = $request->get('description');
+        $data = json_decode($request->getContent(), true);
 
         $category = new Category();
-        $category->setName($name);
-        $category->setDescription($description);
+        $form = $this->createForm(CategoryType::class, $category);
 
-        $errors = $validator->validate($category);
+        $form->submit($data);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($category);
+            $em->flush();
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
-
-            return $this->json($errorArr);
+            return $this->json("Dodano kategorię!");
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($category);
-        $em->flush();
+        if($form->isSubmitted() && !$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
 
-        return $this->json('Dodano kategorię!');
+            return $this->json($errors, 400);
+        }
     }
 
     /**
@@ -70,25 +69,22 @@ class CategoryController extends Controller
      */
     public function update(Category $category, Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
-        $description = $request->get('description');
+        $data = json_decode($request->getContent(), true);
 
-        $category->setName($name);
-        $category->setDescription($description);
-        $errors = $validator->validate($category);
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->submit($data);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
-
-            return $this->json($errorArr);
+            return $this->json("Nazwa kategorii została zmieniona");
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        if($form->isSubmitted() && !$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
 
-        return $this->json("Nazwa kategorii to $name, a jej opis: $description");
+            return $this->json($errors, 400);
+        }
     }
 
     /**
@@ -102,9 +98,25 @@ class CategoryController extends Controller
             $em->remove($category);
             $em->flush();
         } catch (\Doctrine\DBAL\DBALException $e) {
-            return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja");
+            return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
         }
 
         return $this->json("Kategoria została usunieta");
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 }

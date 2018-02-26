@@ -33,12 +33,12 @@ class Category
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Type("string")
      * @Assert\Length(
-     *      min = 10,
+     *      min = 8,
      *      max = 255,
-     *      minMessage = "Opis kategorii musi zawierać conajmniej 10 znaków",
+     *      minMessage = "Opis kategorii musi zawierać conajmniej 8 znaków",
      *      maxMessage = "Opis kategorii może zawierać maksymalnie 255 znaków"
      * )
      */
@@ -46,7 +46,7 @@ class Category
 
     /**
      * Get the value of id
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -54,7 +54,7 @@ class Category
 
     /**
      * Get the value of name
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -64,7 +64,7 @@ class Category
      * Set the value of name
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -74,7 +74,7 @@ class Category
 
     /**
      * Get the value of description
-     */ 
+     */
     public function getDescription()
     {
         return $this->description;
@@ -84,7 +84,7 @@ class Category
      * Set the value of description
      *
      * @return  self
-     */ 
+     */
     public function setDescription($description)
     {
         $this->description = $description;

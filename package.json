@@ -1,6 +1,9 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.17.0",
+        "@symfony/webpack-encore": "^0.19.0",
+        "vue": "^2.5.13",
+        "vue-loader": "^14.1.1",
+        "vue-template-compiler": "^2.5.13",
         "webpack-concat-plugin": "^2.4.2"
     },
     "license": "UNLICENSED",
@@ -12,6 +15,9 @@
         "build": "encore production"
     },
     "dependencies": {
-        "fs": "0.0.1-security"
+        "axios": "^0.17.1",
+        "fs": "0.0.1-security",
+        "vue-router": "^3.0.1",
+        "vuex": "^3.0.1"
     }
 }
