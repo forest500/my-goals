@@ -24,5 +24,7 @@ export default {
 </script>
 
 <style>
-
+body {
+  display: none;
+}
 </style>

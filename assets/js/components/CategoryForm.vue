@@ -1,9 +1,9 @@
 <template>
 <div>
   <form v-on:submit.prevent="httpFunction" name="categoryForm">
-    <input class="row" type="text" name="name" v-model="category.name">
+    <input class="row" type="text" name="name" :value="categoryInForm.name" @input="updateName">
     <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
-    <textarea class="row" name="description" rows="5" cols="50" v-model="category.description"></textarea>
+    <textarea class="row" name="description" rows="5" cols="50" :value="categoryInForm.description" @input="updateDescription"></textarea>
     <app-error if="errors.response.data.description" v-bind:formErrors="formErrors.description"></app-error>
     <slot name="button"></slot>
   </form>
@@ -13,6 +13,7 @@
 <script>
 import axios from 'axios';
 import AppError from './AppError.vue';
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -26,16 +27,22 @@ export default {
   },
   created() {
     this.$store.dispatch('clearErrors')
+    this.$store.dispatch('setCategoryInForm')
   },
   computed: {
-    hasErrors () {
-      return this.$store.getters.hasErrors
+    ...mapGetters([
+      'hasErrors',
+      'formErrors',
+      'category',
+      'categoryInForm',
+    ])
+  },
+  methods: {
+    updateName (e) {
+      this.$store.commit('SET_CATEGORY_IN_FORM_NAME', e.target.value)
     },
-    formErrors() {
-      return this.$store.getters.formErrors
-    },
-    category() {
-      return this.$store.getters.category
+    updateDescription (e) {
+      this.$store.commit('SET_CATEGORY_IN_FORM_DESCRIPTION', e.target.value)
     }
   }
 }

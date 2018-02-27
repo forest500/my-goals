@@ -16,9 +16,9 @@ export default {
   },
   methods: {
     post() {
-      this.$store.dispatch('postCategory', this.category)
+      this.$store.dispatch('postCategory', this.categoryInForm)
         .then(() => {
-          if(!this.hasErrors) this.$router.push({ path: '/' })
+          if(!this.hasErrors) this.$router.push({ path:`/` })
           this.$store.dispatch('loadCategories')
         })
     }
@@ -27,8 +27,8 @@ export default {
     hasErrors () {
       return this.$store.getters.hasErrors
     },
-    category() {
-      return this.$store.getters.category
+    categoryInForm() {
+      return this.$store.getters.categoryInForm
     }
   }
 }

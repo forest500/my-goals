@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios'
+import createPersistedState from 'vuex-persistedstate'
+import * as Cookies from 'js-cookie'
 
 Vue.use(Vuex);
 
@@ -8,14 +10,19 @@ export const store = new Vuex.Store({
   state: {
     categories: [],
     category: {},
+    categoryInForm: {},
     goals: [],
+    stages: [],
     hasErrors: false,
     formErrors: {},
   },
   getters: {
     categories: state => state.categories,
     category: state => state.category,
+    categoryInForm: state => state.categoryInForm,
     goals: state => state.goals,
+    goal: state => state.goal,
+    stages: state => state.stages,
     hasErrors: state => state.hasErrors,
     formErrors: state => state.formErrors,
   },
@@ -26,8 +33,26 @@ export const store = new Vuex.Store({
     SET_CATEGORY(state, category) {
       state.category = category
     },
+    SET_CATEGORY_IN_FORM(state) {
+      state.categoryInForm = Object.assign({}, state.category)
+    },
+    SET_CATEGORY_IN_FORM_NAME(state, categoryName) {
+      state.categoryInForm.name = categoryName
+    },
+    SET_CATEGORY_IN_FORM_DESCRIPTION(state, description) {
+      state.categoryInForm.description = description
+    },
+    SET_CATEGORY_NAME(state, name) {
+      state.category.name = name
+    },
     SET_GOALS(state, goals) {
       state.goals = goals
+    },
+    SET_GOAL(state, goal) {
+      state.goal = goal
+    },
+    SET_STAGES(state, stages) {
+      state.stages = stages
     },
     ADD_CATEGORY(state, categoryObject) {
       state.categories.push(categoryObject)
@@ -48,7 +73,7 @@ export const store = new Vuex.Store({
   },
   actions: {
     loadCategories({commit}) {
-      axios.get(`http://localhost:8000/get_categories`)
+      return axios.get(`http://localhost:8000/get_categories`)
         .then(response => {
           commit('SET_CATEGORIES', response.data)
         }).catch(error => {
@@ -56,7 +81,7 @@ export const store = new Vuex.Store({
         });
     },
     loadGoals({commit}) {
-      axios.get(`http://localhost:8000/get_goals`)
+      return axios.get(`http://localhost:8000/get_goals`)
         .then(response => {
           commit('SET_GOALS', response.data)
         }).catch(error => {
@@ -64,9 +89,17 @@ export const store = new Vuex.Store({
         });
     },
     loadCategoryGoals({commit}, id) {
-      axios.get(`http://localhost:8000/get_category_goals/${id}`)
+      return axios.get(`http://localhost:8000/get_category_goals/${id}`)
         .then(response => {
           commit('SET_GOALS', response.data)
+        }).catch(error => {
+          console.log(error)
+        })
+    },
+    loadCategoryStages({commit}, id) {
+      return axios.get(`http://localhost:8000/get_category_stages/${id}`)
+        .then(response => {
+          commit('SET_STAGES', response.data)
         }).catch(error => {
           console.log(error)
         })
@@ -79,6 +112,23 @@ export const store = new Vuex.Store({
         .then(response => {
           alert(response.data);
           commit('CLEAR_ERRORS')
+          commit('SET_CATEGORY', category)
+        })
+        .catch(errors => {
+          if (errors.response.status === 400) {
+            commit('HAS_ERRORS', true)
+            commit('FORM_ERRORS', errors.response.data)
+          }
+        })
+    },
+    postGoal({commit}, goal) {
+      return axios.post(`http://localhost:8000/new_goal/${goal.categoryId}`,{
+         name: goal.name,
+      })
+        .then(response => {
+          alert(response.data);
+          commit('CLEAR_ERRORS')
+          commit('SET_GOAL', goal)
         })
         .catch(errors => {
           if (errors.response.status === 400) {
@@ -98,6 +148,7 @@ export const store = new Vuex.Store({
         .then(response => {
           alert(response.data);
           commit('CLEAR_ERRORS')
+          commit('SET_CATEGORY', category)
         })
         .catch(errors => {
           if (errors.response.status === 400) {
@@ -106,8 +157,11 @@ export const store = new Vuex.Store({
           }
         })
     },
+    setCategoryInForm({commit}) {
+      commit('SET_CATEGORY_IN_FORM')
+    },
     deleteCategory({commit}, category) {
-      axios.delete(`http://localhost:8000/delete_category/${category.id}`)
+      return axios.delete(`http://localhost:8000/delete_category/${category.id}`)
         .then(response => {
           alert(response.data)
           commit('DELETE_CATEGORY', category.index)
@@ -115,6 +169,8 @@ export const store = new Vuex.Store({
           alert(error.response.data)
         })
     }
-
-  }
+  },
+  plugins: [
+    createPersistedState({ storage: window.sessionStorage })
+  ]
 })

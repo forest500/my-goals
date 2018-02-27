@@ -12,9 +12,6 @@ export default {
   created() {
     this.$store.dispatch('loadGoals')
   },
-  methods: {
-
-  },
   computed: {
     goals() {
       return this.$store.getters.goals

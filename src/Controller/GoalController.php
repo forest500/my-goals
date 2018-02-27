@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Goal;
 use App\Entity\Category;
+use App\Form\GoalType;
 
 class GoalController extends Controller
 {
@@ -19,26 +20,27 @@ class GoalController extends Controller
      */
     public function new(Category $category, Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
+        $data = json_decode($request->getContent(), true);
 
         $goal = new Goal();
-        $goal->setName($name);
         $goal->setCategory($category);
 
-        $errors = $validator->validate($goal);
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
+        $form = $this->createForm(GoalType::class, $goal);
 
-            return $this->json($errorArr);
+        $form->submit($data);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($goal);
+            $em->flush();
+
+            return $this->json("Dodano cel!");
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($goal);
-        $em->flush();
+        if($form->isSubmitted() && !$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
 
-        return $this->json('Dodano cel!');
+            return $this->json($errors, 400);
+        }
     }
 
     /**
@@ -80,26 +82,27 @@ class GoalController extends Controller
      */
     public function update(Goal $goal, Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
-        $categoryId = $request->get('category');
-        $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
+        $data = json_decode($request->getContent(), true);
 
-        $goal->setName($name);
+        $category = $this->getDoctrine()->getRepository(Category::class)->find($data->categoryId);
+
         $goal->setCategory($category);
-        $errors = $validator->validate($goal);
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
+        $form = $this->createForm(GoalType::class, $goal);
 
-            return $this->json($errorArr);
+        $form->submit($data);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            return $this->json("Zmieniono cel!");
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
+        if($form->isSubmitted() && !$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
 
-        return $this->json("Cel został zmodyfikowany");
+            return $this->json($errors, 400);
+        }
     }
 
     /**
@@ -140,5 +143,21 @@ class GoalController extends Controller
         $em->flush();
 
         return $this->json("Cel został usunięty");
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 }

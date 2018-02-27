@@ -16,9 +16,12 @@ export default {
   },
   methods: {
     put() {
-      this.$store.dispatch('editCategory', this.category)
+      this.$store.dispatch('editCategory', this.categoryInForm)
         .then(() => {
-          if(!this.hasErrors) this.$router.push({ path: '/' + this.category.name })
+          if(!this.hasErrors) {
+            this.$store.dispatch('loadCategories')
+            this.$router.push({ path: `/${this.categoryInForm.name}/${this.categoryInForm.id}` })
+          }
         })
     }
   },
@@ -26,8 +29,8 @@ export default {
     hasErrors () {
       return this.$store.getters.hasErrors
     },
-    category() {
-      return this.$store.getters.category
+    categoryInForm() {
+      return this.$store.getters.categoryInForm
     }
   }
 }

@@ -77,7 +77,7 @@ class CategoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->json("Nazwa kategorii została zmieniona");
+            return $this->json("Kategoria została zmieniona");
         }
 
         if($form->isSubmitted() && !$form->isValid()) {
