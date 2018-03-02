@@ -1,7 +1,7 @@
 <template>
 <div>
   <form v-on:submit.prevent="httpFunction" name="categoryForm">
-    <input class="row" type="text" name="name" :value="goal.name" @input="updateName">
+    <input type="text" name="name" :value="goal.name" @input="updateName">
     <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
     <slot name="button"></slot>
   </form>
@@ -20,6 +20,10 @@ export default {
     httpFunction: {
       type: Function,
       required: true
+    },
+    goal: {
+      type: Object,
+      required: true
     }
   },
   created() {
@@ -32,13 +36,10 @@ export default {
     formErrors() {
       return this.$store.getters.formErrors
     },
-    goal() {
-      return this.$store.getters.goal
-    },
   },
   methods: {
     updateName (e) {
-      this.$store.commit('SET_GOAL', e.target.value)
+      this.goal.name = e.target.value
     },
   }
 }

@@ -3,6 +3,9 @@ body {
   margin-right: auto;
   margin-left: auto;
 }
+ul {
+  list-style-type: none;
+}
 .loading {
   margin: 0;
   position: absolute;

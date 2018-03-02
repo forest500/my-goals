@@ -1,6 +1,6 @@
 <template>
-<button v-on:click="showForm" type="button" class="btn btn-success">
-  Dodaj {{ item }}
+<button type="button" class="btn btn-success">
+  {{ item }}
 </button>
 </template>
 <script>
@@ -9,17 +9,17 @@ export default {
   props: {
     item: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   methods: {
-    showForm() {
-      console.log('shit')
-    }
+
   }
 }
 </script>
 
 <style scoped>
-
+  button.btn.btn-success {
+    height: 10px;
+  }
 </style>

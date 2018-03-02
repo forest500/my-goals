@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormInterface;
 use App\Entity\Category;
 use App\Form\CategoryType;
@@ -18,7 +17,7 @@ class CategoryController extends Controller
      * @Route("/new_category", name="new_category")
      * @Method("POST")
      */
-    public function new(Request $request, ValidatorInterface $validator)
+    public function new(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -67,7 +66,7 @@ class CategoryController extends Controller
      * @Route("/update_category/{category}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(Category $category, Request $request, ValidatorInterface $validator)
+    public function update(Category $category, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 

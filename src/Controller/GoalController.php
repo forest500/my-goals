@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Goal;
 use App\Entity\Category;
@@ -18,7 +19,7 @@ class GoalController extends Controller
      * @Route("/new_goal/{category}", name="new_goal", options={"utf8": true})
      * @Method("POST")
      */
-    public function new(Category $category, Request $request, ValidatorInterface $validator)
+    public function new(Category $category, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -80,19 +81,19 @@ class GoalController extends Controller
      * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(Goal $goal, Request $request, ValidatorInterface $validator)
+    public function update(Goal $goal, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-
-        $category = $this->getDoctrine()->getRepository(Category::class)->find($data->categoryId);
-
-        $goal->setCategory($category);
+        // dump($data);die;
+        // $category = $this->getDoctrine()->getRepository(Category::class)->find($data->category);
+        //
+        // $goal->setCategory($category);
 
         $form = $this->createForm(GoalType::class, $goal);
 
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();        
             $em->flush();
 
             return $this->json("Zmieniono cel!");

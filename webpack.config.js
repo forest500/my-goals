@@ -14,6 +14,7 @@ Encore
     .addEntry('js/main', './assets/js/main.js')
     .enableVueLoader()
 
+
     .addStyleEntry('css/app', './assets/css/main.css')
 
     // uncomment if you use Sass/SCSS files

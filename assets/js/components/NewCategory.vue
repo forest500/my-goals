@@ -18,8 +18,10 @@ export default {
     post() {
       this.$store.dispatch('postCategory', this.categoryInForm)
         .then(() => {
-          if(!this.hasErrors) this.$router.push({ path:`/` })
-          this.$store.dispatch('loadCategories')
+          if(!this.hasErrors) {
+            this.$router.push({ path:`/` })
+            this.$store.dispatch('loadCategories')
+          }
         })
     }
   },

@@ -12,19 +12,24 @@ export const store = new Vuex.Store({
     category: {},
     categoryInForm: {},
     goals: [],
+    newGoal: {},
     stages: [],
     hasErrors: false,
     formErrors: {},
+    showGoalForm: false,
+    loadingGoals: false,
+    loadingMenu: false,
   },
   getters: {
     categories: state => state.categories,
     category: state => state.category,
     categoryInForm: state => state.categoryInForm,
     goals: state => state.goals,
-    goal: state => state.goal,
+    newGoal: state => state.newGoal,
     stages: state => state.stages,
     hasErrors: state => state.hasErrors,
     formErrors: state => state.formErrors,
+    showGoalForm: state => state.showGoalForm,
   },
   mutations: {
     SET_CATEGORIES(state, categories) {
@@ -45,20 +50,29 @@ export const store = new Vuex.Store({
     SET_CATEGORY_NAME(state, name) {
       state.category.name = name
     },
+    SET_CATEGORY_INDEX(state, index) {
+      state.category.index = index
+    },
     SET_GOALS(state, goals) {
       state.goals = goals
     },
     SET_GOAL(state, goal) {
-      state.goal = goal
+      state.newGoal = goal
     },
     SET_STAGES(state, stages) {
       state.stages = stages
+    },
+    SET_SHOW_GOAL_FORM(state, boolean) {
+      state.showGoalForm = boolean
     },
     ADD_CATEGORY(state, categoryObject) {
       state.categories.push(categoryObject)
     },
     DELETE_CATEGORY(state, categoryId) {
       state.categories.splice(categoryId, 1)
+    },
+    DELETE_GOAL(state, index) {
+      state.goals.splice(index, 1)
     },
     HAS_ERRORS(state, hasErrors) {
       state.hasErrors = hasErrors
@@ -129,6 +143,7 @@ export const store = new Vuex.Store({
           alert(response.data);
           commit('CLEAR_ERRORS')
           commit('SET_GOAL', goal)
+          commit('SET_SHOW_GOAL_FORM', false)
         })
         .catch(errors => {
           if (errors.response.status === 400) {
@@ -157,20 +172,46 @@ export const store = new Vuex.Store({
           }
         })
     },
+    editGoal({commit}, goal) {
+      return axios.put(`http://localhost:8000/update_goal/${goal.id}`,{
+         name: goal.name,
+      })
+        .then(response => {
+          console.log(goal.name)
+          alert(response.data);
+          commit('CLEAR_ERRORS')
+          commit('SET_GOAL', goal)
+        })
+        .catch(errors => {
+          if (errors.response.status === 400) {
+            commit('HAS_ERRORS', true)
+            commit('FORM_ERRORS', errors.response.data)
+          }
+        })
+    },
     setCategoryInForm({commit}) {
       commit('SET_CATEGORY_IN_FORM')
     },
     deleteCategory({commit}, category) {
-      return axios.delete(`http://localhost:8000/delete_category/${category.id}`)
+      return axios.delete(`http://localhost:8000/delete_category/${category.itemToDelete.id}`)
         .then(response => {
           alert(response.data)
-          commit('DELETE_CATEGORY', category.index)
+          commit('DELETE_CATEGORY', category.itemToDelete.index)
         }).catch(error => {
           alert(error.response.data)
         })
-    }
+    },
+    deleteGoal({commit}, goal) {
+      return axios.delete(`http://localhost:8000/delete_goal/${goal.itemToDelete.id}`)
+        .then(response => {
+          alert(response.data)
+        commit('DELETE_GOAL', goal.index)
+        }).catch(error => {
+          alert(error.response.data)
+        })
+    },
   },
-  plugins: [
-    createPersistedState({ storage: window.sessionStorage })
-  ]
+  // plugins: [
+  //   createPersistedState({ storage: window.sessionStorage })
+  // ]
 })

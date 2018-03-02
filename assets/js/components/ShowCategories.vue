@@ -1,10 +1,10 @@
 <template>
 <header class="mb-4 mt-3">
-  <div class="row">
-    <div v-show="loading" class="loading">
-      <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
-    </div>
-    <ul v-show ="!loading" class="nav bg-faded nav-pills col-10">
+  <div v-show="loading" class="loading">
+    <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
+  </div>
+  <div v-show ="!loading" class="row">
+    <ul class="nav bg-faded nav-pills col-10">
       <li class="nav-item" v-on:click="clearActiveCategory">
         <router-link to="/" exact class="nav-link active">
           Wszystkie
@@ -27,27 +27,27 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  created() {
+    this.loading = true;
+    this.$store.dispatch('loadCategories')
+      .then(() => {
+        this.loading = false;
+      })
+  },
   data() {
     return {
       loading: false,
     }
   },
-  created() {
-    this.loading = true
-    this.$store.dispatch('loadCategories')
-      .then(() => {
-        this.loading = false
-      })
-  },
   computed: {
     categories() {
       return this.$store.getters.categories
-    }
+    },
   },
   methods: {
     setActiveCategory(category, index) {
-      this.$store.commit('SET_CATEGORY', category);
-      category.index = index;
+      this.$store.commit('SET_CATEGORY_INDEX', index)
+      this.$store.commit('SET_CATEGORY', category)
     },
     clearActiveCategory() {
       this.$store.commit('SET_CATEGORY', {});

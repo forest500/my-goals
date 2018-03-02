@@ -25,6 +25,6 @@ export default {
 
 <style>
 body {
-  display: none;
+  background: red;
 }
 </style>
