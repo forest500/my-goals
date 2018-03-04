@@ -11,21 +11,12 @@ Encore
     // .enableVersioning(Encore.isProduction())
 
     // uncomment to define the assets of the project
-    .addEntry('js/main', './assets/js/main.js')
-    // .enableVueLoader()
-    .enableVueLoader(function(options) {
-      rules: [
-        {
-          test: /\.css$/,
-          use: [
-            'vue-style-loader',
-            'css-loader'
-          ],
-        },
-      ]
-    })
+    .addEntry('js/app', './assets/js/main.js')
+    // .addStyleEntry('css/app', './assets/css/main.css')
 
-    .addStyleEntry('css/app', './assets/css/main.css')
+    .enableVueLoader()
+
+
 
     // uncomment if you use Sass/SCSS files
     // .enableSassLoader()

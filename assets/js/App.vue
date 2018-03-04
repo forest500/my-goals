@@ -25,6 +25,12 @@ export default {
 
 <style>
 body {
-  background: red;
+  width: 85%;
+  margin-right: auto;
+  margin-left: auto;
+  background-image: url("./img/metal-background.png");
+}
+ul {
+  list-style-type: none;
 }
 </style>

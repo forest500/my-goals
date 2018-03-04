@@ -19,7 +19,5 @@ export default {
 </script>
 
 <style scoped>
-  button.btn.btn-success {
-    height: 10px;
-  }
+
 </style>

@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style scoped>
-div{
-  background-color: red
+.stage-form {
+  width: 100vw;
 }
 </style>
