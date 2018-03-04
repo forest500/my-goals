@@ -56,7 +56,7 @@ class Stage
 
      /**
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Date(message = "Data musi mieć format YYYY-MM-DD")
+     * @Assert\Date(message = "Data musi mieć format YYYY-mm-dd")
      */
     private $endDate;
 

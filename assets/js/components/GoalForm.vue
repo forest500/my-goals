@@ -1,7 +1,7 @@
 <template>
 <div>
-  <form v-on:submit.prevent="httpFunction" name="categoryForm">
-    <input type="text" name="name" :value="goal.name" @input="updateName">
+  <form class="row" v-on:submit.prevent="httpFunction" name="categoryForm">
+    <input class="col-2" type="text" name="name" v-model="goal.name">
     <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
     <slot name="button"></slot>
   </form>
@@ -37,11 +37,6 @@ export default {
       return this.$store.getters.formErrors
     },
   },
-  methods: {
-    updateName (e) {
-      this.goal.name = e.target.value
-    },
-  }
 }
 </script>
 

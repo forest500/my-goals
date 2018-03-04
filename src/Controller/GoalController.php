@@ -84,16 +84,12 @@ class GoalController extends Controller
     public function update(Goal $goal, Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        // dump($data);die;
-        // $category = $this->getDoctrine()->getRepository(Category::class)->find($data->category);
-        //
-        // $goal->setCategory($category);
 
         $form = $this->createForm(GoalType::class, $goal);
 
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();        
+            $em = $this->getDoctrine()->getManager();
             $em->flush();
 
             return $this->json("Zmieniono cel!");

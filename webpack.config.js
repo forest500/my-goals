@@ -12,8 +12,18 @@ Encore
 
     // uncomment to define the assets of the project
     .addEntry('js/main', './assets/js/main.js')
-    .enableVueLoader()
-
+    // .enableVueLoader()
+    .enableVueLoader(function(options) {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'vue-style-loader',
+            'css-loader'
+          ],
+        },
+      ]
+    })
 
     .addStyleEntry('css/app', './assets/css/main.css')
 

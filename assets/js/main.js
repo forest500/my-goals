@@ -13,6 +13,11 @@ const router = new VueRouter({
   routes: Routes
 });
 
+//Filters
+Vue.filter('match-date', (value) => {
+  return value.match(/\d{4}-\d{2}-\d{2}/)[0]
+})
+
 window.onload = function () {
   new Vue({
     store: store,

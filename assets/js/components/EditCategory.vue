@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="w-100 row">
     <category-form v-bind:httpFunction="put">
       <button slot="button" class="btn btn-success">edytuj</button>
     </category-form>

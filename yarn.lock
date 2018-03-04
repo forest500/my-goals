@@ -91,6 +91,10 @@ ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"
 
+ajv-keywords@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.1.0.tgz#ac2b27939c543e95d2c06e7f7f5c27be4aa543be"
+
 ajv@^4.9.1:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.8.tgz#82ffb02b29e662ae53bdc20af15947706739c536"
@@ -103,6 +107,14 @@ ajv@^5.0.0, ajv@^5.1.5:
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
   dependencies:
     co "^4.6.0"
+    fast-deep-equal "^1.0.0"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.3.0"
+
+ajv@^6.1.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.2.1.tgz#28a6abc493a2abe0fb4c8507acaedb43fa550671"
+  dependencies:
     fast-deep-equal "^1.0.0"
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
@@ -2124,6 +2136,13 @@ file-loader@^0.10.1:
   dependencies:
     loader-utils "^1.0.2"
 
+file-loader@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-1.1.11.tgz#6fe886449b0f2a936e43cabaac0cdbfb369506f8"
+  dependencies:
+    loader-utils "^1.0.2"
+    schema-utils "^0.4.5"
+
 filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
@@ -3373,6 +3392,10 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.21.0:
+  version "2.21.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.21.0.tgz#2a114b51d2a6ec9e6d83cf803f838a878d8a023a"
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -4526,6 +4549,13 @@ schema-utils@^0.4.3:
     ajv "^5.0.0"
     ajv-keywords "^2.1.0"
 
+schema-utils@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.5.tgz#21836f0608aac17b78f9e3e24daff14a5ca13a3e"
+  dependencies:
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
@@ -4942,6 +4972,13 @@ style-loader@^0.13.2:
   dependencies:
     loader-utils "^1.0.2"
 
+style-loader@^0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.20.2.tgz#851b373c187890331776e9cde359eea9c95ecd00"
+  dependencies:
+    loader-utils "^1.1.0"
+    schema-utils "^0.4.3"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -5280,6 +5317,10 @@ vue-template-es2015-compiler@^1.6.0:
 vue@^2.5.13:
   version "2.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
+
+vuejs-datepicker@^0.9.27:
+  version "0.9.27"
+  resolved "https://registry.yarnpkg.com/vuejs-datepicker/-/vuejs-datepicker-0.9.27.tgz#9bd2247d4b3a5459ba9edcce1225f38cb0d04b6e"
 
 vuex-persistedstate@^2.4.2:
   version "2.4.2"

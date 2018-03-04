@@ -14,3 +14,9 @@ ul {
   margin-right: -50%;
   transform: translate(-50%, -50%)
 }
+.stage-form {
+  width: 100vw;
+}
+.router-link-active {
+  background: blue;
+}

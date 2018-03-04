@@ -152,6 +152,23 @@ export const store = new Vuex.Store({
           }
         })
     },
+    postStage({commit}, stage) {
+      return axios.post(`http://localhost:8000/new_stage/${stage.goalId}`,{
+         name: stage.name,
+         award: stage.award,
+         endDate: stage.endDate
+      })
+        .then(response => {
+          alert(response.data);
+          commit('CLEAR_ERRORS')
+        })
+        .catch(errors => {
+          if (errors.response.status === 400) {
+            commit('HAS_ERRORS', true)
+            commit('FORM_ERRORS', errors.response.data)
+          }
+        })
+    },
     clearErrors({commit}) {
       commit('CLEAR_ERRORS')
     },

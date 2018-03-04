@@ -1,7 +1,7 @@
 <template>
 <div>
     <goal-form :goal="newGoal" v-bind:httpFunction="post">
-      <button slot="button" class="btn btn-success">dodaj cel</button>
+      <button slot="button" class="btn btn-success ml-2">dodaj cel</button>
     </goal-form>
 </div>
 </template>

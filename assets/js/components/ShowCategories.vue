@@ -3,15 +3,15 @@
   <div v-show="loading" class="loading">
     <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
   </div>
-  <div v-show ="!loading" class="row">
-    <ul class="nav bg-faded nav-pills col-10">
+  <div v-show ="!loading" class="row jumbotron bg-info">
+    <ul class="nav bg-faded nav-pills col-10" role="tablist">
       <li class="nav-item" v-on:click="clearActiveCategory">
-        <router-link to="/" exact class="nav-link active">
+        <router-link to="/" exact class="nav-link text-white">
           Wszystkie
         </router-link>
       </li>
       <li class="nav-item" v-for="(category, index) in categories" v-bind:key="category.id" v-on:click="setActiveCategory(category, index)">
-        <router-link class="nav-link" :to="{ name: 'category', params: {categoryName: category.name, id: category.id} }" exact>
+        <router-link :to="{ name: 'category', params: {categoryName: category.name, id: category.id} }" exact class="nav-link text-white">
           {{ category.name }}
         </router-link>
       </li>

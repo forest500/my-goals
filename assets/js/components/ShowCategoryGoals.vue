@@ -16,13 +16,13 @@
       </header>
       <ul class="">
         <div class="row" v-for="(goal, index) in goals" v-bind:key="goal.id">
-          <li v-if="!isEditing[index]" class="col-2">
-            {{ goal.name }}
+          <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
+          <li class="col-2">
+            <h4 v-if="!isEditing[index]">{{ goal.name }}</h4>
+            <show-stages :goalId="goal.id"></show-stages>
           </li>
-          <edit-goal v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
           <edit-button v-show="!isEditing[index]" @click.native="setIsEditing(index, true)" class="btn-sm mb-2 mr-2 h-25"></edit-button>
           <delete-button v-show="!isEditing[index]" :index="index" :path="$route.path" class="btn-sm mb-2 mr-2 h-25" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
-          <add-button v-show="!isEditing[index]" item="nowy poziom" class="btn-sm h-25"></add-button>
         </div>
       </ul>
       <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       isEditing: [],
-      loading: false
+      loading: false,
     }
   },
   created() {
@@ -103,7 +103,7 @@ export default {
     },
     setIsEditing(index, value) {
       this.$set(this.isEditing, index, value);
-    }
+    },
   }
 }
 </script>

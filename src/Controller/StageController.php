@@ -8,9 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormInterface;
 use App\Entity\Stage;
 use App\Entity\Goal;
 use App\Entity\Category;
+use App\Form\StageType;
 
 class StageController extends Controller
 {
@@ -20,32 +22,26 @@ class StageController extends Controller
      */
     public function new(Goal $goal, Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
-        $award = $request->get('award');
-        $endDate = $request->get('endDate');
+        $data = json_decode($request->getContent(), true);
 
         $stage = new stage();
-        $stage->setName($name);
-        $stage->setAward($award);
-        $stage->setEndDate(new \DateTIme($endDate));
         $stage->setgoal($goal);
-        $number = $stage->getNumber();
 
-        $errors = $validator->validate($stage);
+        $form = $this->createForm(StageType::class, $stage);
+        $form->submit($data);
 
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
+        if($form->isSubmitted() && $form->isValid()) {
+          $em = $this->getDoctrine()->getManager();
+          $em->persist($stage);
+          $em->flush();
 
-            return $this->json($errorArr);
+          return $this->json("Dodano poziom!");
         }
+        if($form->isSubmitted() && !$form->isValid()) {
+          $errors = $this->getErrorsFromForm($form);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($stage);
-        $em->flush();
-
-        return $this->json("Dodano poziom $number!");
+          return $this->json($errors, 400);
+        }
     }
 
     /**
@@ -98,31 +94,22 @@ class StageController extends Controller
      */
     public function update(Stage $stage, Request $request, ValidatorInterface $validator)
     {
-        $name = $request->get('name');
-        $award = $request->get('award');
-        $endDate = $request->get('endDate');
-        $goalId = $request->get('goal');
-        $goal = $this->getDoctrine()->getRepository(Goal::class)->find($goalId);
+      $data = json_decode($request->getContent(), true);
 
-        $stage->setName($name);
-        $stage->setAward($award);
-        $stage->setEndDate(new \DateTIme($endDate));
-        $stage->setgoal($goal);
+      $form = $this->createForm(StageType::class, $stage);
+      $form->submit($data);
 
-        $errors = $validator->validate($stage);
-
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
-
-            return $this->json($errorArr);
-        }
-
+      if($form->isSubmitted() && $form->isValid()) {
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        return $this->json("Poziom został zmodyfikowany");
+        return $this->json("Zmodyfikowano poziom!");
+      }
+      if($form->isSubmitted() && !$form->isValid()) {
+        $errors = $this->getErrorsFromForm($form);
+
+        return $this->json($errors, 400);
+      }
     }
 
     /**
@@ -163,5 +150,21 @@ class StageController extends Controller
         $em->flush();
 
         return $this->json("Poziom został usunięty");
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 }

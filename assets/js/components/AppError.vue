@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="">
     <div class="formErrors text-danger m-2" v-for="formError in formErrors">{{ formError}}</div>
 </div>
 </template>

@@ -9,11 +9,9 @@ export default {
   props: {
     itemToEdit: {
       type: Object,
-      required: true,
     },
     index: {
       type: Number,
-      required: false,
     }
   },
 

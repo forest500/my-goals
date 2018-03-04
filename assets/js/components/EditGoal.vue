@@ -1,7 +1,7 @@
 <template>
 <div>
     <goal-form :goal="goal" v-bind:httpFunction="put">
-      <save-button slot="button" :index="index" v-bind:itemToEdit="goal" class="btn-sm mb-2 mr-2 h-25"></save-button>
+      <save-button slot="button" :index="index" v-bind:itemToEdit="goal" class="btn-sm ml-2 mb-2 mr-2 h-25"></save-button>
       <cancel-button slot="button" class="btn-sm mb-2 mr-2 h-25" @click.native="setIsEditing(index, false)"></cancel-button>
     </goal-form>
 </div>
