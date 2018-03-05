@@ -1,29 +1,36 @@
 <template>
   <div class="w-100">
-    <table class="table mt-4">
+    <table class="table mt-4 table-responsive">
+      <thead>
         <tr>
           <th>poziom</th>
           <th>nazwa</th>
           <th>nagroda</th>
           <th>planowana data</th>
         </tr>
-        <tr v-for="stage in stages" v-bind:key="stage.id" li v-if="stage.goalId === goalId">
-          <td>{{ stage.number }} </td>
+      </thead>
+      <tbody>
+        <tr is ="stage-item" :stage="stage" v-for="stage in stages" li v-if="stage.goalId === goalId">
+          <!-- <stage-item :stage="stage"></stage-item> -->
+          <!-- <td>{{ stage.number }} </td>
           <td>{{ stage.name }} </td>
           <td>{{ stage.award }}</td>
-          <td>{{ stage.endDate.date | match-date }}</td>
+          <td>{{ stage.endDate.date | match-date }}</td> -->
         </tr>
+      </tbody>
+
     </table>
     <new-stage :showStageForm="showStageForm" v-if="showStageForm" class="w-100" :goalId="goalId">
       <cancel-button slot="cancel-button" v-show="showStageForm" @click.native="showStageForm = !showStageForm"></cancel-button>
     </new-stage>
-    <add-button v-show="!showStageForm" @click.native="showStageForm = !showStageForm" item="nowy poziom" class="btn-sm h-25"></add-button>
+    <add-button v-show="!showStageForm" @click.native="showStageForm = !showStageForm" item="nowy poziom" class="btn-sm h-25 mb-4"></add-button>
   </div>
 </template>
 
 <script>
-import DeleteButton from './DeleteButton.vue'
 import NewStage from './NewStage.vue'
+import StageItem from './StageItem.vue'
+import DeleteButton from './DeleteButton.vue'
 import AddButton from './AddButton.vue'
 import CancelButton from './CancelButton.vue'
 
@@ -40,8 +47,9 @@ export default {
     }
   },
   components: {
-    'delete-button': DeleteButton,
     'new-stage': NewStage,
+    'stage-item': StageItem,
+    'delete-button': DeleteButton,
     'add-button': AddButton,
     'cancel-button': CancelButton,
   },

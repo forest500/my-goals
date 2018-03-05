@@ -194,10 +194,26 @@ export const store = new Vuex.Store({
          name: goal.name,
       })
         .then(response => {
-          console.log(goal.name)
           alert(response.data);
           commit('CLEAR_ERRORS')
           commit('SET_GOAL', goal)
+        })
+        .catch(errors => {
+          if (errors.response.status === 400) {
+            commit('HAS_ERRORS', true)
+            commit('FORM_ERRORS', errors.response.data)
+          }
+        })
+    },
+    editStage({commit}, stage) {
+      return axios.put(`http://localhost:8000/update_stage/${stage.id}`,{
+         name: stage.name,
+         award: stage.award,
+         endDate: stage.endDate
+      })
+        .then(response => {
+          alert(response.data);
+          commit('CLEAR_ERRORS')
         })
         .catch(errors => {
           if (errors.response.status === 400) {

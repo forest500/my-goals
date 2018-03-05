@@ -15,14 +15,16 @@
         <p>{{ category.description }}</p>
       </header>
       <ul class="">
-        <div class="row" v-for="(goal, index) in goals" v-bind:key="goal.id">
+        <div class="container-fluid" v-for="(goal, index) in goals" v-bind:key="goal.id">
           <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
-          <li class="col-2">
-            <h4 v-if="!isEditing[index]">{{ goal.name }}</h4>
+          <li class="container-fluid">
+            <div class="row">
+              <h5 class="col-md-2" v-if="!isEditing[index]">{{ goal.name }}</h5>
+              <edit-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
+              <delete-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" :index="index" :path="$route.path" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
+            </div>
             <show-stages :goalId="goal.id"></show-stages>
           </li>
-          <edit-button v-show="!isEditing[index]" @click.native="setIsEditing(index, true)" class="btn-sm mb-2 mr-2 h-25"></edit-button>
-          <delete-button v-show="!isEditing[index]" :index="index" :path="$route.path" class="btn-sm mb-2 mr-2 h-25" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
         </div>
       </ul>
       <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">

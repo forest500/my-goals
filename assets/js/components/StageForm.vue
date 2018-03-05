@@ -39,7 +39,8 @@ export default {
   },
   created() {
     this.$store.dispatch('clearErrors')
-    this.stage.endDate = moment(new Date).format('YYYY-MM-DD')
+    console.log(this.stage.endDate)
+    if(!this.stage.endDate) this.stage.endDate = moment(new Date).format('YYYY-MM-DD')
   },
   computed: {
     hasErrors () {
