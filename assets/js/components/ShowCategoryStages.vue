@@ -1,25 +1,12 @@
 <template>
-  <div class="w-100">
-    <table class="table mt-4 table-responsive">
-      <thead>
-        <tr>
-          <th>poziom</th>
-          <th>nazwa</th>
-          <th>nagroda</th>
-          <th>planowana data</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr is ="stage-item" :stage="stage" v-for="stage in stages" li v-if="stage.goalId === goalId">
-          <!-- <stage-item :stage="stage"></stage-item> -->
-          <!-- <td>{{ stage.number }} </td>
-          <td>{{ stage.name }} </td>
-          <td>{{ stage.award }}</td>
-          <td>{{ stage.endDate.date | match-date }}</td> -->
-        </tr>
-      </tbody>
-
-    </table>
+  <div class="container-fluid">
+    <div v-show="stages" class="row">
+        <div class="col-md-1">poziom</div>
+        <div class="col-md-2">nazwa</div>
+        <div class="col-md-2">nagroda</div>
+        <div class="col-md-2">planowana data</div>
+    </div>
+    <div v-if="stage.goalId === goalId" is ="stage-item" v-for="(stage, index) in stages" :stage="stage" :index="index"></div>
     <new-stage :showStageForm="showStageForm" v-if="showStageForm" class="w-100" :goalId="goalId">
       <cancel-button slot="cancel-button" v-show="showStageForm" @click.native="showStageForm = !showStageForm"></cancel-button>
     </new-stage>

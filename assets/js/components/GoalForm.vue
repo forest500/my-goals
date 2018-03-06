@@ -1,6 +1,6 @@
 <template>
 <div>
-  <form class="row" v-on:submit.prevent="httpFunction" name="categoryForm">
+  <form class="row" v-on:submit.prevent="httpFunction" name="goalForm">
     <input class="col-2" type="text" name="name" v-model="goal.name">
     <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
     <slot name="button"></slot>

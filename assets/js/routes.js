@@ -5,8 +5,8 @@ import EditCategory from './components/EditCategory.vue';
 import ShowCategoryGoals from './components/ShowCategoryGoals.vue';
 
 export default [
-  { path: '/', component: ShowGoals,},
-  { path: '/nowa_kategoria', component: NewCategory},
+  { path: '/', name: 'home', component: ShowGoals,},
+  { path: '/nowa_kategoria', name: 'new_category', component: NewCategory},
   { path: '/:categoryName/:id', name: 'category', component: ShowCategoryGoals},
   { path: '/edytuj_kategorie/:categoryName/:id', name: 'edit_category', component: EditCategory},
 ]

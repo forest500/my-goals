@@ -35,6 +35,11 @@ export const store = new Vuex.Store({
     SET_CATEGORIES(state, categories) {
       state.categories = categories
     },
+    SET_CATEGORY_INDEXES(state) {
+      state.categories.forEach((category, index) => {
+        category.index = index
+      })
+    },
     SET_CATEGORY(state, category) {
       state.category = category
     },
@@ -49,9 +54,6 @@ export const store = new Vuex.Store({
     },
     SET_CATEGORY_NAME(state, name) {
       state.category.name = name
-    },
-    SET_CATEGORY_INDEX(state, index) {
-      state.category.index = index
     },
     SET_GOALS(state, goals) {
       state.goals = goals
@@ -68,11 +70,14 @@ export const store = new Vuex.Store({
     ADD_CATEGORY(state, categoryObject) {
       state.categories.push(categoryObject)
     },
-    DELETE_CATEGORY(state, categoryId) {
-      state.categories.splice(categoryId, 1)
+    DELETE_CATEGORY(state, index) {
+      state.categories.splice(index, 1)
     },
     DELETE_GOAL(state, index) {
       state.goals.splice(index, 1)
+    },
+    DELETE_STAGE(state, index) {
+      state.stages.splice(index, 1)
     },
     HAS_ERRORS(state, hasErrors) {
       state.hasErrors = hasErrors
@@ -90,6 +95,7 @@ export const store = new Vuex.Store({
       return axios.get(`http://localhost:8000/get_categories`)
         .then(response => {
           commit('SET_CATEGORIES', response.data)
+          commit('SET_CATEGORY_INDEXES')
         }).catch(error => {
           console.log(error)
         });
@@ -229,7 +235,7 @@ export const store = new Vuex.Store({
       return axios.delete(`http://localhost:8000/delete_category/${category.itemToDelete.id}`)
         .then(response => {
           alert(response.data)
-          commit('DELETE_CATEGORY', category.itemToDelete.index)
+          commit('DELETE_CATEGORY', category.index)
         }).catch(error => {
           alert(error.response.data)
         })
@@ -239,6 +245,15 @@ export const store = new Vuex.Store({
         .then(response => {
           alert(response.data)
         commit('DELETE_GOAL', goal.index)
+        }).catch(error => {
+          alert(error.response.data)
+        })
+    },
+    deleteStage({commit}, stage) {
+      return axios.delete(`http://localhost:8000/delete_stage/${stage.itemToDelete.id}`)
+        .then(response => {
+          alert(response.data)
+        commit('DELETE_STAGE', stage.index)
         }).catch(error => {
           alert(error.response.data)
         })

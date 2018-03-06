@@ -13,7 +13,7 @@ export default {
     },
     path: {
       type: String,
-      required: true,
+      required: false,
     },
     deleteFunction: {
       type: String,
@@ -21,7 +21,7 @@ export default {
     },
     index: {
       type: Number,
-      required: false,
+      required: true,
     }
   },
   data() {
@@ -31,10 +31,9 @@ export default {
   },
   methods: {
     remove() {
-      console.log(this.payload.index)
       this.$store.dispatch(this.deleteFunction, this.payload)
         .then(() => {
-          this.$router.push({ path: this.path })
+          if(this.path) this.$router.push({ path: this.path })
         })
     }
   }

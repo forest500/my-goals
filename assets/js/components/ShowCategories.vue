@@ -10,7 +10,7 @@
           Wszystkie
         </router-link>
       </li>
-      <li class="nav-item" v-for="(category, index) in categories" v-bind:key="category.id" v-on:click="setActiveCategory(category, index)">
+      <li class="nav-item" v-for="(category, index) in categories" :key="category.id">
         <router-link :to="{ name: 'category', params: {categoryName: category.name, id: category.id} }" exact class="nav-link text-white">
           {{ category.name }}
         </router-link>
@@ -31,6 +31,7 @@ export default {
     this.loading = true;
     this.$store.dispatch('loadCategories')
       .then(() => {
+        this.$store.commit('SET_CATEGORY_INDEXES')
         this.loading = false;
       })
   },
@@ -45,13 +46,9 @@ export default {
     },
   },
   methods: {
-    setActiveCategory(category, index) {
-      this.$store.commit('SET_CATEGORY_INDEX', index)
-      this.$store.commit('SET_CATEGORY', category)
-    },
     clearActiveCategory() {
       this.$store.commit('SET_CATEGORY', {});
-    }
+    },
   }
 }
 </script>

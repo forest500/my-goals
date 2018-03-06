@@ -5,12 +5,12 @@
     </div>
     <div v-show="!loading">
       <header>
-        <div class="row">
+        <div class="row justify-content-center p-4">
           <h3 class="mr-3">{{ category.name }}</h3>
             <button class="btn btn-info mr-3 h-25">
               <router-link :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact>Edytuj</router-link>
             </button>
-          <delete-button class="h-25" path="/" v-bind:itemToDelete="category" deleteFunction="deleteCategory"></delete-button>
+          <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
         </div>
         <p>{{ category.description }}</p>
       </header>
@@ -19,7 +19,7 @@
           <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
           <li class="container-fluid">
             <div class="row">
-              <h5 class="col-md-2" v-if="!isEditing[index]">{{ goal.name }}</h5>
+              <h5 v-if="!isEditing[index]" class="col-md-2" :id="goal.id">{{ goal.name }}</h5>
               <edit-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
               <delete-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" :index="index" :path="$route.path" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
             </div>
@@ -55,6 +55,7 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.loading = true;
+      this.setActiveCategory()
       this.$store.commit('SET_SHOW_GOAL_FORM', false)
       this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
         .then(() => {
@@ -74,6 +75,7 @@ export default {
   },
   created() {
     this.loading = true;
+    this.setActiveCategory()
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
         this.goals.forEach((goal, index) => {
@@ -88,6 +90,9 @@ export default {
   computed: {
     goals() {
       return this.$store.getters.goals
+    },
+    categories() {
+      return this.$store.getters.categories
     },
     newGoal() {
       return this.$store.getters.newGoal
@@ -105,6 +110,11 @@ export default {
     },
     setIsEditing(index, value) {
       this.$set(this.isEditing, index, value);
+    },
+    setActiveCategory() {
+      this.categories.forEach(category => {
+        if(category.id === this.$route.params.id) this.$store.commit('SET_CATEGORY', category)
+      })
     },
   }
 }
