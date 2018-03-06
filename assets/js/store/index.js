@@ -11,25 +11,28 @@ export const store = new Vuex.Store({
     categories: [],
     category: {},
     categoryInForm: {},
+    allGoals: [],
     goals: [],
     newGoal: {},
     stages: [],
     hasErrors: false,
     formErrors: {},
     showGoalForm: false,
-    loadingGoals: false,
-    loadingMenu: false,
+    alert: {},
+    alertMessage: '',
   },
   getters: {
     categories: state => state.categories,
     category: state => state.category,
     categoryInForm: state => state.categoryInForm,
+    allGoals: state => state.allGoals,
     goals: state => state.goals,
     newGoal: state => state.newGoal,
     stages: state => state.stages,
     hasErrors: state => state.hasErrors,
     formErrors: state => state.formErrors,
     showGoalForm: state => state.showGoalForm,
+    alert: state => state.alert,
   },
   mutations: {
     SET_CATEGORIES(state, categories) {
@@ -54,6 +57,9 @@ export const store = new Vuex.Store({
     },
     SET_CATEGORY_NAME(state, name) {
       state.category.name = name
+    },
+    SET_ALLGOALS(state, goals) {
+      state.allGoals = goals
     },
     SET_GOALS(state, goals) {
       state.goals = goals
@@ -85,10 +91,16 @@ export const store = new Vuex.Store({
     FORM_ERRORS(state, formErrors) {
       state.formErrors = formErrors
     },
-    CLEAR_ERRORS (state) {
+    CLEAR_ERRORS(state) {
       state.formErrors = {}
       state.hasErrors = false
-    }
+    },
+    SET_ALERT(state, alert) {
+      state.alert = alert
+    },
+    UNSET_ALERT(state) {
+      state.alert = {}
+    },
   },
   actions: {
     loadCategories({commit}) {
@@ -103,7 +115,7 @@ export const store = new Vuex.Store({
     loadGoals({commit}) {
       return axios.get(`http://localhost:8000/get_goals`)
         .then(response => {
-          commit('SET_GOALS', response.data)
+          commit('SET_ALLGOALS', response.data)
         }).catch(error => {
           console.log(error)
         });
@@ -130,7 +142,6 @@ export const store = new Vuex.Store({
          description: category.description
       })
         .then(response => {
-          alert(response.data);
           commit('CLEAR_ERRORS')
           commit('SET_CATEGORY', category)
         })
@@ -146,10 +157,12 @@ export const store = new Vuex.Store({
          name: goal.name,
       })
         .then(response => {
-          alert(response.data);
+          commit('SET_ALERT', { goal: true, message: response.data } );
           commit('CLEAR_ERRORS')
           commit('SET_GOAL', goal)
           commit('SET_SHOW_GOAL_FORM', false)
+          console.log(this.state.alert)
+          console.log(this.state.alertMessage)
         })
         .catch(errors => {
           if (errors.response.status === 400) {

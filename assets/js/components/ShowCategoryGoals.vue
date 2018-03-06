@@ -14,19 +14,20 @@
         </div>
         <p>{{ category.description }}</p>
       </header>
-      <ul class="">
-        <div class="container-fluid" v-for="(goal, index) in goals" v-bind:key="goal.id">
+      <ul class="" v-for="(goal, index) in goals" v-bind:key="goal.id">
+        <div class="container-fluid">
           <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
           <li class="container-fluid">
             <div class="row">
               <h5 v-if="!isEditing[index]" class="col-md-2" :id="goal.id">{{ goal.name }}</h5>
               <edit-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
-              <delete-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" :index="index" :path="$route.path" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
+              <delete-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
             </div>
             <show-stages :goalId="goal.id"></show-stages>
           </li>
         </div>
       </ul>
+      <alert-app v-if="alert.goal" class="alert-success" :message="alert.message"></alert-app>
       <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">
           <add-button item="nowy cel"></add-button>
       </div>
@@ -42,6 +43,7 @@ import EditButton from './EditButton.vue'
 import ShowCategoryStages from './ShowCategoryStages.vue'
 import NewGoal from './NewGoal.vue'
 import EditGoal from './EditGoal.vue'
+import AlertApp from './AlertApp.vue'
 
 export default {
   components: {
@@ -51,6 +53,7 @@ export default {
     'show-stages': ShowCategoryStages,
     'new-goal': NewGoal,
     'edit-goal': EditGoal,
+    'alert-app': AlertApp,
   },
   watch: {
     '$route.params.id': function (id) {
@@ -65,7 +68,7 @@ export default {
               this.isEditing = []
             })
         })
-    }
+    },
   },
   data() {
     return {
@@ -78,9 +81,6 @@ export default {
     this.setActiveCategory()
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
-        this.goals.forEach((goal, index) => {
-          this.isEditing[index] = false;
-        })
         this.$store.dispatch('loadCategoryStages', this.$route.params.id)
           .then(() => {
             this.loading = false;
@@ -102,6 +102,9 @@ export default {
     },
     showGoalForm() {
       return this.$store.getters.showGoalForm
+    },
+    alert() {
+      return this.$store.getters.alert
     },
   },
   methods: {

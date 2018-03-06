@@ -24,7 +24,9 @@ export default {
       this.newGoal.categoryId = this.$route.params.id
       this.$store.dispatch('postGoal', this.newGoal)
         .then(() => {
-          if(!this.hasErrors) this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
+          if(!this.hasErrors) {
+            this.$store.dispatch('loadCategoryGoals', this.$route.params.id)         
+          }
         })
     }
   },

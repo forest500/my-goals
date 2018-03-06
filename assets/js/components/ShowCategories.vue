@@ -1,22 +1,22 @@
 <template>
-<header class="mb-4 mt-3">
+<header class="mb-5 mt-4">
   <div v-show="loading" class="loading">
     <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
   </div>
-  <div v-show ="!loading" class="row jumbotron bg-info">
-    <ul class="nav bg-faded nav-pills col-10" role="tablist">
-      <li class="nav-item" v-on:click="clearActiveCategory">
-        <router-link to="/" exact class="nav-link text-white">
-          Wszystkie
-        </router-link>
-      </li>
-      <li class="nav-item" v-for="(category, index) in categories" :key="category.id">
-        <router-link :to="{ name: 'category', params: {categoryName: category.name, id: category.id} }" exact class="nav-link text-white">
-          {{ category.name }}
-        </router-link>
-      </li>
-    </ul>
-    <router-link class="col" to="/nowa_kategoria" exact>
+  <div v-show ="!loading" class="row">
+      <ul class="nav bg-faded nav-pills col-10" role="tablist">
+        <li class="nav-item" v-on:click="clearActiveCategory">
+          <router-link to="/" exact class="nav-link">
+            Wszystkie
+          </router-link>
+        </li>
+        <li class="nav-item" v-for="(category, index) in categories" :key="category.id">
+          <router-link :to="{ name: 'category', params: {categoryName: category.name, id: category.id} }" exact class="nav-link">
+            {{ category.name }}
+          </router-link>
+        </li>
+      </ul>
+    <router-link class="col new-category" to="/nowa_kategoria" exact>
       <button v-on:click="clearActiveCategory" type="button" class="btn btn-success">Nowa kategoria</button>
     </router-link>
   </div>
@@ -31,7 +31,6 @@ export default {
     this.loading = true;
     this.$store.dispatch('loadCategories')
       .then(() => {
-        this.$store.commit('SET_CATEGORY_INDEXES')
         this.loading = false;
       })
   },
@@ -63,6 +62,11 @@ export default {
   transform: translate(-50%, -50%)
 }
 .router-link-active {
-  background: blue;
+  background-color: #778899;
 }
+a.new-category {
+  background-color: inherit;
+}
+
+
 </style>

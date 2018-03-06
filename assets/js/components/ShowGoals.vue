@@ -1,6 +1,6 @@
 <template>
   <ul class="list-group">
-    <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in goals" v-bind:key="goal.id">
+    <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in allGoals">
       <router-link :to="{ name: 'category', params: {categoryName: goal.category, id: goal.categoryId }}" exact>
         {{ goal.name }}
       </router-link>
@@ -16,8 +16,8 @@ export default {
     this.$store.dispatch('loadGoals')
   },
   computed: {
-    goals() {
-      return this.$store.getters.goals
+    allGoals() {
+      return this.$store.getters.allGoals
     }
   },
 }
