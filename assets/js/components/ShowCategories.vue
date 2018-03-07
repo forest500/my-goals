@@ -20,13 +20,18 @@
       <button v-on:click="clearActiveCategory" type="button" class="btn btn-success">Nowa kategoria</button>
     </router-link>
   </div>
+  <alert-app v-if="alert.category" :class="alert.class" :message="alert.message"></alert-app>
 </header>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import AlertApp from './AlertApp.vue'
 
 export default {
+  components: {
+    'alert-app': AlertApp,
+  },
   created() {
     this.loading = true;
     this.$store.dispatch('loadCategories')
@@ -42,6 +47,9 @@ export default {
   computed: {
     categories() {
       return this.$store.getters.categories
+    },
+    alert() {
+      return this.$store.getters.alert
     },
   },
   methods: {

@@ -11,6 +11,8 @@
       <cancel-button slot="cancel-button" v-show="showStageForm" @click.native="showStageForm = !showStageForm"></cancel-button>
     </new-stage>
     <add-button v-show="!showStageForm" @click.native="showStageForm = !showStageForm" item="nowy poziom" class="btn-sm h-25 mb-4"></add-button>
+    <alert-app v-if="alert.stage === goalId" :class="alert.class" :message="alert.message"></alert-app>
+    {{goalId}}
   </div>
 </template>
 
@@ -20,6 +22,7 @@ import StageItem from './StageItem.vue'
 import DeleteButton from './DeleteButton.vue'
 import AddButton from './AddButton.vue'
 import CancelButton from './CancelButton.vue'
+import AlertApp from './AlertApp.vue'
 
 export default {
   props: {
@@ -39,15 +42,16 @@ export default {
     'delete-button': DeleteButton,
     'add-button': AddButton,
     'cancel-button': CancelButton,
+    'alert-app': AlertApp,
   },
   computed: {
     stages() {
       return this.$store.getters.stages
     },
+    alert() {
+      return this.$store.getters.alert
+    },
   },
-  methods: {
-
-  }
 }
 </script>
 

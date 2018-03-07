@@ -12,7 +12,7 @@
             </button>
           <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
         </div>
-        <p>{{ category.description }}</p>
+        <p>{{ category.description }}</p>     
       </header>
       <ul class="" v-for="(goal, index) in goals" v-bind:key="goal.id">
         <div class="container-fluid">
@@ -27,7 +27,7 @@
           </li>
         </div>
       </ul>
-      <alert-app v-if="alert.goal" class="alert-success" :message="alert.message"></alert-app>
+      <alert-app v-if="alert.goal" :class="alert.class" :message="alert.message"></alert-app>
       <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">
           <add-button item="nowy cel"></add-button>
       </div>

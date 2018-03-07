@@ -1,6 +1,6 @@
 <template>
-  <div class="alert alert-dismissible fade show" role="alert">
-    <strong class="text-center mx-auto">{{ message }}</strong>
+  <div class="row alert alert-dismissible fade show" role="alert">
+    <strong class="col text-center">{{ message }}</strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -9,6 +9,10 @@
 <script>
 
 export default {
+  created() {
+    console.log('alert created')
+    setTimeout(this.closeAlert, 1200)
+  },
   props: {
     message: {
       type: String,
@@ -16,7 +20,10 @@ export default {
     },
   },
   methods: {
-
+    closeAlert() {
+      $().alert('close')
+      this.$store.commit('UNSET_ALERT');
+    }
   }
 }
 </script>

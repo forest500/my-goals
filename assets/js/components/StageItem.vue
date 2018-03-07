@@ -12,7 +12,6 @@
         <cancel-button slot="cancel-button" class="mb-2 mr-2" @click.native="isEditing=!isEditing"></cancel-button>
       </edit-stage>
     </div>
-
   </div>
 </template>
 

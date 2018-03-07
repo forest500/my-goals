@@ -142,6 +142,7 @@ export const store = new Vuex.Store({
          description: category.description
       })
         .then(response => {
+          commit('SET_ALERT', { category: true, message: response.data, class: 'alert-success' } )
           commit('CLEAR_ERRORS')
           commit('SET_CATEGORY', category)
         })
@@ -157,7 +158,7 @@ export const store = new Vuex.Store({
          name: goal.name,
       })
         .then(response => {
-          commit('SET_ALERT', { goal: true, message: response.data } );
+          commit('SET_ALERT', { goal: true, message: response.data, class: 'alert-success' } )
           commit('CLEAR_ERRORS')
           commit('SET_GOAL', goal)
           commit('SET_SHOW_GOAL_FORM', false)
@@ -178,7 +179,7 @@ export const store = new Vuex.Store({
          endDate: stage.endDate
       })
         .then(response => {
-          alert(response.data);
+          commit('SET_ALERT', { stage: stage.goalId, message: response.data, class: 'alert-success' } )
           commit('CLEAR_ERRORS')
         })
         .catch(errors => {
@@ -197,7 +198,7 @@ export const store = new Vuex.Store({
          description: category.description
       })
         .then(response => {
-          alert(response.data);
+          commit('SET_ALERT', { category: true, message: response.data, class: 'alert-info' } )
           commit('CLEAR_ERRORS')
           commit('SET_CATEGORY', category)
         })
@@ -213,7 +214,7 @@ export const store = new Vuex.Store({
          name: goal.name,
       })
         .then(response => {
-          alert(response.data);
+          commit('SET_ALERT', { goal: true, message: response.data, class: 'alert-info' } )
           commit('CLEAR_ERRORS')
           commit('SET_GOAL', goal)
         })
@@ -231,7 +232,7 @@ export const store = new Vuex.Store({
          endDate: stage.endDate
       })
         .then(response => {
-          alert(response.data);
+          commit('SET_ALERT', { stage: stage.goalId, message: response.data, class: 'alert-info' } )
           commit('CLEAR_ERRORS')
         })
         .catch(errors => {
@@ -247,7 +248,7 @@ export const store = new Vuex.Store({
     deleteCategory({commit}, category) {
       return axios.delete(`http://localhost:8000/delete_category/${category.itemToDelete.id}`)
         .then(response => {
-          alert(response.data)
+          commit('SET_ALERT', { category: true, message: response.data, class: 'alert-danger' } )
           commit('DELETE_CATEGORY', category.index)
         }).catch(error => {
           alert(error.response.data)
@@ -256,7 +257,7 @@ export const store = new Vuex.Store({
     deleteGoal({commit}, goal) {
       return axios.delete(`http://localhost:8000/delete_goal/${goal.itemToDelete.id}`)
         .then(response => {
-          alert(response.data)
+          commit('SET_ALERT', { goal: true, message: response.data, class: 'alert-danger' } )
         commit('DELETE_GOAL', goal.index)
         }).catch(error => {
           alert(error.response.data)
@@ -265,7 +266,7 @@ export const store = new Vuex.Store({
     deleteStage({commit}, stage) {
       return axios.delete(`http://localhost:8000/delete_stage/${stage.itemToDelete.id}`)
         .then(response => {
-          alert(response.data)
+          commit('SET_ALERT', { stage: stage.itemToDelete.goalId, message: response.data, class: 'alert-danger' } )
         commit('DELETE_STAGE', stage.index)
         }).catch(error => {
           alert(error.response.data)
