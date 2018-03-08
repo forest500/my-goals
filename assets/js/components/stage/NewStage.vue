@@ -1,8 +1,8 @@
 <template>
 <div>
-    <stage-form :stage="stage" v-bind:httpFunction="put">
+    <stage-form :stage="newStage" v-bind:httpFunction="post">
       <div slot="button">
-        <save-button slot="button" v-bind:itemToEdit="stage" class="ml-2 mb-2 mr-2"></save-button>
+        <save-button class="mx-2"></save-button>
         <slot name="cancel-button"></slot>
       </div>
     </stage-form>
@@ -12,7 +12,8 @@
 <script>
 import axios from 'axios';
 import StageForm from './StageForm.vue';
-import SaveButton from './SaveButton.vue'
+import SaveButton from '../button/SaveButton.vue'
+var moment = require('moment');
 
 export default {
   components: {
@@ -20,24 +21,27 @@ export default {
     'save-button': SaveButton,
   },
   props: {
-    stage: {
-      type: Object,
+    goalId: {
+      type: Number,
       required: true
     },
-    isEditing: {
-      type: Boolean,
-      required: true
+  },
+  data() {
+    return {
+      newStage: {},
     }
   },
   methods: {
-    put() {
-      this.$store.dispatch('editStage', this.stage)
+    post() {
+      this.newStage.goalId = this.goalId
+      this.$store.dispatch('postStage', this.newStage)
         .then(() => {
           if(!this.hasErrors) {
-            this.$emit('update:isEditing', false)
+            this.$store.dispatch('loadCategoryStages', this.$route.params.id)
+            this.newStage.endDate = moment(this.newStage.endDate.date).format('YYYY-MM-DD')
           }
         })
-    },
+    }
   },
   computed: {
     hasErrors () {

@@ -17,10 +17,10 @@
 
 <script>
 import axios from 'axios';
-import EditButton from './EditButton.vue'
+import EditButton from '../button/EditButton.vue'
 import EditStage from './EditStage.vue'
-import CancelButton from './CancelButton.vue'
-import DeleteButton from './DeleteButton.vue'
+import CancelButton from '../button/CancelButton.vue'
+import DeleteButton from '../button/DeleteButton.vue'
 
 var moment = require('moment');
 

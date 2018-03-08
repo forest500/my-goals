@@ -18,7 +18,7 @@
 
 <script>
 import axios from 'axios';
-import AppError from './AppError.vue';
+import AppError from '../AppError.vue';
 import Datepicker from 'vuejs-datepicker';
 var moment = require('moment');
 

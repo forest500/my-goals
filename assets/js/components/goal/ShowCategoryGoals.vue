@@ -12,7 +12,7 @@
             </button>
           <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
         </div>
-        <p>{{ category.description }}</p>     
+        <p>{{ category.description }}</p>
       </header>
       <ul class="" v-for="(goal, index) in goals" v-bind:key="goal.id">
         <div class="container-fluid">
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import DeleteButton from './DeleteButton.vue'
-import AddButton from './AddButton.vue'
-import EditButton from './EditButton.vue'
-import ShowCategoryStages from './ShowCategoryStages.vue'
+import DeleteButton from '../button/DeleteButton.vue'
+import AddButton from '../button/AddButton.vue'
+import EditButton from '../button/EditButton.vue'
+import ShowCategoryStages from '../stage/ShowCategoryStages.vue'
 import NewGoal from './NewGoal.vue'
 import EditGoal from './EditGoal.vue'
-import AlertApp from './AlertApp.vue'
+import AlertApp from '../AlertApp.vue'
 
 export default {
   components: {

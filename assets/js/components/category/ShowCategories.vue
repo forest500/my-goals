@@ -26,7 +26,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AlertApp from './AlertApp.vue'
+import AlertApp from '../AlertApp.vue'
 
 export default {
   components: {

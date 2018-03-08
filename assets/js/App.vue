@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ShowCategories from './components/ShowCategories.vue';
+import ShowCategories from './components/category/ShowCategories.vue';
 
 export default {
   components: {

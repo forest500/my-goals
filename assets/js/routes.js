@@ -1,8 +1,8 @@
-import ShowCategories from './components/ShowCategories.vue';
-import ShowGoals from './components/ShowGoals.vue';
-import NewCategory from './components/NewCategory.vue';
-import EditCategory from './components/EditCategory.vue';
-import ShowCategoryGoals from './components/ShowCategoryGoals.vue';
+import ShowCategories from './components/category/ShowCategories.vue';
+import ShowGoals from './components/goal/ShowGoals.vue';
+import NewCategory from './components/category/NewCategory.vue';
+import EditCategory from './components/category/EditCategory.vue';
+import ShowCategoryGoals from './components/goal/ShowCategoryGoals.vue';
 
 export default [
   { path: '/', name: 'home', component: ShowGoals,},

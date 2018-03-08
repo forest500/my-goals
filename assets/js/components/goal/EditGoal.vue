@@ -10,8 +10,8 @@
 <script>
 import axios from 'axios';
 import GoalForm from './GoalForm.vue';
-import SaveButton from './SaveButton.vue'
-import CancelButton from './CancelButton.vue'
+import SaveButton from '../button/SaveButton.vue'
+import CancelButton from '../button/CancelButton.vue'
 
 export default {
   components: {
