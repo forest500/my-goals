@@ -66,6 +66,12 @@ class Stage
      */
     private $goal;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\User")
+    * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+    */
+    private $userId;
+
     public function  __construct()
     {
         $this->status = true;
@@ -196,4 +202,24 @@ class Stage
 
         return $this;
     }
+
+    /**
+     * Get the value of userId
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set the value of userId
+     *
+     * @return  self
+     */
+    public function setUserId(User $user)
+    {
+        $this->userId = $user;
+
+        return $this;
+    }    
 }

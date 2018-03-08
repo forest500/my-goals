@@ -31,6 +31,9 @@ class StageController extends Controller
         $form->submit($data);
 
         if($form->isSubmitted() && $form->isValid()) {
+          $user = $this->getUser();
+          $stage->setUserId($user);
+
           $em = $this->getDoctrine()->getManager();
           $em->persist($stage);
           $em->flush();
@@ -50,7 +53,9 @@ class StageController extends Controller
      */
     public function getAll(Request $request)
     {
-        $categories = $this->getDoctrine()->getRepository(Stage::class)->findStages();
+        $userId = $this->getUser()->getId();
+
+        $categories = $this->getDoctrine()->getRepository(Stage::class)->findStages($userId);
 
         return $this->json($categories);
     }

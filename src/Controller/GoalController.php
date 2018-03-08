@@ -30,6 +30,9 @@ class GoalController extends Controller
 
         $form->submit($data);
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $goal->setUserId($user);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($goal);
             $em->flush();
@@ -50,7 +53,9 @@ class GoalController extends Controller
      */
     public function getAll(Request $request)
     {
-        $categories = $this->getDoctrine()->getRepository(Goal::class)->findGoals();
+        $userId = $this->getUser()->getId();
+
+        $categories = $this->getDoctrine()->getRepository(Goal::class)->findGoals($userId);
 
         return $this->json($categories);
     }

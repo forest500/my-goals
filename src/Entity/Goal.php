@@ -47,13 +47,19 @@ class Goal
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Stage", mappedBy="goal")
      */
-    private $stages; 
+    private $stages;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\User")
+    * @ORM\JoinColumn(name="$userId", referencedColumnName="id")
+    */
+    private $userId;
 
     public function __construct()
     {
         $this->stages = new ArrayCollection();
         $this->status = true;
-    }    
+    }
 
     /**
      * @return Collection|Stage[]
@@ -75,7 +81,7 @@ class Goal
 
     /**
      * Get the value of id
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -83,7 +89,7 @@ class Goal
 
     /**
      * Get min = 3,
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -93,7 +99,7 @@ class Goal
      * Set min = 3,
      *
      * @return  self
-     */ 
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -103,7 +109,7 @@ class Goal
 
     /**
      * Get the value of status
-     */ 
+     */
     public function getStatus()
     {
         return $this->status;
@@ -113,7 +119,7 @@ class Goal
      * Set the value of status
      *
      * @return  self
-     */ 
+     */
     public function setStatus($status)
     {
         switch ($status) {
@@ -124,9 +130,29 @@ class Goal
                 $status = false;
             break;
         }
-        
+
         $this->status = $status;
 
         return $this;
     }
+
+    /**
+     * Get the value of userId
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set the value of userId
+     *
+     * @return  self
+     */
+    public function setUserId(User $user)
+    {
+        $this->userId = $user;
+
+        return $this;
+    }    
 }

@@ -45,6 +45,12 @@ class Category
     private $description;
 
     /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\User")
+    * @ORM\JoinColumn(name="$userId", referencedColumnName="id")
+    */
+    private $userId;
+
+    /**
      * Get the value of id
      */
     public function getId()
@@ -88,6 +94,26 @@ class Category
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of userId
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Set the value of userId
+     *
+     * @return  self
+     */
+    public function setUserId(User $user)
+    {
+        $this->userId = $user;
 
         return $this;
     }

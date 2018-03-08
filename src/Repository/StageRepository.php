@@ -13,14 +13,16 @@ class StageRepository extends ServiceEntityRepository
         parent::__construct($registry, Stage::class);
     }
 
-    public function findStages()
+    public function findStages($userId)
     {
         return $this->getEntityManager()->createQuery(
             'SELECT s.id, g.name as goal, g.id as goalId, s.number, s.name, s.status, s.award, s.endDate
             FROM App\Entity\Stage s
             JOIN s.goal g
-            WITH s.goal = g.id'
+            WITH s.goal = g.id
+            WHERE s.userId = :userId'
         )
+        ->setParameter('userId', $userId)        
         ->getResult();
     }
 

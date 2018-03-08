@@ -20,13 +20,16 @@ class CategoryController extends Controller
     public function new(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-
         $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
 
+        $form = $this->createForm(CategoryType::class, $category);
         $form->submit($data);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $user = $this->getUser();
+            $category->setUserId($user);
+
+            $em = $this->getDoctrine()->getManager();            
             $em->persist($category);
             $em->flush();
 
@@ -46,7 +49,9 @@ class CategoryController extends Controller
      */
     public function getAll(Request $request)
     {
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories();
+        $userId = $this->getUser()->getId();
+
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories($userId);
 
         return $this->json($categories);
     }
