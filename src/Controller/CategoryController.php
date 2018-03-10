@@ -29,7 +29,7 @@ class CategoryController extends Controller
             $user = $this->getUser();
             $category->setUserId($user);
 
-            $em = $this->getDoctrine()->getManager();            
+            $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
 
@@ -97,13 +97,13 @@ class CategoryController extends Controller
      */
     public function delete(Category $category, Request $request)
     {
-        try {
+        // try {
             $em = $this->getDoctrine()->getManager();
             $em->remove($category);
             $em->flush();
-        } catch (\Doctrine\DBAL\DBALException $e) {
-            return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
-        }
+        // } catch (\Doctrine\DBAL\DBALException $e) {
+        //     return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
+        // }
 
         return $this->json("Kategoria została usunieta");
     }

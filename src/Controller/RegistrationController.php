@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Service\ObjectGenerator;
 
 class RegistrationController extends Controller
 {
@@ -52,8 +53,9 @@ class RegistrationController extends Controller
         $activateUrl = $this->get('router')->generate('user_activation', array(
               'email' => $email
           ));
+
         $decodedEmail = base64_decode($email);
-        $message = (new \Swift_Message('Witamy w dieta i trening! Potwierdź swoją rejestrację!'))
+        $message = (new \Swift_Message('Witamy w naszym serwisie moje cele!'))
             ->setFrom('lasekdeveloper@gmail.com')
             ->setTo($decodedEmail)
             ->setBody(
@@ -70,11 +72,12 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @Route("/activate{email}", name="user_activation")
+     * @Route("/activate/{email}", name="user_activation")
      */
-    public function activationAction($email)
+    public function activationAction($email, ObjectGenerator $generator)
     {
         $decodedEmail = base64_decode($email);
+
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->findOneByEmail($decodedEmail);
 
@@ -83,9 +86,13 @@ class RegistrationController extends Controller
                 'No user found for email '.$decodedEmail
             );
         }
+        if(!$user->getIsActive()) {
+          $user->setIsActive(1);
+          $generator->generateCategory($user);
 
-        $user->setIsActive(1);
-        $em->flush();
+          $em->flush();
+        }
+
         return $this->redirectToRoute('login');
     }
 
