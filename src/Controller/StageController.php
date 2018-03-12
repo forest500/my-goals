@@ -20,7 +20,7 @@ class StageController extends Controller
      * @Route("/new_stage/{goal}", name="new_stage", options={"utf8": true})
      * @Method("POST")
      */
-    public function new(Goal $goal, Request $request, ValidatorInterface $validator)
+    public function post(Goal $goal, Request $request, ValidatorInterface $validator)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -38,7 +38,7 @@ class StageController extends Controller
           $em->persist($stage);
           $em->flush();
 
-          return $this->json("Dodano poziom!");
+          return $this->json("Dodano poziom!", 201);
         }
         if($form->isSubmitted() && !$form->isValid()) {
           $errors = $this->getErrorsFromForm($form);
@@ -97,7 +97,7 @@ class StageController extends Controller
      * @Route("/update_stage/{stage}", name="update_stage", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(Stage $stage, Request $request, ValidatorInterface $validator)
+    public function put(Stage $stage, Request $request, ValidatorInterface $validator)
     {
       $data = json_decode($request->getContent(), true);
 

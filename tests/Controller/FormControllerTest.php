@@ -31,5 +31,5 @@ class FormControllerTest extends WebTestCase
         $crawler = $client->submit($form);
 
         $this->assertContains('Welcome!', $client->getResponse()->getContent());
-    }    
+    }
 }

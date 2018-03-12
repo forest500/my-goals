@@ -251,7 +251,7 @@ export const store = new Vuex.Store({
           commit('SET_ALERT', { category: true, message: response.data, class: 'alert-danger' } )
           commit('DELETE_CATEGORY', category.index)
         }).catch(error => {
-          alert(error.response.data)
+          commit('SET_ALERT', { category: true, message: error.response.data, class: 'alert-danger' } )
         })
     },
     deleteGoal({commit}, goal) {
@@ -260,7 +260,7 @@ export const store = new Vuex.Store({
           commit('SET_ALERT', { goal: true, message: response.data, class: 'alert-danger' } )
         commit('DELETE_GOAL', goal.index)
         }).catch(error => {
-          alert(error.response.data)
+          commit('SET_ALERT', { goal: true, message: error.response.data, class: 'alert-danger' } )
         })
     },
     deleteStage({commit}, stage) {

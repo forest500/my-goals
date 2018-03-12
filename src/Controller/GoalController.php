@@ -19,7 +19,7 @@ class GoalController extends Controller
      * @Route("/new_goal/{category}", name="new_goal", options={"utf8": true})
      * @Method("POST")
      */
-    public function new(Category $category, Request $request)
+    public function post(Category $category, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -86,7 +86,7 @@ class GoalController extends Controller
      * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(Goal $goal, Request $request)
+    public function put(Goal $goal, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -97,7 +97,7 @@ class GoalController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->json("Zmieniono cel!");
+            return $this->json("Zmieniono cel!", 201);
         }
 
         if($form->isSubmitted() && !$form->isValid()) {
@@ -140,9 +140,13 @@ class GoalController extends Controller
      */
     public function delete(Goal $goal, Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($goal);
-        $em->flush();
+      try {
+          $em = $this->getDoctrine()->getManager();
+          $em->remove($goal);
+          $em->flush();
+      } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+          return $this->json("Aby usunąc wybrany cel nalezy najpierw usunac poziomy, ktore sie w nim znajduja", 400);
+      }
 
         return $this->json("Cel został usunięty");
     }

@@ -17,7 +17,7 @@ class CategoryController extends Controller
      * @Route("/new_category", name="new_category")
      * @Method("POST")
      */
-    public function new(Request $request)
+    public function post(Request $request)
     {
         $data = json_decode($request->getContent(), true);
         $category = new Category();
@@ -33,7 +33,7 @@ class CategoryController extends Controller
             $em->persist($category);
             $em->flush();
 
-            return $this->json("Dodano kategorię!");
+            return $this->json("Dodano kategorię!", 201);
         }
 
         if($form->isSubmitted() && !$form->isValid()) {
@@ -71,7 +71,7 @@ class CategoryController extends Controller
      * @Route("/update_category/{category}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
-    public function update(Category $category, Request $request)
+    public function put(Category $category, Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -97,13 +97,13 @@ class CategoryController extends Controller
      */
     public function delete(Category $category, Request $request)
     {
-        // try {
+        try {
             $em = $this->getDoctrine()->getManager();
             $em->remove($category);
             $em->flush();
-        // } catch (\Doctrine\DBAL\DBALException $e) {
-        //     return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
-        // }
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+            return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
+        }
 
         return $this->json("Kategoria została usunieta");
     }
