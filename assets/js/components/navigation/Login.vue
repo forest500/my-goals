@@ -1,8 +1,9 @@
 <template>
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-6 offset-md-3 mt-3">
     <form v-on:submit.prevent="login" class="form">
       <div class="bd-danger"></div>
       <h3 class="text-center">Zaloguj się</h3>
+      <div class="text-danger">{{ authError }}</div>
       <div class="form-group">
         <label for="email">Email</label>
         <input v-model="credentials.email" type="email" name="email" id="email" class="form-control">
@@ -11,8 +12,8 @@
         <label for="password">Hasło</label>
         <input v-model="credentials.password" type="password" name="password" id="password" class="form-control">
       </div>
-      <div class="form-group">
-        <input type="submit" value="Login" class="btn btn-large btn-primary">
+      <div class="form-group float-center">
+        <input type="submit" value="Zaloguj się" class="btn btn-large btn-primary">
       </div>
     </form>
   </div>
@@ -30,7 +31,15 @@ export default {
   },
   methods: {
     login() {
-      this.$store.dispatch('signIn', this.credentials)
+      this.$store.dispatch('authRequest', this.credentials)
+        .then((response) => {
+          this.$router.push('/')
+        })
+    }
+  },
+  computed: {
+    authError() {
+      return this.$store.getters.authError
     }
   }
 

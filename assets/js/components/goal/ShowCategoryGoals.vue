@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-if="errorMsg" class="text-danger text-center">{{ errorMsg }}</div>
     <div v-show="loading" class="loading">
       <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
     </div>
@@ -63,9 +64,14 @@ export default {
       this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
         .then(() => {
           this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-            .then(() => {
-              this.loading = false
-              this.isEditing = []
+            .then((response) => {
+              if(typeof response !== 'undefined' && response.name === 'Error') {
+                console.log(response)
+                this.loading = true
+              } else {
+                this.loading = false
+                this.isEditing = []
+              }
             })
         })
     },
@@ -74,6 +80,7 @@ export default {
     return {
       isEditing: [],
       loading: false,
+      errorMsg: ''
     }
   },
   created() {
@@ -82,8 +89,14 @@ export default {
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
         this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-          .then(() => {
-            this.loading = false;
+          .then((response) => {
+            if(typeof response !== 'undefined' && response.name === 'Error') {
+              console.log(response)
+              this.loading = true
+            } else {
+              this.loading = false
+              this.isEditing = []
+            }
             })
       })
   },

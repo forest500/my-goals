@@ -1,25 +1,40 @@
 <template>
 <div>
-  <show-categories></show-categories>
-  <router-view></router-view>
+    <nav-bar v-if="isAuthenticated"></nav-bar>
+    <router-view v-if="!loading"></router-view>
 </div>
 </template>
 
 <script>
-import ShowCategories from './components/category/ShowCategories.vue';
+import NavBar from './components/navigation/NavBar.vue';
+import axios from 'axios'
 
 export default {
+  created: function () {
+    axios.interceptors.response.use(undefined, function (err) {
+      return new Promise(function (resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch('authLogout')
+            .then(() => {
+              console.log('error')
+              this.$router.push('/login')
+            })
+        }
+        throw err;
+      });
+    });
+  },
   components: {
-    'show-categories': ShowCategories,
+    'nav-bar': NavBar,
   },
-  data() {
-    return {
-
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    },
+    loading() {
+      return this.$store.getters.loading
     }
-  },
-  methods: {
-
-  },
+  }
 }
 </script>
 
