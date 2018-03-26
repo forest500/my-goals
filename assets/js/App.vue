@@ -10,20 +10,6 @@ import NavBar from './components/navigation/NavBar.vue';
 import axios from 'axios'
 
 export default {
-  created: function () {
-    axios.interceptors.response.use(undefined, function (err) {
-      return new Promise(function (resolve, reject) {
-        if (err.status === 401) {
-          this.$store.dispatch('authLogout')
-            .then(() => {
-              console.log('error')
-              this.$router.push('/login')
-            })
-        }
-        throw err;
-      });
-    });
-  },
   components: {
     'nav-bar': NavBar,
   },
@@ -31,6 +17,14 @@ export default {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated
     },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('authLogout')
+        .then(() => {
+          this.$router.push('/login')
+        })
+    }
   }
 }
 </script>

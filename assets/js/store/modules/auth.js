@@ -32,7 +32,7 @@ const mutations = {
   }
 }
 const actions = {
-  authRequest({commit, dispatch}, user) {
+  authRequest({commit}, user) {
     return new Promise((resolve, reject) => {
       axios({url: AUTH_LOCATION, data: user, method: 'POST' })
         .then(response => {
@@ -53,7 +53,7 @@ const actions = {
       })
     })
   },
-  authLogout: ({commit, dispatch}) => {
+  authLogout: ({commit}) => {
     return new Promise((resolve, reject) => {
       commit('AUTH_LOGOUT')
       localStorage.removeItem('user-token')

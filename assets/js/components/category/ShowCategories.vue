@@ -4,6 +4,11 @@
   <div v-show="loading" class="loading">
     <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
   </div>
+  <div class="container">
+    <div class="row justify-content-end my-3">
+        <slot class="" name="logout"></slot>
+    </div>
+  </div>
   <div v-show ="!loading" class="container">
     <div class="row">
         <ul class="nav bg-faded nav-pills" role="tablist">
@@ -18,14 +23,9 @@
             </router-link>
           </li>
         </ul>
-       <router-link class="ml-auto new-category" to="/nowa_kategoria" exact>
+       <router-link class="ml-auto" to="/nowa_kategoria" exact>
           <button v-on:click="clearActiveCategory" type="button" class="btn btn-success">Nowa kategoria</button>
         </router-link>
-      </div>
-  </div>
-  <div class="container">
-    <div class="row justify-content-end">
-        <slot class="" name="logout"></slot>
     </div>
   </div>
 
