@@ -18,7 +18,8 @@ use App\Form\CategoryType;
 class CategoryController extends Controller
 {
     /**
-     * @Route("/new_category", name="new_category")
+     * @Route("/new_category.{_format}", name="new_category",
+    *  defaults={"_format": "json"})
      * @Method("POST")
      */
     public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor)
@@ -51,7 +52,6 @@ class CategoryController extends Controller
     public function getAll(Request $request)
     {
         $userId = $this->getUser()->getId();
-
         $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories($userId);
 
         return $this->json($categories);

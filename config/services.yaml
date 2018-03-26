@@ -29,3 +29,9 @@ services:
     jwt_authenticator:
         class: App\Security\JwtAuthenticator
         autowire: true
+
+    api_exception_subscriber:
+        class: App\EventListener\ApiExceptionSubscriber
+        arguments: []
+        tags:
+            - { name: kernel.event_subscriber }

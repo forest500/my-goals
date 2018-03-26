@@ -1,5 +1,6 @@
 <?php
 namespace App\Api;
+
 /**
  * A wrapper for holding data to be used for a application/problem+json response
  */
@@ -44,5 +45,10 @@ class ApiProblem
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    public function getTitle()
+    {
+      return $this->title;
     }
 }
