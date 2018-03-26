@@ -36,6 +36,7 @@ class RegisterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => User::class,
+            'csrf_protection' => false
         ));
     }
 }

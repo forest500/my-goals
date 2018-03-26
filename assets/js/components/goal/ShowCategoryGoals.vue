@@ -8,9 +8,7 @@
       <header>
         <div class="row justify-content-center p-4">
           <h3 class="mr-3">{{ category.name }}</h3>
-            <button class="btn btn-info mr-3 h-25">
-              <router-link :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact>Edytuj</router-link>
-            </button>
+            <router-link tag="button" class="btn btn-info mr-3 h-25"  :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact>Edytuj</router-link>
           <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
         </div>
         <p>{{ category.description }}</p>
@@ -63,17 +61,9 @@ export default {
       this.$store.commit('SET_SHOW_GOAL_FORM', false)
       this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
         .then(() => {
-          this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-            .then((response) => {
-              if(typeof response !== 'undefined' && response.name === 'Error') {
-                console.log(response)
-                this.loading = true
-              } else {
-                this.loading = false
-                this.isEditing = []
-              }
-            })
-        })
+          this.loadCategoryStages()
+        }
+      )
     },
   },
   data() {
@@ -88,17 +78,9 @@ export default {
     this.setActiveCategory()
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
-        this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-          .then((response) => {
-            if(typeof response !== 'undefined' && response.name === 'Error') {
-              console.log(response)
-              this.loading = true
-            } else {
-              this.loading = false
-              this.isEditing = []
-            }
-            })
-      })
+        this.loadCategoryStages()
+      }
+    )
   },
   computed: {
     goals() {
@@ -132,6 +114,17 @@ export default {
         if(category.id === this.$route.params.id) this.$store.commit('SET_CATEGORY', category)
       })
     },
+    loadCategoryStages() {
+      this.$store.dispatch('loadCategoryStages', this.$route.params.id)
+        .then((response) => {
+          if(typeof response !== 'undefined' && response.name === 'Error') {
+            this.loading = true
+          } else {
+            this.loading = false
+            this.isEditing = []
+          }
+        })
+      }
   }
 }
 </script>
@@ -143,6 +136,7 @@ export default {
   top: 50%;
   left: 50%;
   margin-right: -50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 </style>

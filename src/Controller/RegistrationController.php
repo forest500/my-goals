@@ -5,59 +5,58 @@ namespace App\Controller;
 use App\Form\RegisterType;
 use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Service\ObjectGenerator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormInterface;
 
 class RegistrationController extends Controller
 {
 
     /**
      * @Route("/register", name="registration")
+     * @Method("POST")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer)
     {
-        if ($this->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('homepage');
-        }
-
+        $data = json_decode($request->getContent(), true);
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
+        $form->submit($data);
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
+        if($form->isSubmitted() && $form->isValid()) {
+          $password = $passwordEncoder->encodePassword($user, $data['plainPassword']);
+          $user->setPassword($password);
+          $user->generateActivationCode();
 
-            $databaseUser = $this->getDoctrine()->getManager();
-            $databaseUser->persist($user);
-            $databaseUser->flush();
+          $this->sendConfirmationEmail($data['email'], $user->getActivationCode(), $mailer);
+          $em = $this->getDoctrine()->getManager();
+          $em->persist($user);
+          $em->flush();
 
-            $encodedEmail = base64_encode($user->getEmail());
 
-            return $this->redirectToRoute('registration_email', array('email' => $encodedEmail));
+
+          return $this->json("Dodano nowego użytkownika", 201);
         }
+        if($form->isSubmitted() && !$form->isValid()) {
+          $errors = $this->getErrorsFromForm($form);
 
-        return $this->render(
-            'forms/register.html.twig',
-            array('form' => $form->createView())
-        );
+          return $this->json($errors, 400);
+        }
     }
 
-    /**
-     * @Route("/register_email/{email}", name="registration_email")
-     */
-    public function emailAction($email, \Swift_Mailer $mailer)
+    public function sendConfirmationEmail($email, $activationCode, \Swift_Mailer $mailer)
     {
         $activateUrl = $this->get('router')->generate('user_activation', array(
-              'email' => $email
+              'activationCode' => $activationCode
           ));
 
-        $decodedEmail = base64_decode($email);
         $message = (new \Swift_Message('Witamy w naszym serwisie moje cele!'))
             ->setFrom('lasekdeveloper@gmail.com')
-            ->setTo($decodedEmail)
+            ->setTo($email)
             ->setBody(
                 $this->renderView(
                     'emails/registration.html.twig',
@@ -67,23 +66,19 @@ class RegistrationController extends Controller
             );
 
         $mailer->send($message);
-
-        return $this->render('forms/confirm.html.twig');
     }
 
     /**
-     * @Route("/activate/{email}", name="user_activation")
+     * @Route("/activate/{activationCode}", name="user_activation")
      */
-    public function activationAction($email, ObjectGenerator $generator)
+    public function activationAction($activationCode, ObjectGenerator $generator)
     {
-        $decodedEmail = base64_decode($email);
-
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository(User::class)->findOneByEmail($decodedEmail);
+        $user = $em->getRepository(User::class)->findOneByActivationCode($activationCode);
 
         if (!$user) {
             throw $this->createNotFoundException(
-                'No user found for email '.$decodedEmail
+                'Nie znaleziono użytkownika'
             );
         }
         if(!$user->getIsActive()) {
@@ -93,7 +88,7 @@ class RegistrationController extends Controller
           $em->flush();
         }
 
-        return $this->redirectToRoute('login');
+        return $this->redirectToRoute('user_confirmation');
     }
 
     /**
@@ -101,6 +96,23 @@ class RegistrationController extends Controller
      */
     public function confirmAction()
     {
-        return $this->render('default/confirm.html.twig');
+        return $this->render('forms/confirm.html.twig');
     }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
+    }
+
 }

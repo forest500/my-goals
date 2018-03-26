@@ -7,23 +7,30 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormInterface;
+use App\Service\FormValidator;
+use App\Service\FormProcessor;
 use App\Entity\Category;
 use App\Form\CategoryType;
 
+/**
+ * @Route("/api")
+ */
 class CategoryController extends Controller
 {
     /**
      * @Route("/new_category", name="new_category")
      * @Method("POST")
      */
-    public function post(Request $request)
+    public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-        $data = json_decode($request->getContent(), true);
         $category = new Category();
 
         $form = $this->createForm(CategoryType::class, $category);
-        $form->submit($data);
+        $formProcessor->processForm($form, $request);
+
+        if($form->isSubmitted() && !$form->isValid()) {
+            return $validator->createValidationErrorResponse($form);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
@@ -34,12 +41,6 @@ class CategoryController extends Controller
             $em->flush();
 
             return $this->json("Dodano kategorię!", 201);
-        }
-
-        if($form->isSubmitted() && !$form->isValid()) {
-            $errors = $this->getErrorsFromForm($form);
-
-            return $this->json($errors, 400);
         }
     }
 
@@ -71,23 +72,21 @@ class CategoryController extends Controller
      * @Route("/update_category/{category}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Category $category, Request $request)
+    public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-        $data = json_decode($request->getContent(), true);
 
         $form = $this->createForm(CategoryType::class, $category);
-        $form->submit($data);
+        $formProcessor->processForm($form, $request);
+
+        if($form->isSubmitted() && !$form->isValid()) {
+            return $validator->createValidationErrorResponse($form);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
             return $this->json("Kategoria została zmieniona");
-        }
-
-        if($form->isSubmitted() && !$form->isValid()) {
-            $errors = $this->getErrorsFromForm($form);
-
-            return $this->json($errors, 400);
         }
     }
 
@@ -106,21 +105,5 @@ class CategoryController extends Controller
         }
 
         return $this->json("Kategoria została usunieta");
-    }
-
-    private function getErrorsFromForm(FormInterface $form)
-    {
-        $errors = array();
-        foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
-        }
-        foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                if ($childErrors = $this->getErrorsFromForm($childForm)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
-            }
-        }
-        return $errors;
     }
 }

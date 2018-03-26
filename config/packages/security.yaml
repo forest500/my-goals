@@ -9,31 +9,37 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        refresh:
+            pattern:  ^/api/token/refresh
+            stateless: true
+            anonymous: true
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        secured_area:
-            anonymous: ~
-            pattern: ^/
-            http_basic: ~
-            provider: our_db_provider
-            form_login:
-                login_path: login
-                check_path: login
-                always_use_default_target_path: true
-                default_target_path: /
-                username_parameter: login[email]
-                password_parameter: login[password]
-                csrf_token_generator: security.csrf.token_manager
-
-            logout:
-                path: /logout
-                target: /login
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                username_path: email
+                password_path: password
+                require_previous_session: false
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+                entry_point: jwt_authenticator
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/confirm, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/activate, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_USER }

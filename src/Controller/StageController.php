@@ -7,28 +7,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Form\FormInterface;
+use App\Service\FormValidator;
+use App\Service\FormProcessor;
 use App\Entity\Stage;
 use App\Entity\Goal;
 use App\Entity\Category;
 use App\Form\StageType;
 
+/**
+ * @Route("/api")
+ */
 class StageController extends Controller
 {
     /**
      * @Route("/new_stage/{goal}", name="new_stage", options={"utf8": true})
      * @Method("POST")
      */
-    public function post(Goal $goal, Request $request, ValidatorInterface $validator)
+    public function post(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-        $data = json_decode($request->getContent(), true);
-
         $stage = new stage();
         $stage->setgoal($goal);
 
         $form = $this->createForm(StageType::class, $stage);
-        $form->submit($data);
+        $formProcessor->processForm($form, $request);
+
+        if($form->isSubmitted() && !$form->isValid()) {
+            return $validator->createValidationErrorResponse($form);
+        }
 
         if($form->isSubmitted() && $form->isValid()) {
           $user = $this->getUser();
@@ -39,11 +44,6 @@ class StageController extends Controller
           $em->flush();
 
           return $this->json("Dodano poziom!", 201);
-        }
-        if($form->isSubmitted() && !$form->isValid()) {
-          $errors = $this->getErrorsFromForm($form);
-
-          return $this->json($errors, 400);
         }
     }
 
@@ -97,12 +97,14 @@ class StageController extends Controller
      * @Route("/update_stage/{stage}", name="update_stage", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Stage $stage, Request $request, ValidatorInterface $validator)
+    public function put(Stage $stage, Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-      $data = json_decode($request->getContent(), true);
-
       $form = $this->createForm(StageType::class, $stage);
-      $form->submit($data);
+      $formProcessor->processForm($form, $request);
+
+      if($form->isSubmitted() && !$form->isValid()) {
+          return $validator->createValidationErrorResponse($form);
+      }
 
       if($form->isSubmitted() && $form->isValid()) {
         $em = $this->getDoctrine()->getManager();
@@ -110,38 +112,6 @@ class StageController extends Controller
 
         return $this->json("Zmodyfikowano poziom!");
       }
-      if($form->isSubmitted() && !$form->isValid()) {
-        $errors = $this->getErrorsFromForm($form);
-
-        return $this->json($errors, 400);
-      }
-    }
-
-    /**
-     * @Route("/update_stage_status/{stage}", name="update_stage_status", options={"utf8": true})
-     * @Method("PUT")
-     */
-    public function updateStatus(Stage $stage, Request $request, ValidatorInterface $validator)
-    {
-        $status = $request->get('status');
-        $name = $stage->getName();
-
-        $stage->setStatus($status);
-
-        $errors = $validator->validate($stage);
-
-        if (count($errors) > 0) {
-            foreach ($errors as $error) {
-                $errorArr[] = $error->getMessage();
-            }
-
-            return $this->json($errorArr);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
-        return $this->json("$name został zmieniony na $status");
     }
 
     /**
@@ -155,21 +125,5 @@ class StageController extends Controller
         $em->flush();
 
         return $this->json("Poziom został usunięty");
-    }
-
-    private function getErrorsFromForm(FormInterface $form)
-    {
-        $errors = array();
-        foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
-        }
-        foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                if ($childErrors = $this->getErrorsFromForm($childForm)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
-            }
-        }
-        return $errors;
     }
 }

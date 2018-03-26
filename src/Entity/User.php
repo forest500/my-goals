@@ -57,6 +57,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $email;
 
     /**
+   * @ORM\Column(name="activationCode", type="text")
+   */
+    private $activationCode;
+
+    /**
      * @ORM\Column(name="isActive", type="boolean")
      * @Assert\Type("bool")
      */
@@ -65,7 +70,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         $this->isActive = false;
-    }    
+    }
 
     /**
      * Get id
@@ -79,7 +84,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Get min = 6,
-     */ 
+     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -89,7 +94,7 @@ class User implements AdvancedUserInterface, \Serializable
      * Set min = 6,
      *
      * @return  self
-     */ 
+     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
@@ -99,7 +104,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Get the value of password
-     */ 
+     */
     public function getPassword()
     {
         return $this->password;
@@ -109,13 +114,13 @@ class User implements AdvancedUserInterface, \Serializable
      * Set the value of password
      *
      * @return  self
-     */ 
+     */
     public function setPassword($password)
     {
         $this->password = $password;
 
         return $this;
-    }    
+    }
 
     /**
      * Set email
@@ -139,6 +144,21 @@ class User implements AdvancedUserInterface, \Serializable
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Get activationCode
+     *
+     * @return string
+     */
+    public function getActivationCode()
+    {
+        return $this->activationCode;
+    }
+
+    public function generateActivationCode()
+    {
+      $this->activationCode = bin2hex(openssl_random_pseudo_bytes(16));
     }
 
     /**

@@ -2,11 +2,12 @@
 
 namespace App\Tests\Entity;
 
-use \App\Entity\Category;
+use \App\Entity\Goal;
 use \App\Tests\ApiTestCase;
 
-class CategoryControllerTest extends ApiTestCase
+class GoalControllerTest extends ApiTestCase
 {
+
     protected function setUp()
     {
         parent::setUp();
@@ -15,10 +16,9 @@ class CategoryControllerTest extends ApiTestCase
     public function testPost()
     {
         $client = $this->createAuthenticatedClient();
-
-        $data = '{"name":"kategoria", "description":"opis kategorii"}';
-
-        $client->request('Post', 'api/new_category', array(), array(),array(),$data);
+        $data = '{"name":"cel"}';
+        $categoryId = $this->getCategoryId();
+        $client->request('Post', 'api/new_goal/'.$categoryId, array(), array(),array(),$data);
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertEquals("Dodano kategorię!", json_decode($client->getResponse()->getContent()));
@@ -28,13 +28,13 @@ class CategoryControllerTest extends ApiTestCase
     {
         $client = $this->createAuthenticatedClient();
         $this->createCategory();
+
         $client->request('Get', 'api/get_categories');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $data = json_decode($client->getResponse()->getContent());
         $this->assertEquals('kategoria', $data[0]->name);
         $this->assertEquals('opis kategorii', $data[0]->description);
-        $this->assertCount(2, $data);
     }
 
     public function testPut()
@@ -66,4 +66,6 @@ class CategoryControllerTest extends ApiTestCase
       $this->assertEquals(200, $client->getResponse()->getStatusCode());
       $this->assertEquals("Kategoria została usunieta", json_decode($client->getResponse()->getContent()));
     }
+
+
 }

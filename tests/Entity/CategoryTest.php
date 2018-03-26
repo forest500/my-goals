@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Tests\Entity;
 
@@ -18,12 +18,6 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         $this->validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
     }
 
-    // /** @test */
-    // public function constructor_instantiate_goals_as_ArrayCollection()
-    // {
-    //     $this->assertInstanceOf(ArrayCollection::class, $this->category->getGoals());
-    // }
-
     /** @test */
     public function that_we_can_get_valid_name()
     {
@@ -33,7 +27,7 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('career', $this->category->getName());
         $this->assertEquals(0, count($errors));
-    } 
+    }
 
     /** @test */
     public function that_we_can_get_valid_valid_description()
@@ -44,7 +38,7 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Here are my career goals', $this->category->getDescription());
         $this->assertEquals(0, count($errors));
-    }    
+    }
 
 
 }

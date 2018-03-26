@@ -17,6 +17,13 @@
         <env name="SHELL_VERBOSITY" value="-1" />
 	      <env name="DATABASE_URL" value="mysql://root:@127.0.0.1:3306/my-goals-test" />
         <!-- define your env variables for the test env here -->
+
+        <!-- ###+ lexik/jwt-authentication-bundle ### -->
+        <!-- Key paths should be relative to the project directory -->
+        <env name="JWT_PRIVATE_KEY_PATH" value="config/jwt/private.pem"/>
+        <env name="JWT_PUBLIC_KEY_PATH" value="config/jwt/public.pem"/>
+        <env name="JWT_PASSPHRASE" value="9fa12e366f51f25e7bb8c5d50f41417a"/>
+        <!-- ###- lexik/jwt-authentication-bundle ### -->
     </php>
 
     <testsuites>

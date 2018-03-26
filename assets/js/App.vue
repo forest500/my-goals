@@ -1,7 +1,7 @@
 <template>
 <div>
     <nav-bar v-if="isAuthenticated"></nav-bar>
-    <router-view v-if="!loading"></router-view>
+    <router-view></router-view>
 </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   created: function () {
     axios.interceptors.response.use(undefined, function (err) {
       return new Promise(function (resolve, reject) {
-        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+        if (err.status === 401) {
           this.$store.dispatch('authLogout')
             .then(() => {
               console.log('error')
@@ -31,9 +31,6 @@ export default {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated
     },
-    loading() {
-      return this.$store.getters.loading
-    }
   }
 }
 </script>

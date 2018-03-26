@@ -28,6 +28,7 @@ const getters = {
   formErrors: state => state.formErrors,
   showGoalForm: state => state.showGoalForm,
   alert: state => state.alert,
+  loadingError: state => state.loadingError
 }
 
 const mutations = {
@@ -144,9 +145,9 @@ const actions = {
         commit('SET_CATEGORY', category)
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
@@ -161,9 +162,9 @@ const actions = {
         commit('SET_SHOW_GOAL_FORM', false)
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
@@ -178,9 +179,9 @@ const actions = {
         commit('CLEAR_ERRORS')
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
@@ -198,9 +199,9 @@ const actions = {
         commit('SET_CATEGORY', category)
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
@@ -214,9 +215,9 @@ const actions = {
         commit('SET_GOAL', goal)
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
@@ -231,9 +232,9 @@ const actions = {
         commit('CLEAR_ERRORS')
       })
       .catch(errors => {
-        if (errors.response.status === 400) {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
-          commit('FORM_ERRORS', errors.response.data)
+          commit('FORM_ERRORS', errors.response.data.errors)
         }
       })
   },
