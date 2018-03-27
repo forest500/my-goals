@@ -7,9 +7,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\FormValidator;
-use App\Service\FormProcessor;
+use App\Api\FormValidator;
+use App\Api\FormProcessor;
+use App\Api\DeleteProcessor;
 use App\Entity\Goal;
+use App\Entity\Stage;
 use App\Entity\Category;
 use App\Form\GoalType;
 
@@ -30,7 +32,7 @@ class GoalController extends Controller
         $form = $this->createForm(GoalType::class, $goal);
         $formProcessor->processForm($form, $request);
 
-        if($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
@@ -91,7 +93,7 @@ class GoalController extends Controller
         $form = $this->createForm(GoalType::class, $goal);
         $formProcessor->processForm($form, $request);
 
-        if($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
@@ -107,15 +109,15 @@ class GoalController extends Controller
      * @Route("/delete_goal/{goal}", name="delete_goal", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Goal $goal, Request $request)
+    public function delete(Goal $goal, Request $request, DeleteProcessor $deleteProcessor)
     {
-      try {
-          $em = $this->getDoctrine()->getManager();
-          $em->remove($goal);
-          $em->flush();
-      } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
-          return $this->json("Aby usunąc wybrany cel nalezy najpierw usunac poziomy, ktore sie w nim znajduja", 400);
-      }
+        $em = $this->getDoctrine()->getManager();
+        $goalStages = $em->getRepository(Stage::class)->findByGoal($goal->getId());
+        if (!empty($goalStages)) {
+            $deleteProcessor->throwForeignKeyException();
+        }
+        $em->remove($goal);
+        $em->flush();
 
         return $this->json("Cel został usunięty");
     }

@@ -247,7 +247,7 @@ const actions = {
         commit('SET_ALERT', { category: true, message: response.data, class: 'alert-danger' } )
         commit('DELETE_CATEGORY', category.index)
       }).catch(error => {
-        commit('SET_ALERT', { category: true, message: error.response.data, class: 'alert-danger' } )
+        commit('SET_ALERT', { category: true, message: error.response.data.error, class: 'alert-danger' } )
       })
   },
   deleteGoal({commit}, goal) {
@@ -256,7 +256,7 @@ const actions = {
         commit('SET_ALERT', { goal: true, message: response.data, class: 'alert-danger' } )
       commit('DELETE_GOAL', goal.index)
       }).catch(error => {
-        commit('SET_ALERT', { goal: true, message: error.response.data, class: 'alert-danger' } )
+        commit('SET_ALERT', { goal: true, message: error.response.data.error, class: 'alert-danger' } )
       })
   },
   deleteStage({commit}, stage) {

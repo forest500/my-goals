@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Api;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,8 +18,8 @@ class FormProcessor
             $apiProblem = new ApiProblem(400, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
 
             throw new ApiProblemException($apiProblem);
-
         }
-        $form->submit($data);
+        $clearMissing = $request->getMethod() != 'PATCH';
+        $form->submit($data, $clearMissing);
     }
 }

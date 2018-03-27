@@ -7,10 +7,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\FormValidator;
-use App\Service\FormProcessor;
+use App\Api\FormValidator;
+use App\Api\FormProcessor;
+use App\Api\DeleteProcessor;
 use App\Entity\Category;
+use App\Entity\Goal;
 use App\Form\CategoryType;
+use App\Api\ApiProblem;
+use App\Api\ApiProblemException;
 
 /**
  * @Route("/api")
@@ -29,7 +33,7 @@ class CategoryController extends Controller
         $form = $this->createForm(CategoryType::class, $category);
         $formProcessor->processForm($form, $request);
 
-        if($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
@@ -74,11 +78,10 @@ class CategoryController extends Controller
      */
     public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-
         $form = $this->createForm(CategoryType::class, $category);
         $formProcessor->processForm($form, $request);
 
-        if($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
@@ -94,15 +97,16 @@ class CategoryController extends Controller
      * @Route("/delete_category/{category}", name="delete_category", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Category $category, Request $request)
+    public function delete(Category $category, Request $request, DeleteProcessor $deleteProcessor)
     {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($category);
-            $em->flush();
-        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
-            return $this->json("Aby usunąc wybraną kategorie nalezy najpierw usunac cele, ktore sie w niej znajduja", 400);
+        $em = $this->getDoctrine()->getManager();
+        $categoryGoals = $em->getRepository(Goal::class)->findByCategory($category->getId());
+        if (!empty($categoryGoals)) {
+            $deleteProcessor->throwForeignKeyException();
         }
+
+        $em->remove($category);
+        $em->flush();
 
         return $this->json("Kategoria została usunieta");
     }

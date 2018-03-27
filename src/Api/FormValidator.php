@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Api;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
