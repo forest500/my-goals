@@ -46,7 +46,7 @@ class Category
 
     /**
     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-    * @ORM\JoinColumn(name="$userId", referencedColumnName="id")
+    * @ORM\JoinColumn(name="userId", referencedColumnName="id")
     */
     private $userId;
 

@@ -68,6 +68,12 @@ class CategoryController extends Controller
     public function getOne($id, Request $request)
     {
         $category = $this->getDoctrine()->getRepository(Category::class)->findCategory($id);
+        if(!$category) {
+            throw $this->createNotFoundException(sprintf(
+                'Nie znaleziono kategorii o id "%s"',
+                $id
+            ));
+        }
 
         return $this->json($category);
     }

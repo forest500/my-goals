@@ -12,39 +12,42 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Service\ObjectGenerator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Form\FormInterface;
+use App\Api\FormValidator;
+use App\Api\FormProcessor;
+use App\Api\ApiProblem;
+use App\Api\ApiProblemException;
 
 class RegistrationController extends Controller
 {
 
     /**
-     * @Route("/register", name="registration")
+     * @Route("/api/register", name="registration")
      * @Method("POST")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer)
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer, FormValidator $validator, FormProcessor $formProcessor)
     {
         $data = json_decode($request->getContent(), true);
+
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
-        $form->submit($data);
 
-        if($form->isSubmitted() && $form->isValid()) {
-          $password = $passwordEncoder->encodePassword($user, $data['plainPassword']);
-          $user->setPassword($password);
-          $user->generateActivationCode();
+        $formProcessor->processForm($form, $request);
 
-          $this->sendConfirmationEmail($data['email'], $user->getActivationCode(), $mailer);
-          $em = $this->getDoctrine()->getManager();
-          $em->persist($user);
-          $em->flush();
-
-
-
-          return $this->json("Dodano nowego użytkownika", 201);
+        if ($form->isSubmitted() && !$form->isValid()) {
+            return $validator->createValidationErrorResponse($form);
         }
-        if($form->isSubmitted() && !$form->isValid()) {
-          $errors = $this->getErrorsFromForm($form);
 
-          return $this->json($errors, 400);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $passwordEncoder->encodePassword($user, $data['plainPassword']['first']);
+            $user->setPassword($password);
+            $user->generateActivationCode();
+
+            $this->sendConfirmationEmail($data['email'], $user->getActivationCode(), $mailer);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            return $this->json("Dodano nowego użytkownika", 201);
         }
     }
 
@@ -69,7 +72,7 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @Route("/activate/{activationCode}", name="user_activation")
+     * @Route("/api/activate/{activationCode}", name="user_activation")
      */
     public function activationAction($activationCode, ObjectGenerator $generator)
     {
@@ -81,38 +84,13 @@ class RegistrationController extends Controller
                 'Nie znaleziono użytkownika'
             );
         }
-        if(!$user->getIsActive()) {
-          $user->setIsActive(1);
-          $generator->generateCategory($user);
+        if (!$user->getIsActive()) {
+            $user->setIsActive(1);
+            $generator->generateCategory($user);
 
-          $em->flush();
+            $em->flush();
         }
 
-        return $this->redirectToRoute('user_confirmation');
+        return $this->redirectToRoute('/');
     }
-
-    /**
-     * @Route("/confirm", name="user_confirmation")
-     */
-    public function confirmAction()
-    {
-        return $this->render('forms/confirm.html.twig');
-    }
-
-    private function getErrorsFromForm(FormInterface $form)
-    {
-        $errors = array();
-        foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
-        }
-        foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                if ($childErrors = $this->getErrorsFromForm($childForm)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
-            }
-        }
-        return $errors;
-    }
-
 }

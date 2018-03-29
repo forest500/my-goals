@@ -13,11 +13,13 @@ class ApiTestCase extends WebTestCase
 
     public static function setUpBeforeClass()
     {
-        self::bootKernel();
+
     }
 
     protected function setUp()
     {
+      self::bootKernel();
+      
       $this->createUser();
       $this->createCategory();
     }
@@ -98,5 +100,7 @@ class ApiTestCase extends WebTestCase
     protected function tearDown()
     {
         $this->purgeDatabase();
+
+        parent::teardown();
     }
 }

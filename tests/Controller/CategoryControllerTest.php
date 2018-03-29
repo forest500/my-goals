@@ -66,4 +66,9 @@ class CategoryControllerTest extends ApiTestCase
       $this->assertEquals(200, $client->getResponse()->getStatusCode());
       $this->assertEquals("Kategoria została usunieta", json_decode($client->getResponse()->getContent()));
     }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+    }
 }

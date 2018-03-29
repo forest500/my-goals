@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import AppError from '../AppError.vue';
 import { mapGetters } from 'vuex'
 

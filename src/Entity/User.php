@@ -26,17 +26,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @Assert\NotBlank(message = "Proszę wprowadzić hasło")
      * @Assert\Length(max=4096)
-     * @Assert\Length(
-     *      min = 6,
-     *      max = 64,
-     *      minMessage = "Twoje hasło musi zawierać conajmniej 6 znaków",
-     *      maxMessage = "Twoje hasło może zawierać maksymalnie 64 znaki"
-     * )
-     *
      * @Assert\Regex(
      *      pattern="/^[a-zA-Z0-9_-]{6,64}$/",
-     *      htmlPattern = "/^[a-zA-Z0-9_-]{6,64}$/",
-     *      message="Hasło może zawierać tylko litery i cyfry oraz oraz znaki - , _"
+     *      message="Hasło może się składać z 6 do 64 znaków i może zawierać tylko litery i cyfry oraz oraz znaki - , _"
      *)
      */
     private $plainPassword;
@@ -62,10 +54,12 @@ class User implements AdvancedUserInterface, \Serializable
     private $activationCode;
 
     /**
-     * @ORM\Column(name="isActive", type="boolean")
-     * @Assert\Type("bool")
+    * @Assert\Email(
+    *     message = "Proszę wprowadzić adres email",
+    *     checkMX = true
+    * )
      */
-    private $isActive;
+    private $termsAccepted;
 
     public function __construct()
     {

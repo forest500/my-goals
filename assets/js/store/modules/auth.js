@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { AUTH_LOCATION } from "../../config"
+import { REGISTER_LOCATION } from "../../config"
 
 const  state = {
   token: localStorage.getItem('user-token') || '',
@@ -46,10 +47,28 @@ const actions = {
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
           resolve(response)
         })
-      .catch(err => {
-        commit('AUTH_ERROR', err.response.data.message)
+      .catch(errors => {
+        commit('AUTH_ERROR', errors.response.data.message)
         localStorage.removeItem('user-token')
-        reject(err)
+        reject(errors)
+      })
+    })
+  },
+  registerRequest({commit}, credentials) {
+    return new Promise((resolve, reject) => {
+      axios({url: REGISTER_LOCATION, data: credentials, method: 'POST' })
+        .then(response => {
+          alert("Zostałeś zarejestrowany")
+
+          resolve(response)
+        })
+      .catch(errors => {
+        if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
+          console.log(errors.response.data)
+          commit('HAS_ERRORS', true)
+          commit('FORM_ERRORS', errors.response.data.errors)
+        }
+        reject(errors)
       })
     })
   },

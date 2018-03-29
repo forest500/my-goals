@@ -10,7 +10,7 @@ const state = {
   newGoal: {},
   stages: [],
   hasErrors: false,
-  formErrors: {},
+  formErrors: {"plainPassword":""},
   showGoalForm: false,
   alert: {},
   alertMessage: '',
