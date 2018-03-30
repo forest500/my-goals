@@ -58,13 +58,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios({url: REGISTER_LOCATION, data: credentials, method: 'POST' })
         .then(response => {
-          alert("Zostałeś zarejestrowany")
-
+          commit('CLEAR_ERRORS')
           resolve(response)
         })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
-          console.log(errors.response.data)
           commit('HAS_ERRORS', true)
           commit('FORM_ERRORS', errors.response.data.errors)
         }

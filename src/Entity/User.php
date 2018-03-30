@@ -54,12 +54,10 @@ class User implements AdvancedUserInterface, \Serializable
     private $activationCode;
 
     /**
-    * @Assert\Email(
-    *     message = "Proszę wprowadzić adres email",
-    *     checkMX = true
-    * )
+     * @ORM\Column(name="isActive", type="boolean")
      */
-    private $termsAccepted;
+    private $isActive;
+
 
     public function __construct()
     {

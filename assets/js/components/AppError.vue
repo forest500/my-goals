@@ -10,7 +10,7 @@ export default {
     formErrors: {
       type: [Array, Object]
     }
-  }
+  },
 }
 </script>
 

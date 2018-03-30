@@ -41,34 +41,16 @@ class RegistrationController extends Controller
             $password = $passwordEncoder->encodePassword($user, $data['plainPassword']['first']);
             $user->setPassword($password);
             $user->generateActivationCode();
+            if($user->getActivationCode() !== null) {
+                $this->sendConfirmationEmail($data['email'], $user->getActivationCode(), $mailer);
 
-            $this->sendConfirmationEmail($data['email'], $user->getActivationCode(), $mailer);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
 
-            return $this->json("Dodano nowego użytkownika", 201);
+                return $this->json("Dodano nowego użytkownika", 201);
+            }
         }
-    }
-
-    public function sendConfirmationEmail($email, $activationCode, \Swift_Mailer $mailer)
-    {
-        $activateUrl = $this->get('router')->generate('user_activation', array(
-              'activationCode' => $activationCode
-          ));
-
-        $message = (new \Swift_Message('Witamy w naszym serwisie moje cele!'))
-            ->setFrom('lasekdeveloper@gmail.com')
-            ->setTo($email)
-            ->setBody(
-                $this->renderView(
-                    'emails/registration.html.twig',
-                    array('activeLink' => $activateUrl)
-                ),
-                'text/html'
-            );
-
-        $mailer->send($message);
     }
 
     /**
@@ -91,6 +73,27 @@ class RegistrationController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('/');
+        return $this->redirectToRoute('homepage');
+    }
+
+
+    public function sendConfirmationEmail($email, $activationCode, \Swift_Mailer $mailer)
+    {
+        $activateUrl = $this->get('router')->generate('user_activation', array(
+                  'activationCode' => $activationCode
+              ));
+
+        $message = (new \Swift_Message('Witamy w naszym serwisie moje cele!'))
+                ->setFrom('lasekdeveloper@gmail.com')
+                ->setTo($email)
+                ->setBody(
+                    $this->renderView(
+                        'emails/registration.html.twig',
+                        array('activeLink' => $activateUrl)
+                    ),
+                    'text/html'
+                );
+
+        $mailer->send($message);
     }
 }

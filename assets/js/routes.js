@@ -5,6 +5,7 @@ import EditCategory from './components/category/EditCategory.vue'
 import ShowCategoryGoals from './components/goal/ShowCategoryGoals.vue'
 import Login from './components/navigation/Login.vue'
 import Register from './components/navigation/Register.vue'
+import SuccessRegistration from './components/navigation/SuccessRegistration.vue'
 import {store} from './store/index'
 
 const ifNotAuthenticated = (to, from, next) => {
@@ -33,6 +34,11 @@ export default[
     path: '/register',
     name: 'register',
     component: Register,
+    beforeEnter: ifNotAuthenticated
+  }, {
+    path: '/success_registration',
+    name: 'success_registration',
+    component: SuccessRegistration,
     beforeEnter: ifNotAuthenticated
   }, {
     path: '/',

@@ -1,7 +1,8 @@
 <template>
-  <div class="col-md-6 offset-md-3 mt-3">
+  <div class="col-md-6 offset-md-3 mt-5">
     <form v-on:submit.prevent="register" class="form">
-      <h3 class="text-center">Zarejestruj się</h3>
+      <router-link :to="{ name: 'login' }">Powrót do logowania</router-link>
+      <h3 class="text-center mt-2">Rejestracja</h3>
       <div class="form-group">
         <label for="email">email</label>
         <input v-model="credentials.email" type="email" name="email" id="email" class="form-control">
@@ -10,7 +11,7 @@
       <div class="form-group">
         <label for="plainPassword-first">Hasło</label>
         <input v-model="credentials.plainPassword.first" type="password" name="plainPassword-first" id="plainPassword-first" class="form-control">
-        <app-error if="errors.response.data.plainPassword.first" v-bind:formErrors="formErrors.plainPassword.first"></app-error>
+        <div if="errors.response.data.plainPassword.first" class="formErrors text-danger m-2" v-for="formError in formErrors">{{ formError.first | match-err }}</div>
       </div>
       <div class="form-group">
         <label for="plainPassword-second">Powtórz hasło</label>
@@ -48,9 +49,8 @@ export default {
   methods: {
     register() {
       this.$store.dispatch('registerRequest', this.credentials)
-        .then((response) => {
-          console.log("udalo sie")
-          // this.$router.push('/succes_registration')
+        .then(() => {
+          this.$router.push('/success_registration')
         })
     }
   },

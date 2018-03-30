@@ -1,8 +1,9 @@
 <template>
-  <div class="col-md-6 offset-md-3 mt-3">
+  <div class="col-md-6 offset-md-3 mt-5">
+    <router-link :to="{ name: 'register', params: {} }">Nie masz konta? Zarejestruj się</router-link>
+    <h3 class="text-center mt-2">Zaloguj się</h3>
     <form v-on:submit.prevent="login" class="form">
       <div class="bd-danger"></div>
-      <h3 class="text-center">Zaloguj się</h3>
       <div class="text-danger">{{ authError }}</div>
       <div class="form-group">
         <label for="email">Email</label>

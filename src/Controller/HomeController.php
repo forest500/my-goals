@@ -15,9 +15,6 @@ class HomeController extends Controller
      */
     public function home(Request $request)
     {
-        return $this->render(
-            'home.html.twig',
-            array()
-        );
+        return $this->render('home.html');
     }
 }
