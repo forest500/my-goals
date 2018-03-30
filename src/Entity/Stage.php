@@ -77,6 +77,14 @@ class Stage
         $this->status = true;
     }
 
+    /**
+     * Get the value of id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }    
+
     public function autoSetNumber()
     {
         $this->number = count($this->goal->getStages()) + 1;
@@ -221,5 +229,5 @@ class Stage
         $this->userId = $user;
 
         return $this;
-    }    
+    }
 }

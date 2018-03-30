@@ -6,22 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use App\Entity\User;
 use \App\Entity\Category;
+use \App\Entity\Goal;
 
 class ApiTestCase extends WebTestCase
 {
     protected $client;
 
-    public static function setUpBeforeClass()
-    {
-
-    }
-
     protected function setUp()
     {
       self::bootKernel();
-      
+
       $this->createUser();
-      $this->createCategory();
+      $this->createCategory('kategoria', 'opis kategorii');
     }
 
     protected function createUser($email = 'lasekdeveloper@gmail.com', $plainPassword = 'password')
@@ -41,19 +37,39 @@ class ApiTestCase extends WebTestCase
         return $user;
     }
 
-    protected function createCategory()
+    protected function createCategory(String $name, String $description)
     {
       $client = $this->createAuthenticatedClient();
-      $data = '{"name":"kategoria", "description":"opis kategorii"}';
+      $data = '{"name":"'. $name . '", "description": "'. $description .'"}';
 
       $client->request('Post', 'api/new_category', array(), array(),array(),$data);
     }
 
-    protected function getCategoryId()
+    protected function createGoal(String $name)
+    {
+      $client = $this->createAuthenticatedClient();
+      $data = '{"name":"' . $name . '" }';
+      $categoryId = $this->getObjId('kategoria', Category::class);
+
+      $client->request('Post', "api/new_goal/$categoryId", array(), array(),array(),$data);
+    }
+
+    protected function createStage(String $name, String $award, String $endDate)
+    {
+      $client = $this->createAuthenticatedClient();
+      $data = '{"name":"'. $name . '", "award": "'. $award .'", "endDate": "'. $endDate .'"}';
+
+      $this->createGoal('cel');
+      $goalId = $this->getObjId('cel', Goal::class);
+
+      $client->request('Post', "api/new_stage/$goalId", array(), array(),array(),$data);
+    }
+
+    protected function getObjId(String $categoryName, String $class)
     {
       $category = $this->getEntityManager()
-          ->getRepository(Category::class)
-          ->findOneBy(['name' => 'kategoria']);
+          ->getRepository($class)
+          ->findOneBy(['name' => $categoryName]);
 
       return $category->getId();
     }

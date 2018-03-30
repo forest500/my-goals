@@ -101,7 +101,7 @@ class GoalController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->json("Zmieniono cel!", 201);
+            return $this->json("Zmieniono cel!");
         }
     }
 
