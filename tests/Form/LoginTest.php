@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Tests\Form;
 
@@ -13,14 +13,14 @@ class LoginTest extends TypeTestCase
     {
         $formData = array(
             'email' => 'lasekmiroslaw@gmail.com',
-            'password' => 'pass',
+            'password' => 'password',
         );
 
         $form = $this->factory->create(LoginType::class);
 
         $object = new User();
         $object->setEmail('lasekmiroslaw@gmail.com');
-        $object->setPassword('pass');
+        $object->setPassword('password');
 
         $form->submit($formData);
 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Tests\Form;
 
@@ -28,7 +28,7 @@ class RegisterTest extends TypeTestCase
         return array(
             new ValidatorExtension($this->validator),
         );
-    }    
+    }
 
      /** @test */
     public function submit_valid_data()
