@@ -1,6 +1,6 @@
 <template>
 <button type="button" class="btn btn-danger">
-  Anuluj
+  <i class="fas fa-times"></i>
 </button>
 </template>
 <script>

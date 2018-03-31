@@ -2,16 +2,19 @@
 <div>
     <nav-bar v-if="isAuthenticated"></nav-bar>
     <router-view></router-view>
+    <my-footer></my-footer>
 </div>
 </template>
 
 <script>
 import NavBar from './components/navigation/NavBar.vue';
+import Footer from './components/navigation/Footer.vue';
 import axios from 'axios'
 
 export default {
   components: {
     'nav-bar': NavBar,
+    'my-footer': Footer,
   },
   computed: {
     isAuthenticated() {
@@ -49,10 +52,8 @@ html {
   }
 }
 body {
-  width: 85%;
-  margin-right: auto;
-  margin-left: auto;
   background-image: url("./img/metal-background.png");
+  font-family: 'Lato', sans-serif;
 }
 ul {
   list-style-type: none;

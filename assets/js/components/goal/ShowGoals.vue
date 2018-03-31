@@ -4,20 +4,36 @@
     <div v-show="loading" class="loading">
       <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
     </div>
-    <ul v-show="!loading" class="list-group">
-      <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in allGoals">
-        <router-link :to="{ name: 'category', params: {categoryName: goal.category, id: goal.categoryId }}" exact>
-          {{ goal.name }}
-        </router-link>
-        <span class="badge badge-default badge-pill">{{ goal.category }}</span>
-      </li>
-    </ul>
+    <div v-show="!loading">
+      <div class="container">
+        <div class="row">
+          <div class="form-group mr-auto w-50">
+              <input class="form-control" type="text" v-model="search" placeholder="wyszukaj cel...">
+          </div>
+          <goal-form :categories="categories"></goal-form>
+        </div>
+      </div>
+
+
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in filteredGoals">
+          <router-link :to="{ name: 'category', params: {categoryName: goal.category, id: goal.categoryId }}" exact>
+            {{ goal.name }}
+          </router-link>
+          <span class="badge badge-default badge-pill">{{ goal.category }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import CategoryGoalForm from './CategoryGoalForm.vue';
 
 export default {
+  components: {
+    'goal-form': CategoryGoalForm,
+  },
   created() {
     this.$store.dispatch('loadGoals')
     .then((response) => {
@@ -32,12 +48,21 @@ export default {
   data() {
     return {
       loading: false,
-      errorMsg: ''
+      errorMsg: '',
+      search: ''
     }
   },
   computed: {
     allGoals() {
       return this.$store.getters.allGoals
+    },
+    categories() {
+      return this.$store.getters.categories
+    },
+    filteredGoals() {
+      return this.allGoals.filter((goal) => {
+        return goal.name.match(this.search)
+      })
     }
   },
 }

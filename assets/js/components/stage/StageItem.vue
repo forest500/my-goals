@@ -1,15 +1,15 @@
 <template>
   <div class="row my-2">
-      <div class="col-1" v-show="!isEditing">{{ stage.number }} </div>
-      <div class="col-2" v-show="!isEditing">{{ stage.name }} </div>
-      <div class="col-2" v-show="!isEditing">{{ stage.award }}</div>
-      <div class="col-2" v-show="!isEditing">{{ stage.endDate }}</div>
-      <div><edit-button v-show="!isEditing" @click.native="isEditing=!isEditing"></edit-button></div>
-      <delete-button v-show="!isEditing" class="ml-2" :index="index" v-bind:itemToDelete="stage" deleteFunction="deleteStage"></delete-button>
+      <div class="col-md-2" v-show="!isEditing">{{ stage.number }} </div>
+      <div class="col-md-2" v-show="!isEditing">{{ stage.name }} </div>
+      <div class="col-md-2" v-show="!isEditing">{{ stage.award }}</div>
+      <div class="col-md-3" v-show="!isEditing">{{ stage.endDate }}</div>
+      <div class="ml-3"><edit-button class="btn-sm" v-show="!isEditing" @click.native="isEditing=!isEditing"></edit-button></div>
+      <delete-button v-show="!isEditing" class="ml-2 btn-sm" :index="index" v-bind:itemToDelete="stage" deleteFunction="deleteStage"></delete-button>
 
-    <div class="col-5" v-if="isEditing">
+    <div class="" v-if="isEditing">
       <edit-stage :stage="stage" :isEditing.sync="isEditing">
-        <cancel-button slot="cancel-button" class="mb-2 mr-2" @click.native="isEditing=!isEditing"></cancel-button>
+        <cancel-button slot="cancel-button" class="btn-sm mb-2 mr-2" @click.native="isEditing=!isEditing"></cancel-button>
       </edit-stage>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <button v-on:click="logout" class="btn btn-primary">
-    Wyloguj się
+    <i class="fas fa-sign-out-alt"></i>
   </button>
 </template>
 <script>

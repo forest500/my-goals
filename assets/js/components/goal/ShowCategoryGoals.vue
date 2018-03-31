@@ -1,38 +1,40 @@
 <template>
-  <div>
-    <div v-if="errorMsg" class="text-danger text-center">{{ errorMsg }}</div>
-    <div v-show="loading" class="loading">
-      <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
-    </div>
-    <div v-show="!loading">
-      <header>
-        <div class="row justify-content-center p-4">
-          <h3 class="mr-3">{{ category.name }}</h3>
-            <router-link tag="button" class="btn btn-info mr-3 h-25"  :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact>Edytuj</router-link>
-          <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
-        </div>
-        <p>{{ category.description }}</p>
-      </header>
-      <ul class="" v-for="(goal, index) in goals" v-bind:key="goal.id">
-        <div class="container-fluid">
-          <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
-          <li class="container-fluid">
-            <div class="row">
-              <h5 v-if="!isEditing[index]" class="col-md-2" :id="goal.id">{{ goal.name }}</h5>
-              <edit-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
-              <delete-button class="btn-sm mb-2 mr-2 h-25" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
-            </div>
-            <show-stages :goalId="goal.id"></show-stages>
-          </li>
-        </div>
-      </ul>
-      <alert-app v-if="alert.goal" :class="alert.class" :message="alert.message"></alert-app>
-      <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">
-          <add-button item="nowy cel"></add-button>
-      </div>
-      <new-goal v-if="showGoalForm"></new-goal>
-    </div>
+<div>
+  <div v-if="errorMsg" class="text-danger text-center">{{ errorMsg }}</div>
+  <div v-show="loading" class="loading">
+    <i class="fa fa-spinner fa-spin" style="font-size:100px"></i>
   </div>
+  <div v-show="!loading">
+    <header>
+      <div class="row justify-content-center mt-4">
+        <h3 class="mr-3">{{ category.name }}</h3>
+        <router-link tag="button" class="btn btn-info mr-3 h-25" :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact><i class="fas fa-edit"></i></router-link>
+        <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
+      </div>
+      <div class="row justify-content-center p-4">
+        <p>{{ category.description }}</p>
+      </div>
+    </header>
+    <div class="d-flex flex-wrap">
+      <div class="col-md-6" v-for="(goal, index) in goals" v-bind:key="goal.id">
+        <div :class="cardClass[randomNumber(index)]">
+          <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
+          <div class="card-header row w-100">
+            <h5 v-if="!isEditing[index]" class="offset-md-3 col-md-4" :id="goal.id">{{ goal.name }}</h5>
+            <edit-button class="btn-sm mr-2 h-25 col-md-1" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
+            <delete-button class="btn-sm h-25 col-md-1" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
+          </div>
+          <show-stages :goalId="goal.id"></show-stages>
+        </div>
+      </div>
+    </div>
+    <alert-app v-if="alert.goal" :class="alert.class" :message="alert.message"></alert-app>
+    <div v-show="!showGoalForm" v-on:click="toogleShowGoalForm">
+      <add-button item="nowy cel"></add-button>
+    </div>
+    <new-goal v-if="showGoalForm"></new-goal>
+  </div>
+</div>
 </template>
 
 <script>
@@ -55,22 +57,30 @@ export default {
     'alert-app': AlertApp,
   },
   watch: {
-    '$route.params.id': function (id) {
+    '$route.params.id': function(id) {
       this.loading = true;
       this.setActiveCategory()
       this.$store.commit('SET_SHOW_GOAL_FORM', false)
       this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
         .then(() => {
           this.loadCategoryStages()
-        }
-      )
+        })
     },
   },
   data() {
     return {
       isEditing: [],
       loading: false,
-      errorMsg: ''
+      errorMsg: '',
+      cardClass: [
+        "card text-white bg-primary mb-3",
+        "card text-white bg-secondary mb-3",
+        "card text-white bg-danger mb-3",
+        "card text-white bg-warning mb-3",
+        "card text-white bg-info mb-3",
+        "card bg-light mb-3",
+        "card text-white bg-dark mb-3"
+      ]
     }
   },
   created() {
@@ -79,8 +89,7 @@ export default {
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
         this.loadCategoryStages()
-      }
-    )
+      })
   },
   computed: {
     goals() {
@@ -111,21 +120,24 @@ export default {
     },
     setActiveCategory() {
       this.categories.forEach(category => {
-        if(category.id === this.$route.params.id) this.$store.commit('SET_CATEGORY', category)
+        if (category.id === this.$route.params.id) this.$store.commit('SET_CATEGORY', category)
       })
     },
     loadCategoryStages() {
       this.$store.dispatch('loadCategoryStages', this.$route.params.id)
         .then((response) => {
-          if(typeof response !== 'undefined' && response.name === 'Error') {
+          if (typeof response !== 'undefined' && response.name === 'Error') {
             this.loading = true
           } else {
             this.loading = false
             this.isEditing = []
           }
         })
-      }
-  }
+    },
+    randomNumber(index){
+      return Math.floor(Math.random() * 7);
+    }
+  },
 }
 </script>
 

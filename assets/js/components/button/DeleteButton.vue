@@ -1,6 +1,6 @@
 <template>
 <button v-on:click="remove" type="button" class="btn btn-danger">
-  Usuń
+  <i class="far fa-trash-alt"></i>
 </button>
 </template>
 <script>

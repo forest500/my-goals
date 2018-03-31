@@ -1,6 +1,6 @@
 <template>
 <button type="submit" class="btn btn-success">
-  zapisz
+  <i class="fas fa-check"></i>
 </button>
 </template>
 <script>

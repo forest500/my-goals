@@ -1,6 +1,6 @@
 <template>
 <button type="button" class="btn btn-info">
-  edytuj
+  <i class="fas fa-edit"></i>
 </button>
 </template>
 <script>

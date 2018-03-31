@@ -1,8 +1,8 @@
 <template>
-<div>
+<div class="">
     <stage-form :stage="newStage" v-bind:httpFunction="post">
       <div slot="button">
-        <save-button class="mx-2"></save-button>
+        <save-button class="mx-2 btn-sm"></save-button>
         <slot name="cancel-button"></slot>
       </div>
     </stage-form>

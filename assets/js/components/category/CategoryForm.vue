@@ -1,11 +1,17 @@
 <template>
-<div>
-  <form v-on:submit.prevent="httpFunction" name="categoryForm">
-    <input class="row" type="text" name="name" :value="categoryInForm.name" @input="updateName">
-    <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
-    <textarea class="row" name="description" rows="5" cols="50" :value="categoryInForm.description" @input="updateDescription"></textarea>
-    <app-error if="errors.response.data.description" v-bind:formErrors="formErrors.description"></app-error>
-    <slot name="button"></slot>
+<div class="container">
+  <form class="w-50" v-on:submit.prevent="httpFunction" name="categoryForm">
+    <div class="form-group">
+      <input placeholder="nazwa kategorii..." class="row form-control" type="text" name="name" :value="categoryInForm.name" @input="updateName">
+      <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
+    </div>
+    <div class="form-group">
+      <textarea placeholder="opis kategorii ..." class="row form-control" name="description" rows="5" cols="50" :value="categoryInForm.description" @input="updateDescription"></textarea>
+      <app-error if="errors.response.data.description" v-bind:formErrors="formErrors.description"></app-error>
+    </div>
+    <div class="form-group float-right mr-3">
+        <slot name="button"></slot>
+    </div>
   </form>
 </div>
 </template>
