@@ -13,8 +13,7 @@
           <goal-form :categories="categories"></goal-form>
         </div>
       </div>
-
-
+      <alert-app v-if="alert.goal" :class="alert.class" :message="alert.message"></alert-app>
       <ul class="list-group">
         <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in filteredGoals">
           <router-link :to="{ name: 'category', params: {categoryName: goal.category, id: goal.categoryId }}" exact>
@@ -29,10 +28,12 @@
 
 <script>
 import CategoryGoalForm from './CategoryGoalForm.vue';
+import AlertApp from '../AlertApp.vue'
 
 export default {
   components: {
     'goal-form': CategoryGoalForm,
+    'alert-app': AlertApp,
   },
   created() {
     this.$store.dispatch('loadGoals')
@@ -63,7 +64,10 @@ export default {
       return this.allGoals.filter((goal) => {
         return goal.name.match(this.search)
       })
-    }
+    },
+    alert() {
+      return this.$store.getters.alert
+    }   
   },
 }
 </script>

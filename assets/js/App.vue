@@ -1,7 +1,7 @@
 <template>
 <div>
     <nav-bar v-if="isAuthenticated"></nav-bar>
-    <router-view></router-view>
+    <router-view class="margin-footer"></router-view>
     <my-footer></my-footer>
 </div>
 </template>
@@ -57,5 +57,8 @@ body {
 }
 ul {
   list-style-type: none;
+}
+.margin-footer {
+  margin-bottom: 7rem;
 }
 </style>

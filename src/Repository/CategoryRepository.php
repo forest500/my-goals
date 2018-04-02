@@ -33,6 +33,6 @@ class CategoryRepository extends ServiceEntityRepository
             WHERE c.id = :id'
         )
         ->setParameter('id', $id)
-        ->getResult();
+        ->getOneOrNullResult();;
     }
 }

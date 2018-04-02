@@ -56,7 +56,7 @@ class RegistrationController extends Controller
     /**
      * @Route("/api/activate/{activationCode}", name="user_activation")
      */
-    public function activationAction($activationCode, ObjectGenerator $generator)
+    public function activation($activationCode, ObjectGenerator $generator)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->findOneByActivationCode($activationCode);

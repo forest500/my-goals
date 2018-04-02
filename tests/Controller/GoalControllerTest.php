@@ -32,6 +32,7 @@ class GoalControllerTest extends ApiTestCase
 
         $client->request('Get', 'api/get_goals');
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->goals;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertObjectHasAttribute('name', $data[0]);
@@ -61,6 +62,7 @@ class GoalControllerTest extends ApiTestCase
 
         $client->request('Get', "api/get_category_goals/$categoryId");
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->goals;        
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('cel', $data[0]->name);

@@ -22,7 +22,7 @@ class StageRepository extends ServiceEntityRepository
             WITH s.goal = g.id
             WHERE s.userId = :userId'
         )
-        ->setParameter('userId', $userId)        
+        ->setParameter('userId', $userId)
         ->getResult();
     }
 
@@ -37,7 +37,7 @@ class StageRepository extends ServiceEntityRepository
             ORDER BY g.name ASC'
         )
         ->setParameter('id', $id)
-        ->getResult();
+        ->getOneOrNullResult();;
     }
 
     public function findByGoal($id)

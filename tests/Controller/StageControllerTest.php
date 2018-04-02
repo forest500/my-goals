@@ -39,6 +39,7 @@ class StageControllerTest extends ApiTestCase
 
         $client->request('Get', 'api/get_stages');
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->stages;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertObjectHasAttribute('name', $data[0]);
@@ -74,6 +75,7 @@ class StageControllerTest extends ApiTestCase
 
         $client->request('Get', "api/get_category_stages/$categoryId");
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->stages;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('nagroda', $data[0]->award);
@@ -92,6 +94,7 @@ class StageControllerTest extends ApiTestCase
 
         $client->request('Get', "api/get_goal_stages/$goalId");
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->stages;        
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('poziom pierwszy', $data[0]->name);

@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-copyright py-3 mt-5 text-center bg-light">
+  <div class="fixed-bottom footer-copyright py-3 mt-5 text-center bg-light w-100">
       © 2018 Copyright:
   </div>
 </template>
@@ -12,4 +12,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

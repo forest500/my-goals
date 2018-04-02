@@ -104,7 +104,7 @@ const actions = {
   loadCategories({commit}) {
     return axios.get(`${API_LOCATION}get_categories`)
       .then(response => {
-        commit('SET_CATEGORIES', response.data)
+        commit('SET_CATEGORIES', response.data.categories)
         commit('SET_CATEGORY_INDEXES')
       }).catch(error => {
         return error
@@ -113,7 +113,7 @@ const actions = {
   loadGoals({commit}) {
     return axios.get(`${API_LOCATION}get_goals`)
       .then(response => {
-        commit('SET_ALLGOALS', response.data)
+        commit('SET_ALLGOALS', response.data.goals)
       }).catch(error => {
         return error
       });
@@ -121,7 +121,7 @@ const actions = {
   loadCategoryGoals({commit}, id) {
     return axios.get(`${API_LOCATION}get_category_goals/${id}`)
       .then(response => {
-        commit('SET_GOALS', response.data)
+        commit('SET_GOALS', response.data.goals)
       }).catch(error => {
         return error
       })
@@ -129,7 +129,7 @@ const actions = {
   loadCategoryStages({commit}, id) {
     return axios.get(`${API_LOCATION}get_category_stages/${id}`)
       .then(response => {
-        commit('SET_STAGES', response.data)
+        commit('SET_STAGES', response.data.stages)
       }).catch(error => {
         return error
       })

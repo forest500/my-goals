@@ -7,7 +7,7 @@
   <div v-show="!loading">
     <header>
       <div class="row justify-content-center mt-4">
-        <h3 class="mr-3">{{ category.name }}</h3>
+        <h4 class="mr-3">{{ category.name }}</h4>
         <router-link tag="button" class="btn btn-info mr-3 h-25" :to="{ name: 'edit_category', params: {categoryName: category.name, id: category.id} }" exact><i class="fas fa-edit"></i></router-link>
         <delete-button class="h-25" path="/" v-bind:itemToDelete="category" :index="category.index" deleteFunction="deleteCategory"></delete-button>
       </div>
@@ -17,9 +17,9 @@
     </header>
     <div class="d-flex flex-wrap">
       <div class="col-md-6" v-for="(goal, index) in goals" v-bind:key="goal.id">
-        <div :class="cardClass[randomNumber(index)]">
+        <div class="card border-secondary mb-3">
           <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
-          <div class="card-header row w-100">
+          <div class="card-header row w-100 m-auto">
             <h5 v-if="!isEditing[index]" class="offset-md-3 col-md-4" :id="goal.id">{{ goal.name }}</h5>
             <edit-button class="btn-sm mr-2 h-25 col-md-1" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
             <delete-button class="btn-sm h-25 col-md-1" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
@@ -72,15 +72,6 @@ export default {
       isEditing: [],
       loading: false,
       errorMsg: '',
-      cardClass: [
-        "card text-white bg-primary mb-3",
-        "card text-white bg-secondary mb-3",
-        "card text-white bg-danger mb-3",
-        "card text-white bg-warning mb-3",
-        "card text-white bg-info mb-3",
-        "card bg-light mb-3",
-        "card text-white bg-dark mb-3"
-      ]
     }
   },
   created() {
@@ -134,9 +125,6 @@ export default {
           }
         })
     },
-    randomNumber(index){
-      return Math.floor(Math.random() * 7);
-    }
   },
 }
 </script>

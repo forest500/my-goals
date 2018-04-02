@@ -58,7 +58,7 @@ class CategoryController extends Controller
         $userId = $this->getUser()->getId();
         $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories($userId);
 
-        return $this->json($categories);
+        return $this->json(['categories' => $categories]);
     }
 
     /**
@@ -100,7 +100,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/delete_category/{category}", name="delete_category", options={"utf8": true})
+     * @Route("/delete_category/{id}", name="delete_category", options={"utf8": true})
      * @Method("DELETE")
      */
     public function delete(Category $category, Request $request, DeleteProcessor $deleteProcessor)

@@ -15,9 +15,7 @@ class CategoryControllerTest extends ApiTestCase
     public function testPost()
     {
         $client = $this->createAuthenticatedClient();
-
         $data = '{"name":"kategoria", "description":"opis kategorii"}';
-
         $client->request('Post', 'api/new_category', array(), array(), array(), $data);
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
@@ -31,6 +29,7 @@ class CategoryControllerTest extends ApiTestCase
 
         $client->request('Get', 'api/get_categories');
         $data = json_decode($client->getResponse()->getContent());
+        $data = $data->categories;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertObjectHasAttribute('name', $data[0]);

@@ -56,9 +56,9 @@ class GoalController extends Controller
     {
         $userId = $this->getUser()->getId();
 
-        $categories = $this->getDoctrine()->getRepository(Goal::class)->findGoals($userId);
+        $goals = $this->getDoctrine()->getRepository(Goal::class)->findGoals($userId);
 
-        return $this->json($categories);
+        return $this->json(['goals' => $goals]);
     }
 
     /**
@@ -68,6 +68,12 @@ class GoalController extends Controller
     public function getOne($id, Request $request)
     {
         $goal = $this->getDoctrine()->getRepository(Goal::class)->findGoal($id);
+        if(!$goal) {
+            throw $this->createNotFoundException(sprintf(
+                'Nie znaleziono celu o id "%s"',
+                $id
+            ));
+        }
 
         return $this->json($goal);
     }
@@ -80,7 +86,7 @@ class GoalController extends Controller
     {
         $goals = $this->getDoctrine()->getRepository(Goal::class)->findByCategory($category->getId());
 
-        return $this->json($goals);
+        return $this->json(['goals' => $goals]);
     }
 
     /**
@@ -89,7 +95,6 @@ class GoalController extends Controller
      */
     public function put(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor)
     {
-        $form = $this->createForm(GoalType::class, $goal);
         $form = $this->createForm(GoalType::class, $goal);
         $formProcessor->processForm($form, $request);
 

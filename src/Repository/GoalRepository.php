@@ -23,7 +23,7 @@ class GoalRepository extends ServiceEntityRepository
             WHERE g.userId = :userId
             ORDER BY g.id ASC'
         )
-        ->setParameter('userId', $userId)        
+        ->setParameter('userId', $userId)
         ->getResult();
     }
 
@@ -37,7 +37,7 @@ class GoalRepository extends ServiceEntityRepository
             WHERE g.id = :id'
         )
         ->setParameter('id', $id)
-        ->getResult();
+        ->getOneOrNullResult();;
     }
 
     public function findByCategory($id)

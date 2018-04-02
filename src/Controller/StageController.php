@@ -55,9 +55,9 @@ class StageController extends Controller
     {
         $userId = $this->getUser()->getId();
 
-        $categories = $this->getDoctrine()->getRepository(Stage::class)->findStages($userId);
+        $stages = $this->getDoctrine()->getRepository(Stage::class)->findStages($userId);
 
-        return $this->json($categories);
+        return $this->json(['stages' => $stages]);
     }
 
     /**
@@ -67,6 +67,12 @@ class StageController extends Controller
     public function getOne($id, Request $request)
     {
         $stage = $this->getDoctrine()->getRepository(Stage::class)->findStage($id);
+        if(!$stage) {
+            throw $this->createNotFoundException(sprintf(
+                'Nie znaleziono poziomu o id "%s"',
+                $id
+            ));
+        }
 
         return $this->json($stage);
     }
@@ -77,9 +83,9 @@ class StageController extends Controller
      */
     public function getByGoal(Goal $goal, Request $request)
     {
-        $stage = $this->getDoctrine()->getRepository(Stage::class)->findByGoal($goal->getId());
+        $stages = $this->getDoctrine()->getRepository(Stage::class)->findByGoal($goal->getId());
 
-        return $this->json($stage);
+        return $this->json(['stages' => $stages]);
     }
 
     /**
@@ -88,9 +94,9 @@ class StageController extends Controller
      */
     public function getByCategory(Category $category, Request $request)
     {
-        $stage = $this->getDoctrine()->getRepository(Stage::class)->findByCategory($category->getId());
+        $stages = $this->getDoctrine()->getRepository(Stage::class)->findByCategory($category->getId());
 
-        return $this->json($stage);
+        return $this->json(['stages' => $stages]);
     }
 
     /**

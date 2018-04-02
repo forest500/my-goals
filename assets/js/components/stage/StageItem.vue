@@ -1,11 +1,13 @@
 <template>
   <div class="row my-2">
-      <div class="col-md-2" v-show="!isEditing">{{ stage.number }} </div>
-      <div class="col-md-2" v-show="!isEditing">{{ stage.name }} </div>
+      <div class="col-md-1" v-show="!isEditing">{{ stage.number }} </div>
+      <div class="col-md-3" v-show="!isEditing">{{ stage.name }} </div>
       <div class="col-md-2" v-show="!isEditing">{{ stage.award }}</div>
       <div class="col-md-3" v-show="!isEditing">{{ stage.endDate }}</div>
-      <div class="ml-3"><edit-button class="btn-sm" v-show="!isEditing" @click.native="isEditing=!isEditing"></edit-button></div>
-      <delete-button v-show="!isEditing" class="ml-2 btn-sm" :index="index" v-bind:itemToDelete="stage" deleteFunction="deleteStage"></delete-button>
+      <div class="ml-2"><edit-button class="btn-sm" v-show="!isEditing" @click.native="isEditing=!isEditing"></edit-button></div>
+      <div>
+        <delete-button v-show="!isEditing" class="ml-2 btn-sm" :index="index" v-bind:itemToDelete="stage" deleteFunction="deleteStage"></delete-button>
+      </div>
 
     <div class="" v-if="isEditing">
       <edit-stage :stage="stage" :isEditing.sync="isEditing">

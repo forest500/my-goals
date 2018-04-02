@@ -11,12 +11,13 @@ use \App\Entity\Goal;
 class ApiTestCase extends WebTestCase
 {
     protected $client;
+    protected $user;
 
     protected function setUp()
     {
       self::bootKernel();
 
-      $this->createUser();
+      $this->user = $this->createUser();
       $this->createCategory('kategoria', 'opis kategorii');
     }
 
