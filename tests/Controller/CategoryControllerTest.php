@@ -48,9 +48,8 @@ class CategoryControllerTest extends ApiTestCase
         $data = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('kategoria', $data[0]->name);
-        $this->assertEquals('opis kategorii', $data[0]->description);
-        $this->assertCount(1, $data);
+        $this->assertEquals('kategoria', $data->name);
+        $this->assertEquals('opis kategorii', $data->description);
     }
 
     public function testPut()

@@ -50,8 +50,7 @@ class GoalControllerTest extends ApiTestCase
         $data = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('cel', $data[0]->name);
-        $this->assertCount(1, $data);
+        $this->assertEquals('cel', $data->name);
     }
 
     public function testGetByCategory()
@@ -62,7 +61,7 @@ class GoalControllerTest extends ApiTestCase
 
         $client->request('Get', "api/get_category_goals/$categoryId");
         $data = json_decode($client->getResponse()->getContent());
-        $data = $data->goals;        
+        $data = $data->goals;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('cel', $data[0]->name);

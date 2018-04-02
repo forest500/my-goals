@@ -60,8 +60,7 @@ class StageControllerTest extends ApiTestCase
         $data = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('poziom pierwszy', $data[0]->name);
-        $this->assertCount(1, $data);
+        $this->assertEquals('poziom pierwszy', $data->name);
     }
 
     public function testGetByCategory()
@@ -94,7 +93,7 @@ class StageControllerTest extends ApiTestCase
 
         $client->request('Get', "api/get_goal_stages/$goalId");
         $data = json_decode($client->getResponse()->getContent());
-        $data = $data->stages;        
+        $data = $data->stages;
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('poziom pierwszy', $data[0]->name);
