@@ -13,8 +13,6 @@ use App\Api\DeleteProcessor;
 use App\Entity\Category;
 use App\Entity\Goal;
 use App\Form\CategoryType;
-use App\Api\ApiProblem;
-use App\Api\ApiProblemException;
 
 /**
  * @Route("/api")

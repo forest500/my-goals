@@ -148,6 +148,9 @@ const actions = {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
           commit('FORM_ERRORS', errors.response.data.errors)
+        } else if (errors.response.status === 400 && errors.response.data.type === "unique_name_error") {
+          commit('HAS_ERRORS', true)
+          commit('SET_ALERT', { category: true, message: errors.response.data.message, class: 'alert-danger' } )
         }
       })
   },
@@ -165,6 +168,9 @@ const actions = {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
           commit('FORM_ERRORS', errors.response.data.errors)
+        } else if (errors.response.status === 400 && errors.response.data.type === "unique_name_error") {
+          commit('HAS_ERRORS', true)
+          commit('SET_ALERT', { category: true, message: errors.response.data.message, class: 'alert-danger' } )
         }
       })
   },
@@ -182,6 +188,9 @@ const actions = {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
           commit('HAS_ERRORS', true)
           commit('FORM_ERRORS', errors.response.data.errors)
+        } else if (errors.response.status === 400 && errors.response.data.type === "unique_name_error") {
+          commit('HAS_ERRORS', true)
+          commit('SET_ALERT', { category: true, message: errors.response.data.message, class: 'alert-danger' } )
         }
       })
   },

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+*  @ORM\Table(name="category",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})}) 
  */
 class Category
 {

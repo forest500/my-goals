@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StageRepository")
+*  @ORM\Table(name="stage",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})})
  */
 class Stage
 {
@@ -83,7 +84,7 @@ class Stage
     public function getId()
     {
         return $this->id;
-    }    
+    }
 
     public function autoSetNumber()
     {

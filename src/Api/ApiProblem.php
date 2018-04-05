@@ -11,10 +11,12 @@ class ApiProblem
     const TYPE_VALIDATION_ERROR = 'validation_error';
     const TYPE_INVALID_REQUEST_BODY_FORMAT = 'invalid_body_format';
     const TYPE_FOREIGN_KEY_CONSTRAINT_VIOLATION = 'foreign_key_constraint_violation';
+    const TYPE_UNIQUE_NAME_ERROR = 'unique_name_error';
     private static $titles = array(
         self::TYPE_VALIDATION_ERROR => 'There was a validation error',
         self::TYPE_INVALID_REQUEST_BODY_FORMAT => 'Invalid JSON format sent',
         self::TYPE_FOREIGN_KEY_CONSTRAINT_VIOLATION => 'Parent can not be deleted, because it has children',
+        self::TYPE_UNIQUE_NAME_ERROR => 'This name is already used',
     );
 
     private $statusCode;
