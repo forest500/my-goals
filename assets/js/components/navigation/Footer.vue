@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-bottom footer-copyright py-3 mt-5 text-center bg-light w-100">
+  <div class="footer-copyright py-3 mt-5 text-center bg-light w-100">
       © 2018 Copyright:
   </div>
 </template>

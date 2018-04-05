@@ -1,6 +1,6 @@
 <template>
   <div class="row my-2">
-      <div class="col-md-1" v-show="!isEditing">{{ stage.number }} </div>
+      <div class="col-md-1" v-show="!isEditing">{{ stage.number }}</div>
       <div class="col-md-3" v-show="!isEditing">{{ stage.name }} </div>
       <div class="col-md-2" v-show="!isEditing">{{ stage.award }}</div>
       <div class="col-md-3" v-show="!isEditing">{{ stage.endDate }}</div>
@@ -28,11 +28,11 @@ var moment = require('moment');
 
 export default {
   created() {
-    this.stage.endDate = moment(this.stage.endDate.date).format('YYYY-MM-DD')
+    this.stage.endDate = moment(this.stage.endDate).format('YYYY-MM-DD')
   },
   watch: {
     stage: function() {
-      this.stage.endDate = moment(this.stage.endDate.date).format('YYYY-MM-DD')
+      this.stage.endDate = moment(this.stage.endDate).format('YYYY-MM-DD')
     }
   },
   components: {
