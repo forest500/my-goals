@@ -1,9 +1,11 @@
 <template>
-<div>
+<div class="container mt-2 w-100">
   <form class="row" v-on:submit.prevent="httpFunction" name="goalForm">
-    <input class="col-2" type="text" name="name" v-model="goal.name">
-    <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
-    <slot name="button"></slot>
+    <div class="form-group col-md-9">
+      <input class="form-control form-control-sm" type="text" name="name" v-model="goal.name">
+      <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
+    </div>
+    <slot class="col-md-2" name="button"></slot>
   </form>
 </div>
 </template>

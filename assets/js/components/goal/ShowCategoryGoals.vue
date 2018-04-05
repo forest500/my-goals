@@ -20,7 +20,7 @@
         <div class="card border-secondary mb-3">
           <edit-goal class="w-100" v-if="isEditing[index]" :goal="goal" :index="index" :isEditing="isEditing"></edit-goal>
           <div class="card-header row w-100 m-auto">
-            <h5 v-if="!isEditing[index]" class="offset-md-3 col-md-4" :id="goal.id">{{ goal.name }}</h5>
+            <h5 v-if="!isEditing[index]" class="col-md-9" :id="goal.id">{{ goal.name }}</h5>
             <edit-button class="btn-sm mr-2 h-25 col-md-1" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
             <delete-button class="btn-sm h-25 col-md-1" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
           </div>
