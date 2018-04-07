@@ -4,7 +4,6 @@
 </button>
 </template>
 <script>
-
 export default {
   props: {
     itemToDelete: {
@@ -26,14 +25,19 @@ export default {
   },
   data() {
     return {
-      payload: { itemToDelete: this.itemToDelete, index: this.index }
+      payload: {
+        itemToDelete: this.itemToDelete,
+        index: this.index
+      }
     }
   },
   methods: {
     remove() {
       this.$store.dispatch(this.deleteFunction, this.payload)
         .then(() => {
-          if(this.path) this.$router.push({ path: this.path })
+          if (this.path) this.$router.push({
+            path: this.path
+          })
         })
     }
   }

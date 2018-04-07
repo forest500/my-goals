@@ -1,11 +1,11 @@
 <template>
 <div class="">
-    <stage-form :stage="newStage" v-bind:httpFunction="post">
-      <div slot="button">
-        <save-button class="mx-2 btn-sm"></save-button>
-        <slot name="cancel-button"></slot>
-      </div>
-    </stage-form>
+  <stage-form :stage="newStage" v-bind:httpFunction="post">
+    <div slot="button">
+      <save-button class="mx-2 btn-sm"></save-button>
+      <slot name="cancel-button"></slot>
+    </div>
+  </stage-form>
 </div>
 </template>
 
@@ -36,15 +36,12 @@ export default {
       this.newStage.goalId = this.goalId
       this.$store.dispatch('postStage', this.newStage)
         .then(() => {
-          if(!this.hasErrors) {
-            this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-            this.newStage.endDate = moment(this.newStage.endDate.date).format('YYYY-MM-DD')
-          }
+          this.newStage.endDate = moment(this.newStage.endDate.date).format('YYYY-MM-DD')
         })
-    }
+    },
   },
   computed: {
-    hasErrors () {
+    hasErrors() {
       return this.$store.getters.hasErrors
     },
   }

@@ -1,8 +1,8 @@
 <template>
 <div>
-    <category-form v-bind:httpFunction="post">
-      <button slot="button" class="btn btn-success">dodaj kategorię</button>
-    </category-form>
+  <category-form v-bind:httpFunction="post">
+    <button slot="button" class="btn btn-success">dodaj kategorię</button>
+  </category-form>
 </div>
 </template>
 
@@ -18,21 +18,23 @@ export default {
     post() {
       this.$store.dispatch('postCategory', this.categoryInForm)
         .then(() => {
-          if(!this.hasErrors) {
-            this.$store.dispatch('loadCategories')
-              .then(() => {
-                this.$router.push({ path:`/` })
-              })
+          if (!this.hasErrors) {
+            this.$router.push({
+              path: `/${this.category.name}/${this.category.id}`
+            })
           }
         })
     }
   },
   computed: {
-    hasErrors () {
+    hasErrors() {
       return this.$store.getters.hasErrors
     },
     categoryInForm() {
       return this.$store.getters.categoryInForm
+    },
+    category() {
+      return this.$store.getters.category
     }
   }
 }

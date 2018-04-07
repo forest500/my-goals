@@ -38,7 +38,6 @@ export default {
     ...mapGetters([
       'hasErrors',
       'formErrors',
-      'category',
       'categoryInForm',
     ])
   },

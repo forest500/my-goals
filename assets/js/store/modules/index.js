@@ -63,17 +63,20 @@ const mutations = {
   SET_GOAL(state, goal) {
     state.newGoal = goal
   },
-  SET_STAGES(state, stages) {
-    state.stages = stages
-  },
   SET_SHOW_GOAL_FORM(state, boolean) {
     state.showGoalForm = boolean
   },
-  ADD_CATEGORY(state, categoryObject) {
-    state.categories.push(categoryObject)
+  ADD_CATEGORY(state, category) {
+    category.index = Object.keys(state.categories).length
+    state.categories.push(category)
+    state.category = category
   },
   DELETE_CATEGORY(state, index) {
     state.categories.splice(index, 1)
+  },
+  ADD_GOAL(state, goal) {
+    state.goal = goal
+    state.goals.push(goal)
   },
   DELETE_GOAL(state, index) {
     state.goals.splice(index, 1)
@@ -131,9 +134,9 @@ const actions = {
        description: category.description
     })
       .then(response => {
-        commit('SET_ALERT', { category: true, message: message.CATEGORY_CREATE, class: 'alert-success' } )
         commit('CLEAR_ERRORS')
-        commit('SET_CATEGORY', category)
+        commit('ADD_CATEGORY', response.data)
+        commit('SET_ALERT', { category: true, message: message.CATEGORY_CREATE, class: 'alert-success' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -150,10 +153,10 @@ const actions = {
        name: goal.name,
     })
       .then(response => {
-        commit('SET_ALERT', { goal: true, message: message.GOAL_CREATE, class: 'alert-success' } )
         commit('CLEAR_ERRORS')
-        commit('SET_GOAL', goal)
+        commit('ADD_GOAL', response.data)
         commit('SET_SHOW_GOAL_FORM', false)
+        commit('SET_ALERT', { goal: true, message: message.GOAL_CREATE, class: 'alert-success' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -172,8 +175,8 @@ const actions = {
        endDate: stage.endDate
     })
       .then(response => {
-        commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_CREATE, class: 'alert-success' } )
         commit('CLEAR_ERRORS')
+        commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_CREATE, class: 'alert-success' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -194,9 +197,9 @@ const actions = {
        description: category.description
     })
       .then(response => {
-        commit('SET_ALERT', { category: true, message: message.CATEGORY_EDIT, class: 'alert-info' } )
         commit('CLEAR_ERRORS')
         commit('SET_CATEGORY', category)
+        commit('SET_ALERT', { category: true, message: message.CATEGORY_EDIT, class: 'alert-info' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -210,9 +213,9 @@ const actions = {
        name: goal.name,
     })
       .then(response => {
-        commit('SET_ALERT', { goal: true, message: message.GOAL_EDIT, class: 'alert-info' } )
         commit('CLEAR_ERRORS')
         commit('SET_GOAL', goal)
+        commit('SET_ALERT', { goal: true, message: message.GOAL_EDIT, class: 'alert-info' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -228,8 +231,8 @@ const actions = {
        endDate: stage.endDate
     })
       .then(response => {
-        commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_EDIT, class: 'alert-info' } )
         commit('CLEAR_ERRORS')
+        commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_EDIT, class: 'alert-info' } )
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -244,8 +247,8 @@ const actions = {
   deleteCategory({commit}, category) {
     return axios.delete(`${API_LOCATION}delete_category/${category.itemToDelete.id}`)
       .then(response => {
-        commit('SET_ALERT', { category: true, message: message.CATEGORY_DELETE, class: 'alert-danger' } )
         commit('DELETE_CATEGORY', category.index)
+        commit('SET_ALERT', { category: true, message: message.CATEGORY_DELETE, class: 'alert-danger' } )
       }).catch(error => {
         commit('SET_ALERT', { category: true, message: error.response.data.error, class: 'alert-danger' } )
       })
@@ -253,8 +256,8 @@ const actions = {
   deleteGoal({commit}, goal) {
     return axios.delete(`${API_LOCATION}delete_goal/${goal.itemToDelete.id}`)
       .then(response => {
-        commit('SET_ALERT', { goal: true, message: message,GOAL_DELETE, class: 'alert-danger' } )
-      commit('DELETE_GOAL', goal.index)
+        commit('DELETE_GOAL', goal.index)
+        commit('SET_ALERT', { goal: true, message: message.GOAL_DELETE, class: 'alert-danger' } )
       }).catch(error => {
         commit('SET_ALERT', { goal: true, message: error.response.data.error, class: 'alert-danger' } )
       })
@@ -262,8 +265,8 @@ const actions = {
   deleteStage({commit}, stage) {
     return axios.delete(`${API_LOCATION}delete_stage/${stage.itemToDelete.id}`)
       .then(response => {
+        commit('DELETE_STAGE', stage.index)
         commit('SET_ALERT', { stage: stage.itemToDelete.goalId, message: message.STAGE_DELETE, class: 'alert-danger' } )
-      commit('DELETE_STAGE', stage.index)
       }).catch(error => {
         alert(error.response.data)
       })
