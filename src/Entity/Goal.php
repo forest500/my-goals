@@ -6,10 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GoalRepository")
-*  @ORM\Table(name="goal",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})}) 
+ * @ORM\Table(name="goal",uniqueConstraints={@ORM\UniqueConstraint(name="search_user", columns={"name", "userId"})})
+ * @Serializer\ExclusionPolicy("none")
  */
 class Goal
 {
@@ -53,6 +55,7 @@ class Goal
     /**
     * @ORM\ManyToOne(targetEntity="App\Entity\User")
     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+    * @Serializer\Exclude
     */
     private $userId;
 

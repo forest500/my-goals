@@ -9,7 +9,7 @@ use App\Api\ApiProblemException;
 
 class FormProcessorTest extends TypeTestCase
 {
-    public function testThrowException()
+    public function testThrowInvalidBodyException()
     {
         $this->expectException(ApiProblemException::class);
         $invalidBody =
@@ -17,30 +17,30 @@ class FormProcessorTest extends TypeTestCase
               "name: "Miro",
               "number" : "2
           }';
-
-        $request = new Request(array(), array(), array(), array(), array(), array(), $invalidBody);
-
-        $form = $this->factory->create();
-
+        $data = json_decode($invalidBody, true);
 
         $formProcessor = new FormProcessor();
-        $formProcessor->processForm($form, $request);
+        $formProcessor->checkJson($data);
     }
 
-    public function testValidDataIsSubmitted()
+    public function testValiddJsonBodySend()
     {
-      $validBody =
+        $validBody =
         '{
             "name": "Miro",
             "number" : "2"
           }';
 
-      $request = new Request(array(), array(), array(), array(), array(), array(), $validBody);
-      $form = $this->factory->create();
+        $formProcessor = new FormProcessor();
+        $this->assertTrue($formProcessor->checkJson($validBody));
+    }
 
-      $formProcessor = new FormProcessor();
-      $formProcessor->processForm($form, $request);
-      
-      $this->assertTrue($form->isSubmitted());
-  }
+    public function testThrowUniqueNameException()
+    {
+        $this->expectException(ApiProblemException::class);
+
+
+        $formProcessor = new FormProcessor();
+        $formProcessor->checkJson($data);
+    }
 }

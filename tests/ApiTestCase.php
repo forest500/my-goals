@@ -16,6 +16,7 @@ class ApiTestCase extends WebTestCase
     protected function setUp()
     {
       self::bootKernel();
+      $this->purgeDatabase();
 
       $this->user = $this->createUser();
       $this->createCategory('kategoria', 'opis kategorii');
@@ -116,8 +117,6 @@ class ApiTestCase extends WebTestCase
 
     protected function tearDown()
     {
-        $this->purgeDatabase();
-
         parent::teardown();
     }
 }

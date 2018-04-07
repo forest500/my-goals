@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Api\FormValidator;
 use App\Api\FormProcessor;
 use App\Api\DeleteProcessor;
@@ -14,6 +13,7 @@ use App\Entity\Goal;
 use App\Entity\Stage;
 use App\Entity\Category;
 use App\Form\GoalType;
+use App\Api\ApiResponse;
 
 /**
  * @Route("/api")
@@ -24,27 +24,34 @@ class GoalController extends Controller
      * @Route("/new_goal/{category}", name="new_goal", options={"utf8": true})
      * @Method("POST")
      */
-    public function post(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor)
+    public function post(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
         $goal = new Goal();
         $goal->setCategory($category);
+        $user = $this->getUser();
 
         $form = $this->createForm(GoalType::class, $goal);
-        $formProcessor->processForm($form, $request);
+        $formProcessor->processForm($form, $request, $user->getId());
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
             $goal->setUserId($user);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($goal);
             $em->flush();
 
-            return $this->json("Dodano cel!", 201);
+            $response = $response->createResponse($goal, 201);
+            $goalUrl = $this->generateUrl(
+                'get_goal',
+                ['id' => $goal->getId()]
+            );
+            $response->headers->set('Location', $goalUrl);
+
+            return $response;
         }
     }
 
@@ -52,48 +59,56 @@ class GoalController extends Controller
      * @Route("/get_goals", name="get_goals", options={"utf8": true})
      * @Method("GET")
      */
-    public function getAll(Request $request)
+    public function getAll(ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
 
-        $goals = $this->getDoctrine()->getRepository(Goal::class)->findGoals($userId);
+        $goals = $this->getDoctrine()->getRepository(Goal::class)->findByUserId($userId);
 
-        return $this->json(['goals' => $goals]);
+        return $response->createResponse(['goals' => $goals]);
     }
 
     /**
      * @Route("/get_goal/{id}", name="get_goal", options={"utf8": true})
      * @Method("GET")
      */
-    public function getOne($id, Request $request)
+    public function getOne($id, ApiResponse $response)
     {
-        $goal = $this->getDoctrine()->getRepository(Goal::class)->findGoal($id);
-        if(!$goal) {
+        $userId = $this->getUser()->getId();
+        $goal = $this->getDoctrine()->getRepository(Goal::class)->findOneBy([
+            'id' => $id,
+            'userId' => $userId,
+        ]);
+        if (!$goal) {
             throw $this->createNotFoundException(sprintf(
                 'Nie znaleziono celu o id "%s"',
                 $id
             ));
         }
 
-        return $this->json($goal);
+        return $response->createResponse($goal);
     }
 
     /**
      * @Route("/get_category_goals/{category}", name="get_category_goals", options={"utf8": true})
      * @Method("GET")
      */
-    public function getByCategory(Category $category, Request $request)
+    public function getByCategory(Category $category, ApiResponse $response)
     {
-        $goals = $this->getDoctrine()->getRepository(Goal::class)->findByCategory($category->getId());
+        $userId = $this->getUser()->getId();
+        $goals = $this->getDoctrine()->getRepository(Goal::class)->findBy([
+            'category' => $category,
+            'userId' => $userId,
+        ]);
 
-        return $this->json(['goals' => $goals]);
+        return $response->createResponse(['goals' => $goals]);
     }
 
     /**
      * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor)
+    public function put(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
         $form = $this->createForm(GoalType::class, $goal);
         $formProcessor->processForm($form, $request);
@@ -106,7 +121,7 @@ class GoalController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->json("Zmieniono cel!");
+            return $response->createResponse($goal, 200);
         }
     }
 
@@ -114,7 +129,7 @@ class GoalController extends Controller
      * @Route("/delete_goal/{goal}", name="delete_goal", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Goal $goal, Request $request, DeleteProcessor $deleteProcessor)
+    public function delete(Goal $goal, DeleteProcessor $deleteProcessor, ApiResponse $response)
     {
         $em = $this->getDoctrine()->getManager();
         $goalStages = $em->getRepository(Stage::class)->findByGoal($goal->getId());
@@ -124,6 +139,6 @@ class GoalController extends Controller
         $em->remove($goal);
         $em->flush();
 
-        return $this->json("Cel został usunięty");
+        return $response->createResponse(null, 204);
     }
 }

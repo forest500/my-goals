@@ -20,8 +20,14 @@ class GoalControllerTest extends ApiTestCase
         $categoryId = $this->getObjId('kategoria', Category::class);
         $client->request('Post', 'api/new_goal/'.$categoryId, array(), array(), array(), $data);
 
+        $response = $client->getResponse();
+        $responseData = json_decode($response->getContent(), true);
+
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
-        $this->assertEquals("Dodano cel!", json_decode($client->getResponse()->getContent()));
+        $this->assertTrue($response->headers->has('Location'));
+        $this->assertEquals("/api/get_goal/".$responseData['id'], $response->headers->get('Location'));
+        $this->assertArrayHasKey('name', $responseData);
+        $this->assertEquals("cel", $responseData['name']);
     }
 
     public function testGetAll()
@@ -31,13 +37,13 @@ class GoalControllerTest extends ApiTestCase
         $this->createGoal('drugi cel');
 
         $client->request('Get', 'api/get_goals');
-        $data = json_decode($client->getResponse()->getContent());
-        $data = $data->goals;
+        $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertObjectHasAttribute('name', $data[0]);
-        $this->assertEquals('drugi cel', $data[1]->name);
-        $this->assertCount(2, $data);
+        $this->assertArrayHasKey('goals', $data);
+        $this->assertArrayHasKey('name', $data['goals'][0]);
+        $this->assertEquals('drugi cel', $data['goals'][1]['name']);
+        $this->assertCount(2, $data['goals']);
     }
 
     public function testGetOne()
@@ -60,11 +66,11 @@ class GoalControllerTest extends ApiTestCase
         $categoryId = $this->getObjId('kategoria', Category::class);
 
         $client->request('Get', "api/get_category_goals/$categoryId");
-        $data = json_decode($client->getResponse()->getContent());
-        $data = $data->goals;
+        $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('cel', $data[0]->name);
+        $this->assertArrayHasKey('goals', $data);
+        $this->assertEquals('cel', $data['goals'][0]['name']);
         $this->assertCount(1, $data);
     }
 
@@ -85,8 +91,11 @@ class GoalControllerTest extends ApiTestCase
           $data
       );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals("Zmieniono cel!", json_decode($client->getResponse()->getContent()));
+      $response = $client->getResponse();
+      $responseData = json_decode($response->getContent(), true);
+
+      $this->assertEquals(200, $response->getStatusCode());
+      $this->assertEquals('edited goal', $responseData['name']);
     }
 
     public function testDelete()
@@ -98,8 +107,7 @@ class GoalControllerTest extends ApiTestCase
 
         $client->request('Delete', "api/delete_goal/$goalId");
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals("Cel został usunięty", json_decode($client->getResponse()->getContent()));
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }
 
     protected function tearDown()

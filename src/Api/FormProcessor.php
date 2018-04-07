@@ -14,34 +14,49 @@ class FormProcessor
 {
     private $em;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager = null)
     {
         $this->em = $entityManager;
     }
 
-    public function processForm(FormInterface $form, Request $request)
+    public function processForm(FormInterface $form, Request $request, int $userId = 0)
     {
         $data = json_decode($request->getContent(), true);
-        if ($data === null) {
-            $apiProblem = new ApiProblem(400, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
+        $this->checkJson($data);
 
-            throw new ApiProblemException($apiProblem);
-        }
-        $this->checkUniqueName($data['name'], $form);
+        $name = $data['name'];
+        $class = $form->getConfig()->getDataClass();
+        $this->checkUniqueName($class, $name, $userId);
 
         $clearMissing = $request->getMethod() != 'PATCH';
         $form->submit($data, $clearMissing);
     }
 
-    public function checkUniqueName(string $name, FormInterface $form)
+    public function checkJson($data)
     {
-        $class = $form->getConfig()->getDataClass();
-        $object = $this->em->getRepository($class)->findByName($name);
+        if ($data === null) {
+            $apiProblem = new ApiProblem(400, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
+
+            throw new ApiProblemException($apiProblem);
+        }
+
+        return true;
+    }
+
+    public function checkUniqueName($class, string $name, int $userId = 0)
+    {
+        $object = $this->em->getRepository($class)->findOneBy([
+            'name' => $name,
+            'userId' => $userId,
+        ]);
+
         if (!empty($object)) {
             $apiProblem = new ApiProblem(400, ApiProblem::TYPE_UNIQUE_NAME_ERROR);
             $apiProblem->set('message', "$name już istnieje. Wybierz inną nazwe");
 
             throw new ApiProblemException($apiProblem);
         }
+
+        return true;
     }
 }

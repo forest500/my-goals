@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Api\FormValidator;
 use App\Api\FormProcessor;
 use App\Api\DeleteProcessor;
@@ -25,26 +24,33 @@ class CategoryController extends Controller
     *  defaults={"_format": "json"})
      * @Method("POST")
      */
-    public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor)
+    public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
         $category = new Category();
+        $user = $this->getUser();
 
         $form = $this->createForm(CategoryType::class, $category);
-        $formProcessor->processForm($form, $request);
+        $formProcessor->processForm($form, $request, $user->getId());
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
             $category->setUserId($user);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
             $em->flush();
 
-            return $this->json("Dodano kategorię!", 201);
+            $response = $response->createResponse($category, 201);
+            $categoryUrl = $this->generateUrl(
+                'get_category',
+                ['id' => $category->getId()]
+            );
+            $response->headers->set('Location', $categoryUrl);
+
+            return $response;
         }
     }
 
@@ -55,7 +61,7 @@ class CategoryController extends Controller
     public function getAll(ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories($userId);
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findByUserId($userId);
 
         return $response->createResponse(['categories' => $categories]);
     }
@@ -67,7 +73,7 @@ class CategoryController extends Controller
     public function getOne($id, ApiResponse $response)
     {
         $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
-        if(!$category) {
+        if (!$category) {
             throw $this->createNotFoundException(sprintf(
                 'Nie znaleziono kategorii o id "%s"',
                 $id
@@ -78,13 +84,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/update_category/{category}", name="update_category", options={"utf8": true})
+     * @Route("/update_category/{id}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor)
+    public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
+        $userId = $this->getUser()->getId();
+
         $form = $this->createForm(CategoryType::class, $category);
-        $formProcessor->processForm($form, $request);
+        $formProcessor->processForm($form, $request, $userId);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
@@ -94,7 +102,7 @@ class CategoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            return $this->json("Kategoria została zmieniona");
+            return $response->createResponse($category, 200);
         }
     }
 
@@ -102,7 +110,7 @@ class CategoryController extends Controller
      * @Route("/delete_category/{id}", name="delete_category", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Category $category, Request $request, DeleteProcessor $deleteProcessor)
+    public function delete(Category $category, DeleteProcessor $deleteProcessor, ApiResponse $response)
     {
         $em = $this->getDoctrine()->getManager();
         $categoryGoals = $em->getRepository(Goal::class)->findByCategory($category->getId());
@@ -113,6 +121,6 @@ class CategoryController extends Controller
         $em->remove($category);
         $em->flush();
 
-        return $this->json("Kategoria została usunieta");
+        return $response->createResponse(null, 204);
     }
 }
