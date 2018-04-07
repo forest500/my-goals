@@ -56,13 +56,6 @@ export default {
       isEditing: false,
     }
   },
-  methods: {
-
-
-  },
-  computed: {
-
-  }
 }
 </script>
 

@@ -6,7 +6,7 @@
         <div class="col-md-2">nagroda</div>
         <div class="col-md-2">data</div>
     </div>
-    <div v-if="stage.goalId === goalId" is ="stage-item" v-for="(stage, index) in stages" :stage="stage" :index="index"></div>
+    <stage-item v-for="(stage, index) in stages" v-bind:key="stage.id" :stage="stage" :index="index"></stage-item>
       <new-stage :showStageForm="showStageForm" v-if="showStageForm" class="w-100" :goalId="goalId">
         <cancel-button class="btn-sm" slot="cancel-button" v-show="showStageForm" @click.native="showStageForm = !showStageForm"></cancel-button>
       </new-stage>
@@ -25,6 +25,10 @@ import AlertApp from '../AlertApp.vue'
 
 export default {
   props: {
+    stages: {
+      type: Array,
+      required: true
+    },
     goalId: {
       type: Number,
       required: true
@@ -44,9 +48,6 @@ export default {
     'alert-app': AlertApp,
   },
   computed: {
-    stages() {
-      return this.$store.getters.stages
-    },
     alert() {
       return this.$store.getters.alert
     },

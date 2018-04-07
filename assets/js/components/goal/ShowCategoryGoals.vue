@@ -24,7 +24,7 @@
             <edit-button class="btn-sm mr-2 h-25 col-md-1" v-show="!isEditing[index]" @click.native="setIsEditing(index, true)"></edit-button>
             <delete-button class="btn-sm h-25 col-md-1" v-show="!isEditing[index]" v-bind:index="index" v-bind:itemToDelete="goal" deleteFunction="deleteGoal"></delete-button>
           </div>
-          <show-stages :goalId="goal.id"></show-stages>
+          <show-stages :goalId="goal.id" :stages="goal.stages"></show-stages>
         </div>
       </div>
     </div>
@@ -63,7 +63,12 @@ export default {
       this.$store.commit('SET_SHOW_GOAL_FORM', false)
       this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
         .then(() => {
-          this.loadCategoryStages()
+          if (typeof response !== 'undefined' && response.name === 'Error') {
+            this.loading = true
+          } else {
+            this.loading = false
+            this.isEditing = []
+          }
         })
     },
   },
@@ -79,7 +84,12 @@ export default {
     this.setActiveCategory()
     this.$store.dispatch('loadCategoryGoals', this.$route.params.id)
       .then(() => {
-        this.loadCategoryStages()
+        if (typeof response !== 'undefined' && response.name === 'Error') {
+          this.loading = true
+        } else {
+          this.loading = false
+          this.isEditing = []
+        }
       })
   },
   computed: {
@@ -113,17 +123,6 @@ export default {
       this.categories.forEach(category => {
         if (category.id === this.$route.params.id) this.$store.commit('SET_CATEGORY', category)
       })
-    },
-    loadCategoryStages() {
-      this.$store.dispatch('loadCategoryStages', this.$route.params.id)
-        .then((response) => {
-          if (typeof response !== 'undefined' && response.name === 'Error') {
-            this.loading = true
-          } else {
-            this.loading = false
-            this.isEditing = []
-          }
-        })
     },
   },
 }

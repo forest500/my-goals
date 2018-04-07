@@ -16,10 +16,10 @@
       <alert-app v-if="alert.goal" :class="alert.class" :message="alert.message"></alert-app>
       <ul class="list-group">
         <li class="list-group-item list-group-item-action list-group-item-success" v-for="goal in filteredGoals">
-          <router-link :to="{ name: 'category', params: {categoryName: goal.category, id: goal.categoryId }}" exact>
+          <router-link :to="{ name: 'category', params: {categoryName: goal.category.name, id: goal.category.id }}" exact>
             {{ goal.name }}
           </router-link>
-          <span class="badge badge-default badge-pill">{{ goal.category }}</span>
+          <span class="badge badge-default badge-pill">{{ goal.category.name }}</span>
         </li>
       </ul>
     </div>
@@ -67,7 +67,7 @@ export default {
     },
     alert() {
       return this.$store.getters.alert
-    }   
+    }
   },
 }
 </script>
