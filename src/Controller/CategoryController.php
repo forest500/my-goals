@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Api\FormValidator;
 use App\Api\FormProcessor;
 use App\Api\DeleteProcessor;
+use App\Api\ApiResponse;
 use App\Entity\Category;
 use App\Entity\Goal;
 use App\Form\CategoryType;
@@ -51,21 +52,21 @@ class CategoryController extends Controller
      * @Route("/get_categories", name="get_categories")
      * @Method("GET")
      */
-    public function getAll(Request $request)
+    public function getAll(ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
         $categories = $this->getDoctrine()->getRepository(Category::class)->findCategories($userId);
 
-        return $this->json(['categories' => $categories]);
+        return $response->createResponse(['categories' => $categories]);
     }
 
     /**
      * @Route("/get_category/{id}", name="get_category")
      * @Method("GET")
      */
-    public function getOne($id, Request $request)
+    public function getOne($id, ApiResponse $response)
     {
-        $category = $this->getDoctrine()->getRepository(Category::class)->findCategory($id);
+        $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
         if(!$category) {
             throw $this->createNotFoundException(sprintf(
                 'Nie znaleziono kategorii o id "%s"',
@@ -73,7 +74,7 @@ class CategoryController extends Controller
             ));
         }
 
-        return $this->json($category);
+        return $response->createResponse($category);
     }
 
     /**
