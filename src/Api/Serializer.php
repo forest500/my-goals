@@ -8,7 +8,13 @@ class Serializer
 {
     public function serialize($data, $form = 'json')
     {
-        $serializer = SerializerBuilder::create()->build();
+      $serializer = \JMS\Serializer\SerializerBuilder::create()
+          ->setPropertyNamingStrategy(
+              new \JMS\Serializer\Naming\SerializedNameAnnotationStrategy(
+                  new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy()
+              )
+          )
+          ->build();
 
         return $serializer->serialize($data, $form);
     }

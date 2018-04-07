@@ -8,7 +8,8 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StageRepository")
-*  @ORM\Table(name="stage",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})})
+ * @ORM\Table(name="stage",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})})
+ * @Serializer\ExclusionPolicy("none")
  */
 class Stage
 {
@@ -65,6 +66,7 @@ class Stage
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Goal", inversedBy="stages")
      * @ORM\JoinColumn(nullable=true)
+     * @Serializer\Exclude
      */
     private $goal;
 

@@ -24,9 +24,11 @@ class FormProcessor
         $data = json_decode($request->getContent(), true);
         $this->checkJson($data);
 
-        $name = $data['name'];
-        $class = $form->getConfig()->getDataClass();
-        $this->checkUniqueName($class, $name, $userId);
+        if($userId !== 0) {
+          $name = $data['name'];
+          $class = $form->getConfig()->getDataClass();
+          $this->checkUniqueName($class, $name, $userId);
+        }
 
         $clearMissing = $request->getMethod() != 'PATCH';
         $form->submit($data, $clearMissing);

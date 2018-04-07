@@ -34,13 +34,4 @@ class FormProcessorTest extends TypeTestCase
         $formProcessor = new FormProcessor();
         $this->assertTrue($formProcessor->checkJson($validBody));
     }
-
-    public function testThrowUniqueNameException()
-    {
-        $this->expectException(ApiProblemException::class);
-
-
-        $formProcessor = new FormProcessor();
-        $formProcessor->checkJson($data);
-    }
 }

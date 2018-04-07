@@ -62,7 +62,6 @@ class GoalController extends Controller
     public function getAll(ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
-
         $goals = $this->getDoctrine()->getRepository(Goal::class)->findByUserId($userId);
 
         return $response->createResponse(['goals' => $goals]);
@@ -110,8 +109,9 @@ class GoalController extends Controller
      */
     public function put(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
+        $userId = $this->getUser()->getId();
         $form = $this->createForm(GoalType::class, $goal);
-        $formProcessor->processForm($form, $request);
+        $formProcessor->processForm($form, $request, $userId);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);

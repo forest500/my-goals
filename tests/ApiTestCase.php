@@ -61,19 +61,25 @@ class ApiTestCase extends WebTestCase
       $client = $this->createAuthenticatedClient();
       $data = '{"name":"'. $name . '", "award": "'. $award .'", "endDate": "'. $endDate .'"}';
 
-      $this->createGoal('cel');
+      if($this->getObjId('cel', Goal::class) === null){
+         $this->createGoal('cel');
+      }
       $goalId = $this->getObjId('cel', Goal::class);
 
       $client->request('Post', "api/new_stage/$goalId", array(), array(),array(),$data);
     }
 
-    protected function getObjId(String $categoryName, String $class)
+    protected function getObjId(String $name, String $class)
     {
-      $category = $this->getEntityManager()
+      $obj = $this->getEntityManager()
           ->getRepository($class)
-          ->findOneBy(['name' => $categoryName]);
+          ->findOneByName($name);
 
-      return $category->getId();
+      if($obj === null) {
+          return null;
+      } else {
+        return $obj->getId();
+      }
     }
 
     protected function createAuthenticatedClient($email = 'lasekdeveloper@gmail.com', $password = 'password')
