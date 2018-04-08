@@ -1,8 +1,8 @@
 <template>
 <div>
     <goal-form v-show="showGoalForm" :goal="newGoal" v-bind:httpFunction="post">
-      <button slot="button" class="btn btn-success ml-2">dodaj cel</button>
-      <cancel-button class="ml-2" slot="button" @click.native="toogleShowGoalForm"></cancel-button>
+      <button slot="button" class="btn h-50 btn-success ml-2">dodaj cel</button>
+      <cancel-button class="ml-2 h-50" slot="button" @click.native="toogleShowGoalForm"></cancel-button>
     </goal-form>
 </div>
 </template>

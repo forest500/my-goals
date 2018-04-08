@@ -6,7 +6,7 @@
       <div class="col-md-3" v-show="!isEditing">{{ stage.endDate }}</div>
       <div class="ml-2"><edit-button class="btn-sm" v-show="!isEditing" @click.native="isEditing=!isEditing"></edit-button></div>
       <div>
-        <delete-button v-show="!isEditing" class="ml-2 btn-sm" :index="index" v-bind:itemToDelete="stage" deleteFunction="deleteStage"></delete-button>
+        <button v-show="!isEditing" class="ml-2 btn btn-danger btn-sm" @click="deleteStage(index)"><i class="far fa-trash-alt"></i></button>
       </div>
 
     <div class="" v-if="isEditing">
@@ -46,7 +46,15 @@ export default {
       type: Object,
       required: true
     },
+    stages: {
+      type: Array,
+      required: true
+    },
     index: {
+      type: Number,
+      required: true
+    },
+    goalId: {
       type: Number,
       required: true
     },
@@ -56,6 +64,15 @@ export default {
       isEditing: false,
     }
   },
+  methods: {
+    deleteStage(index) {
+      this.stage.goalId = this.goalId
+      this.$store.dispatch('deleteStage', this.stage)
+        .then(() => {
+          this.stages.splice(index, 1)
+        })
+    }
+  }
 }
 </script>
 

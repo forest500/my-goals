@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     post() {
-      console.log(this.goal)
       this.$store.dispatch('postGoal', this.goal)
         .then(() => {
           if (!this.hasErrors) {

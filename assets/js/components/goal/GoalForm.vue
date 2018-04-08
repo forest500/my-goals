@@ -1,8 +1,8 @@
 <template>
-<div class="container mt-2 w-100">
+<div class="w-50">
   <form class="row" v-on:submit.prevent="httpFunction" name="goalForm">
     <div class="form-group col-md-9">
-      <input class="form-control form-control-sm" type="text" name="name" v-model="goal.name">
+      <input class="form-control" type="text" name="name" v-model="goal.name">
       <app-error if="errors.response.data.name" v-bind:formErrors="formErrors.name"></app-error>
     </div>
     <slot class="col-md-2" name="button"></slot>

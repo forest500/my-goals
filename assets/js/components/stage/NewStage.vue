@@ -25,6 +25,10 @@ export default {
       type: Number,
       required: true
     },
+    stages: {
+      type: Array,
+      required: true
+    },
   },
   data() {
     return {
@@ -35,8 +39,8 @@ export default {
     post() {
       this.newStage.goalId = this.goalId
       this.$store.dispatch('postStage', this.newStage)
-        .then(() => {
-          this.newStage.endDate = moment(this.newStage.endDate.date).format('YYYY-MM-DD')
+        .then((response) => {
+          if(response) this.stages.push(response)
         })
     },
   },

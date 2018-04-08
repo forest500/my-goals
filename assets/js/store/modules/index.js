@@ -71,18 +71,15 @@ const mutations = {
     state.categories.push(category)
     state.category = category
   },
-  DELETE_CATEGORY(state, index) {
-    state.categories.splice(index, 1)
-  },
   ADD_GOAL(state, goal) {
     state.goal = goal
     state.goals.push(goal)
   },
+  DELETE_CATEGORY(state, index) {
+    state.categories.splice(index, 1)
+  },
   DELETE_GOAL(state, index) {
     state.goals.splice(index, 1)
-  },
-  DELETE_STAGE(state, index) {
-    state.stages.splice(index, 1)
   },
   HAS_ERRORS(state, hasErrors) {
     state.hasErrors = hasErrors
@@ -177,6 +174,8 @@ const actions = {
       .then(response => {
         commit('CLEAR_ERRORS')
         commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_CREATE, class: 'alert-success' } )
+
+        return response.data
       })
       .catch(errors => {
         if (errors.response.status === 400 && errors.response.data.type === "validation_error") {
@@ -263,10 +262,9 @@ const actions = {
       })
   },
   deleteStage({commit}, stage) {
-    return axios.delete(`${API_LOCATION}delete_stage/${stage.itemToDelete.id}`)
+    return axios.delete(`${API_LOCATION}delete_stage/${stage.id}`)
       .then(response => {
-        commit('DELETE_STAGE', stage.index)
-        commit('SET_ALERT', { stage: stage.itemToDelete.goalId, message: message.STAGE_DELETE, class: 'alert-danger' } )
+        commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_DELETE, class: 'alert-danger' } )
       }).catch(error => {
         alert(error.response.data)
       })

@@ -6,8 +6,8 @@
         <div class="col-md-2">nagroda</div>
         <div class="col-md-2">data</div>
     </div>
-    <stage-item v-for="(stage, index) in stages" v-bind:key="stage.id" :stage="stage" :index="index"></stage-item>
-      <new-stage :showStageForm="showStageForm" v-if="showStageForm" class="w-100" :goalId="goalId">
+    <stage-item v-for="(stage, index) in stages" v-bind:key="stage.id" :stages="stages" :stage="stage" :index="index" :goalId="goalId"></stage-item>
+      <new-stage :stages="stages" :showStageForm="showStageForm" v-if="showStageForm" class="w-100" :goalId="goalId">
         <cancel-button class="btn-sm" slot="cancel-button" v-show="showStageForm" @click.native="showStageForm = !showStageForm"></cancel-button>
       </new-stage>
     <add-button v-show="!showStageForm" @click.native="showStageForm = !showStageForm" item="nowy poziom" class="btn-sm h-25 mb-4"></add-button>

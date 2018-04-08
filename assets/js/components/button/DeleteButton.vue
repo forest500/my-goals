@@ -23,9 +23,9 @@ export default {
       required: true,
     }
   },
-  data() {
-    return {
-      payload: {
+  computed: {
+    payload() {
+      return {
         itemToDelete: this.itemToDelete,
         index: this.index
       }
