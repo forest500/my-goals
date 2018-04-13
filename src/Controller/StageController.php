@@ -20,7 +20,7 @@ use App\Api\ApiResponse;
 class StageController extends Controller
 {
     /**
-     * @Route("/new_stage/{goal}", name="new_stage", options={"utf8": true})
+     * @Route("/goals/{goal}/stages", name="new_stage", options={"utf8": true})
      * @Method("POST")
      */
     public function post(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -55,7 +55,7 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/get_stages", name="get_stages", options={"utf8": true})
+     * @Route("/stages", name="get_stages", options={"utf8": true})
      * @Method("GET")
      */
     public function getAll(ApiResponse $response)
@@ -67,7 +67,7 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/get_stage/{id}", name="get_stage", options={"utf8": true})
+     * @Route("/stages/{id}", name="get_stage", options={"utf8": true})
      * @Method("GET")
      */
     public function getOne($id, ApiResponse $response)
@@ -88,7 +88,7 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/get_goal_stages/{goal}", name="get_goal_stages", options={"utf8": true})
+     * @Route("/goals/{goal}/stages", name="get_goal_stages", options={"utf8": true})
      * @Method("GET")
      */
     public function getByGoal(Goal $goal, ApiResponse $response)
@@ -103,7 +103,7 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/update_stage/{stage}", name="update_stage", options={"utf8": true})
+     * @Route("/stages/{stage}", name="update_stage", options={"utf8": true})
      * @Method("PUT")
      */
     public function put(Stage $stage, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -125,7 +125,7 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/delete_stage/{stage}", name="delete_stage", options={"utf8": true})
+     * @Route("/stages/{stage}", name="delete_stage", options={"utf8": true})
      * @Method("DELETE")
      */
     public function delete(Stage $stage, ApiResponse $response)

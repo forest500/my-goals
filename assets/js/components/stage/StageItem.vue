@@ -10,7 +10,7 @@
       </div>
 
     <div class="" v-if="isEditing">
-      <edit-stage :stage="stage" :isEditing.sync="isEditing">
+      <edit-stage :goalId="goalId" :stage="stage" :isEditing.sync="isEditing">
         <cancel-button slot="cancel-button" class="btn-sm mb-2 mr-2" @click.native="isEditing=!isEditing"></cancel-button>
       </edit-stage>
     </div>

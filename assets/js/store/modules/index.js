@@ -101,7 +101,7 @@ const mutations = {
 
 const actions = {
   loadCategories({commit}) {
-    return axios.get(`${API_LOCATION}get_categories`)
+    return axios.get(`${API_LOCATION}categories`)
       .then(response => {
         commit('SET_CATEGORIES', response.data.categories)
         commit('SET_CATEGORY_INDEXES')
@@ -110,7 +110,7 @@ const actions = {
       });
   },
   loadGoals({commit}) {
-    return axios.get(`${API_LOCATION}get_goals`)
+    return axios.get(`${API_LOCATION}goals`)
       .then(response => {
         commit('SET_ALLGOALS', response.data.goals)
       }).catch(error => {
@@ -118,7 +118,7 @@ const actions = {
       });
   },
   loadCategoryGoals({commit}, id) {
-    return axios.get(`${API_LOCATION}get_category_goals/${id}`)
+    return axios.get(`${API_LOCATION}categories/${id}/goals`)
       .then(response => {
         commit('SET_GOALS', response.data.goals)
       }).catch(error => {
@@ -126,7 +126,7 @@ const actions = {
       })
   },
   postCategory({commit}, category) {
-    return axios.post(`${API_LOCATION}new_category`,{
+    return axios.post(`${API_LOCATION}categories`,{
        name: category.name,
        description: category.description
     })
@@ -146,7 +146,7 @@ const actions = {
       })
   },
   postGoal({commit}, goal) {
-    return axios.post(`${API_LOCATION}new_goal/${goal.categoryId}`,{
+    return axios.post(`${API_LOCATION}categories/${goal.categoryId}/goals`,{
        name: goal.name,
     })
       .then(response => {
@@ -166,7 +166,7 @@ const actions = {
       })
   },
   postStage({commit}, stage) {
-    return axios.post(`${API_LOCATION}new_stage/${stage.goalId}`,{
+    return axios.post(`${API_LOCATION}goals/${stage.goalId}/stages`,{
        name: stage.name,
        award: stage.award,
        endDate: stage.endDate
@@ -191,7 +191,7 @@ const actions = {
     commit('CLEAR_ERRORS')
   },
   editCategory({commit}, category) {
-    return axios.put(`${API_LOCATION}update_category/${category.id}`,{
+    return axios.put(`${API_LOCATION}categories/${category.id}`,{
        name: category.name,
        description: category.description
     })
@@ -208,7 +208,7 @@ const actions = {
       })
   },
   editGoal({commit}, goal) {
-    return axios.put(`${API_LOCATION}update_goal/${goal.id}`,{
+    return axios.put(`${API_LOCATION}goals/${goal.id}`,{
        name: goal.name,
     })
       .then(response => {
@@ -224,7 +224,7 @@ const actions = {
       })
   },
   editStage({commit}, stage) {
-    return axios.put(`${API_LOCATION}update_stage/${stage.id}`,{
+    return axios.put(`${API_LOCATION}stages/${stage.id}`,{
        name: stage.name,
        award: stage.award,
        endDate: stage.endDate
@@ -244,7 +244,7 @@ const actions = {
     commit('SET_CATEGORY_IN_FORM')
   },
   deleteCategory({commit}, category) {
-    return axios.delete(`${API_LOCATION}delete_category/${category.itemToDelete.id}`)
+    return axios.delete(`${API_LOCATION}categories/${category.itemToDelete.id}`)
       .then(response => {
         commit('DELETE_CATEGORY', category.index)
         commit('SET_ALERT', { category: true, message: message.CATEGORY_DELETE, class: 'alert-danger' } )
@@ -253,7 +253,7 @@ const actions = {
       })
   },
   deleteGoal({commit}, goal) {
-    return axios.delete(`${API_LOCATION}delete_goal/${goal.itemToDelete.id}`)
+    return axios.delete(`${API_LOCATION}goals/${goal.itemToDelete.id}`)
       .then(response => {
         commit('DELETE_GOAL', goal.index)
         commit('SET_ALERT', { goal: true, message: message.GOAL_DELETE, class: 'alert-danger' } )
@@ -262,7 +262,7 @@ const actions = {
       })
   },
   deleteStage({commit}, stage) {
-    return axios.delete(`${API_LOCATION}delete_stage/${stage.id}`)
+    return axios.delete(`${API_LOCATION}stages/${stage.id}`)
       .then(response => {
         commit('SET_ALERT', { stage: stage.goalId, message: message.STAGE_DELETE, class: 'alert-danger' } )
       }).catch(error => {

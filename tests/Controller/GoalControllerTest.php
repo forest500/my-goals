@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Controller;
 
 use \App\Entity\Goal;
 use \App\Entity\Category;
@@ -18,14 +18,14 @@ class GoalControllerTest extends ApiTestCase
         $client = $this->createAuthenticatedClient();
         $data = '{"name":"cel"}';
         $categoryId = $this->getObjId('kategoria', Category::class);
-        $client->request('Post', 'api/new_goal/'.$categoryId, array(), array(), array(), $data);
+        $client->request('Post', 'api/categories/'.$categoryId.'/goals', array(), array(), array(), $data);
 
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertTrue($response->headers->has('Location'));
-        $this->assertEquals("/api/get_goal/".$responseData['id'], $response->headers->get('Location'));
+        $this->assertEquals("/api/goals/".$responseData['id'], $response->headers->get('Location'));
         $this->assertArrayHasKey('name', $responseData);
         $this->assertEquals("cel", $responseData['name']);
     }
@@ -36,7 +36,7 @@ class GoalControllerTest extends ApiTestCase
         $this->createGoal('cel');
         $this->createGoal('drugi cel');
 
-        $client->request('Get', 'api/get_goals');
+        $client->request('Get', 'api/goals');
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -52,7 +52,7 @@ class GoalControllerTest extends ApiTestCase
         $this->createGoal('cel');
         $goalId = $this->getObjId('cel', Goal::class);
 
-        $client->request('Get', "api/get_goal/$goalId");
+        $client->request('Get', "api/goals/$goalId");
         $data = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -65,7 +65,7 @@ class GoalControllerTest extends ApiTestCase
         $this->createGoal('cel');
         $categoryId = $this->getObjId('kategoria', Category::class);
 
-        $client->request('Get', "api/get_category_goals/$categoryId");
+        $client->request('Get', 'api/categories/'.$categoryId.'/goals');
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -84,7 +84,7 @@ class GoalControllerTest extends ApiTestCase
         $data = '{"name":"edited goal"}';
         $client->request(
           'Put',
-          "api/update_goal/$goalId",
+          "api/goals/$goalId",
         array(),
           array(),
           array(),
@@ -105,7 +105,7 @@ class GoalControllerTest extends ApiTestCase
         $this->createGoal('goal to delete');
         $goalId = $this->getObjId('goal to delete', Goal::class);
 
-        $client->request('Delete', "api/delete_goal/$goalId");
+        $client->request('Delete', "api/goals/$goalId");
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }

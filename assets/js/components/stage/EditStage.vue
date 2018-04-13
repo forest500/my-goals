@@ -27,10 +27,15 @@ export default {
     isEditing: {
       type: Boolean,
       required: true
+    },
+    goalId: {
+      type: Number,
+      required: true
     }
   },
   methods: {
     put() {
+      this.stage.goalId = this.goalId
       this.$store.dispatch('editStage', this.stage)
         .then(() => {
           if(!this.hasErrors) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Controller;
 
 use \App\Entity\Category;
 use \App\Tests\ApiTestCase;
@@ -16,15 +16,16 @@ class CategoryControllerTest extends ApiTestCase
     {
         $client = $this->createAuthenticatedClient();
         $data = '{"name":"nowa kategoria", "description":"opis kategorii"}';
-        $client->request('Post', 'api/new_category', array(), array(), array(), $data);
+        $client->request('Post', 'api/categories', array(), array(), array(), $data);
 
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertTrue($response->headers->has('Location'));
-        $this->assertEquals("/api/get_category/".$responseData['id'], $response->headers->get('Location'));
+        $this->assertEquals("/api/categories/".$responseData['id'], $response->headers->get('Location'));
         $this->assertArrayHasKey('name', $responseData);
+
         $this->assertArrayHasKey('description', $responseData);
         $this->assertEquals("nowa kategoria", $responseData['name']);
         $this->assertEquals("opis kategorii", $responseData['description']);
@@ -35,7 +36,7 @@ class CategoryControllerTest extends ApiTestCase
         $client = $this->createAuthenticatedClient();
         $this->createCategory('druga kategoria', 'drugi opis');
 
-        $client->request('Get', 'api/get_categories');
+        $client->request('Get', 'api/categories');
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -50,7 +51,7 @@ class CategoryControllerTest extends ApiTestCase
         $client = $this->createAuthenticatedClient();
         $categoryId = $this->getObjId('kategoria', Category::class);
 
-        $client->request('Get', "api/get_category/$categoryId");
+        $client->request('Get', "api/categories/$categoryId");
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertJson($client->getResponse()->getContent());
@@ -69,7 +70,7 @@ class CategoryControllerTest extends ApiTestCase
         $data = '{"name":"edytowana kategoria", "description":"nowy opis kategorii"}';
         $client->request(
           'Put',
-          "api/update_category/$categoryId",
+          "api/categories/$categoryId",
           array(),
           array(),
           array(),
@@ -88,7 +89,7 @@ class CategoryControllerTest extends ApiTestCase
         $client = $this->createAuthenticatedClient();
         $categoryId = $this->getObjId('kategoria', Category::class);
 
-        $client->request('Delete', "api/delete_category/$categoryId");
+        $client->request('Delete', "api/categories/$categoryId");
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }

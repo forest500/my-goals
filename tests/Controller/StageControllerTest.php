@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Controller;
 
 use \App\Entity\Goal;
 use \App\Entity\Stage;
@@ -23,14 +23,14 @@ class StageControllerTest extends ApiTestCase
         $this->createGoal('cel');
         $goalId = $this->getObjId('cel', Goal::class);
 
-        $client->request('Post', "api/new_stage/$goalId", array(), array(),array(),$data);
+        $client->request('Post', "api/goals/$goalId/stages", array(), array(),array(),$data);
 
         $response = $client->getResponse();
         $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertTrue($response->headers->has('Location'));
-        $this->assertEquals("/api/get_stage/".$responseData['id'], $response->headers->get('Location'));
+        $this->assertEquals("/api/stages/".$responseData['id'], $response->headers->get('Location'));
         $this->assertEquals("poziom", $responseData['name']);
         $this->assertEquals("nagroda", $responseData['award']);
     }
@@ -43,7 +43,7 @@ class StageControllerTest extends ApiTestCase
         $this->createStage('poziom drugi', 'milion', '1991-26-01');
         $this->createStage('poziom trzeci', 'bmw', '2018-01-01');
 
-        $client->request('Get', 'api/get_stages');
+        $client->request('Get', 'api/stages');
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -60,7 +60,7 @@ class StageControllerTest extends ApiTestCase
         $this->createStage('poziom pierwszy', 'nagroda', '2018-01-01');
         $stageId = $this->getObjId('poziom pierwszy', Stage::class);
 
-        $client->request('Get', "api/get_stage/$stageId");
+        $client->request('Get', "api/stages/$stageId");
         $data = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -75,7 +75,7 @@ class StageControllerTest extends ApiTestCase
         $this->createStage('poziom drugi', 'milion', '1991-26-01');
         $goalId = $this->getObjId('cel', Goal::class);
 
-        $client->request('Get', "api/get_goal_stages/$goalId");
+        $client->request('Get', "api/goals/$goalId/stages");
         $data = json_decode($client->getResponse()->getContent());
         $data = $data->stages;
 
@@ -94,7 +94,7 @@ class StageControllerTest extends ApiTestCase
         $data = '{"name":"zmieniony poziom", "award":"bmw","endDate":"2005-03-03"}';
         $client->request(
           'Put',
-          "api/update_stage/$stageId",
+          "api/stages/$stageId",
           array(),
           array(),
           array(),
@@ -115,7 +115,7 @@ class StageControllerTest extends ApiTestCase
         $this->createStage('poziom pierwszy', 'nagroda', '2018-01-01');
         $stageId = $this->getObjId('poziom pierwszy', Stage::class);
 
-        $client->request('Delete', "api/delete_stage/$stageId");
+        $client->request('Delete', "api/stages/$stageId");
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }

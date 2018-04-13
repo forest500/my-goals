@@ -21,7 +21,7 @@ use App\Api\ApiResponse;
 class GoalController extends Controller
 {
     /**
-     * @Route("/new_goal/{category}", name="new_goal", options={"utf8": true})
+     * @Route("/categories/{category}/goals", name="new_goal", options={"utf8": true})
      * @Method("POST")
      */
     public function post(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -56,7 +56,7 @@ class GoalController extends Controller
     }
 
     /**
-     * @Route("/get_goals", name="get_goals", options={"utf8": true})
+     * @Route("/goals", name="get_goals", options={"utf8": true})
      * @Method("GET")
      */
     public function getAll(ApiResponse $response)
@@ -68,7 +68,7 @@ class GoalController extends Controller
     }
 
     /**
-     * @Route("/get_goal/{id}", name="get_goal", options={"utf8": true})
+     * @Route("/goals/{id}", name="get_goal", options={"utf8": true})
      * @Method("GET")
      */
     public function getOne($id, ApiResponse $response)
@@ -89,7 +89,7 @@ class GoalController extends Controller
     }
 
     /**
-     * @Route("/get_category_goals/{category}", name="get_category_goals", options={"utf8": true})
+     * @Route("/categories/{category}/goals", name="get_category_goals", options={"utf8": true})
      * @Method("GET")
      */
     public function getByCategory(Category $category, ApiResponse $response)
@@ -104,7 +104,7 @@ class GoalController extends Controller
     }
 
     /**
-     * @Route("/update_goal/{goal}", name="update_goal", options={"utf8": true})
+     * @Route("/goals/{goal}", name="update_goal", options={"utf8": true})
      * @Method("PUT")
      */
     public function put(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -126,7 +126,7 @@ class GoalController extends Controller
     }
 
     /**
-     * @Route("/delete_goal/{goal}", name="delete_goal", options={"utf8": true})
+     * @Route("/goals/{goal}", name="delete_goal", options={"utf8": true})
      * @Method("DELETE")
      */
     public function delete(Goal $goal, DeleteProcessor $deleteProcessor, ApiResponse $response)

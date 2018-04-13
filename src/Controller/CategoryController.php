@@ -20,8 +20,7 @@ use App\Form\CategoryType;
 class CategoryController extends Controller
 {
     /**
-     * @Route("/new_category.{_format}", name="new_category",
-    *  defaults={"_format": "json"})
+     * @Route("/categories", name="new_category")
      * @Method("POST")
      */
     public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -55,7 +54,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/get_categories", name="get_categories")
+     * @Route("/categories", name="get_categories")
      * @Method("GET")
      */
     public function getAll(ApiResponse $response)
@@ -67,7 +66,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/get_category/{id}", name="get_category")
+     * @Route("/categories/{id}", name="get_category")
      * @Method("GET")
      */
     public function getOne($id, ApiResponse $response)
@@ -84,7 +83,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/update_category/{id}", name="update_category", options={"utf8": true})
+     * @Route("/categories/{id}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
     public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
@@ -107,7 +106,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/delete_category/{id}", name="delete_category", options={"utf8": true})
+     * @Route("/categories/{id}", name="delete_category", options={"utf8": true})
      * @Method("DELETE")
      */
     public function delete(Category $category, DeleteProcessor $deleteProcessor, ApiResponse $response)

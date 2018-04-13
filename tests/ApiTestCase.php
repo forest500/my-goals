@@ -44,7 +44,7 @@ class ApiTestCase extends WebTestCase
       $client = $this->createAuthenticatedClient();
       $data = '{"name":"'. $name . '", "description": "'. $description .'"}';
 
-      $client->request('Post', 'api/new_category', array(), array(),array(),$data);
+      $client->request('Post', 'api/categories', array(), array(),array(),$data);
     }
 
     protected function createGoal(String $name)
@@ -53,7 +53,7 @@ class ApiTestCase extends WebTestCase
       $data = '{"name":"' . $name . '" }';
       $categoryId = $this->getObjId('kategoria', Category::class);
 
-      $client->request('Post', "api/new_goal/$categoryId", array(), array(),array(),$data);
+      $client->request('Post', "api/categories/$categoryId/goals", array(), array(),array(),$data);
     }
 
     protected function createStage(String $name, String $award, String $endDate)
@@ -66,7 +66,7 @@ class ApiTestCase extends WebTestCase
       }
       $goalId = $this->getObjId('cel', Goal::class);
 
-      $client->request('Post', "api/new_stage/$goalId", array(), array(),array(),$data);
+      $client->request('Post', 'api/goals/'.$goalId.'/stages', array(), array(),array(),$data);
     }
 
     protected function getObjId(String $name, String $class)
