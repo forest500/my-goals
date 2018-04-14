@@ -26,17 +26,18 @@ class GoalController extends Controller
      */
     public function post(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
-        $goal = new Goal();
-        $goal->setCategory($category);
         $user = $this->getUser();
+        
+        $goal = new Goal();
+        $goal->setUserId($user);
+        $goal->setCategory($category);
 
         $form = $this->createForm(GoalType::class, $goal);
-        $formProcessor->processForm($form, $request, $user->getId());
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
-        $goal->setUserId($user);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($goal);
@@ -101,7 +102,7 @@ class GoalController extends Controller
         $goal = $this->getDoctrine()->getRepository(Goal::class)->getByIdAndUserId($id, $userId);
 
         $form = $this->createForm(GoalType::class, $goal);
-        $formProcessor->processForm($form, $request, $userId);
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);

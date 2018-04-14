@@ -25,16 +25,16 @@ class CategoryController extends Controller
      */
     public function post(Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
-        $category = new Category();
         $user = $this->getUser();
+        $category = new Category();
+        $category->setUserId($user);
 
         $form = $this->createForm(CategoryType::class, $category);
-        $formProcessor->processForm($form, $request, $user->getId());
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
-        $category->setUserId($user);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($category);
@@ -84,7 +84,7 @@ class CategoryController extends Controller
         $category = $this->getDoctrine()->getRepository(Category::class)->getByIdAndUserId($id, $userId);
 
         $form = $this->createForm(CategoryType::class, $category);
-        $formProcessor->processForm($form, $request, $userId);
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);

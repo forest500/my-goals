@@ -5,11 +5,17 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StageRepository")
- * @ORM\Table(name="stage",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})})
+ * @ORM\Table(name="stage", uniqueConstraints={@ORM\UniqueConstraint(name="search_user_stage", columns={"name", "userId"})})
  * @Serializer\ExclusionPolicy("none")
+ * @UniqueEntity(
+ *     fields={"name", "userId"},
+ *     errorPath="name",
+ *     message="Istnieje już poziom o takiej nazwie"
+ * )
  */
 class Stage
 {

@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
     index,
     auth
   },
-  plugins: [
-    createPersistedState({ storage: window.sessionStorage })
-  ]
+  // plugins: [
+  //   createPersistedState({ storage: window.sessionStorage })
+  // ]
 })

@@ -7,10 +7,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GoalRepository")
- * @ORM\Table(name="goal",uniqueConstraints={@ORM\UniqueConstraint(name="search_user", columns={"name", "userId"})})
+ * @ORM\Table(name="goal", uniqueConstraints={@ORM\UniqueConstraint(name="search_user_goal", columns={"name", "userId"})})
+ * @UniqueEntity(
+ *     fields={"name", "userId"},
+ *     errorPath="name",
+ *     message="Istnieje już cel o takiej nazwie"
+ * )
  * @Serializer\ExclusionPolicy("none")
  */
 class Goal

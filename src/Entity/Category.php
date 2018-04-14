@@ -6,10 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
-*  @ORM\Table(name="category",uniqueConstraints={@ORM\UniqueConstraint(name="search_user",   columns={"name", "userId"})})
+ * @ORM\Table(name="category",uniqueConstraints={@ORM\UniqueConstraint(name="search_user_category", columns={"name", "userId"})})
+ * @UniqueEntity(
+ *     fields={"name", "userId"},
+ *     errorPath="name",
+ *     message="Istnieje już kategoria o takiej nazwie"
+ * )
  * @Serializer\ExclusionPolicy("none")
  */
 class Category

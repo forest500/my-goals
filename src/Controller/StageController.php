@@ -25,18 +25,18 @@ class StageController extends Controller
      */
     public function post(Goal $goal, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
-        $stage = new stage();
-        $stage->setgoal($goal);
         $user = $this->getUser();
+      
+        $stage = new Stage();
+        $stage->setUserId($user);
+        $stage->setgoal($goal);
 
         $form = $this->createForm(StageType::class, $stage);
-        $formProcessor->processForm($form, $request, $user->getId());
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
-
-        $stage->setUserId($user);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($stage);
@@ -101,7 +101,7 @@ class StageController extends Controller
         $stage = $this->getDoctrine()->getRepository(Stage::class)->getByIdAndUserId($id, $userId);
 
         $form = $this->createForm(StageType::class, $stage);
-        $formProcessor->processForm($form, $request, $userId);
+        $formProcessor->processForm($form, $request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);

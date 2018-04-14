@@ -2,36 +2,29 @@
 
 namespace App\Tests\Entity;
 
-use Symfony\Component\Form\Test\TypeTestCase;
-use App\Api\FormProcessor;
-use Symfony\Component\HttpFoundation\Request;
-use App\Api\ApiProblemException;
+use \App\Tests\ApiTestCase;
 
-class FormProcessorTest extends TypeTestCase
+class FormProcessorTest extends ApiTestCase
 {
-    public function testThrowInvalidBodyException()
+    protected function setUp()
     {
-        $this->expectException(ApiProblemException::class);
+        parent::setUp();
+    }
+
+    public function testInvalidJson()
+    {
         $invalidBody =
           '{
               "name: "Miro",
-              "number" : "2
+              "description" : "dsfsdf
           }';
-        $data = json_decode($invalidBody, true);
+        $client = $this->createAuthenticatedClient();
 
-        $formProcessor = new FormProcessor();
-        $formProcessor->checkJson($data);
-    }
+        $client->request('Post', 'api/categories', array(), array(), array(), $invalidBody);
+        $data = json_decode($client->getResponse()->getContent(), true);
 
-    public function testValiddJsonBodySend()
-    {
-        $validBody =
-        '{
-            "name": "Miro",
-            "number" : "2"
-          }';
-
-        $formProcessor = new FormProcessor();
-        $this->assertTrue($formProcessor->checkJson($validBody));
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertArrayHasKey('type', $data);
+        $this->assertEquals($data['title'], 'Invalid JSON format sent');
     }
 }
