@@ -32,26 +32,24 @@ class StageController extends Controller
         $form = $this->createForm(StageType::class, $stage);
         $formProcessor->processForm($form, $request, $user->getId());
 
-        if($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
 
-        if($form->isSubmitted() && $form->isValid()) {
-          $stage->setUserId($user);
+        $stage->setUserId($user);
 
-          $em = $this->getDoctrine()->getManager();
-          $em->persist($stage);
-          $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($stage);
+        $em->flush();
 
-          $response = $response->createResponse($stage, 201);
-          $stagelUrl = $this->generateUrl(
+        $response = $response->createResponse($stage, 201);
+        $stagelUrl = $this->generateUrl(
               'get_stage',
               ['id' => $stage->getId()]
           );
-          $response->headers->set('Location', $stagelUrl);
+        $response->headers->set('Location', $stagelUrl);
 
-          return $response;
-        }
+        return $response;
     }
 
     /**
@@ -73,29 +71,20 @@ class StageController extends Controller
     public function getOne($id, ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
-        $stage = $this->getDoctrine()->getRepository(Stage::class)->findOneBy([
-            'id' => $id,
-            'userId' => $userId,
-        ]);
-        if(!$stage) {
-            throw $this->createNotFoundException(sprintf(
-                'Nie znaleziono poziomu o id "%s"',
-                $id
-            ));
-        }
+        $stage = $this->getDoctrine()->getRepository(Stage::class)->getByIdAndUserId($id, $userId);
 
         return $response->createResponse($stage);
     }
 
     /**
-     * @Route("/goals/{goal}/stages", name="get_goal_stages", options={"utf8": true})
+     * @Route("/goals/{id}/stages", name="get_goal_stages", options={"utf8": true})
      * @Method("GET")
      */
-    public function getByGoal(Goal $goal, ApiResponse $response)
+    public function getByGoal($id, ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
         $stages = $this->getDoctrine()->getRepository(Stage::class)->findBy([
-            'goal' => $goal,
+            'goal' => $id,
             'userId' => $userId,
         ]);
 
@@ -103,33 +92,36 @@ class StageController extends Controller
     }
 
     /**
-     * @Route("/stages/{stage}", name="update_stage", options={"utf8": true})
+     * @Route("/stages/{id}", name="update_stage", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Stage $stage, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
+    public function put($id, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
-      $userId = $this->getUser()->getId();
-      $form = $this->createForm(StageType::class, $stage);
-      $formProcessor->processForm($form, $request, $userId);
+        $userId = $this->getUser()->getId();
+        $stage = $this->getDoctrine()->getRepository(Stage::class)->getByIdAndUserId($id, $userId);
 
-      if($form->isSubmitted() && !$form->isValid()) {
-          return $validator->createValidationErrorResponse($form);
-      }
+        $form = $this->createForm(StageType::class, $stage);
+        $formProcessor->processForm($form, $request, $userId);
 
-      if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && !$form->isValid()) {
+            return $validator->createValidationErrorResponse($form);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
         return $response->createResponse($stage, 200);
-      }
     }
 
     /**
-     * @Route("/stages/{stage}", name="delete_stage", options={"utf8": true})
+     * @Route("/stages/{id}", name="delete_stage", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Stage $stage, ApiResponse $response)
+    public function delete($id, ApiResponse $response)
     {
+        $userId = $this->getUser()->getId();
+        $stage = $this->getDoctrine()->getRepository(Stage::class)->getByIdAndUserId($id, $userId);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($stage);
         $em->flush();

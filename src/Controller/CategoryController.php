@@ -34,23 +34,20 @@ class CategoryController extends Controller
         if ($form->isSubmitted() && !$form->isValid()) {
             return $validator->createValidationErrorResponse($form);
         }
+        $category->setUserId($user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $category->setUserId($user);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($category);
+        $em->flush();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($category);
-            $em->flush();
+        $response = $response->createResponse($category, 201);
+        $categoryUrl = $this->generateUrl(
+              'get_category',
+              ['id' => $category->getId()]
+        );
+        $response->headers->set('Location', $categoryUrl);
 
-            $response = $response->createResponse($category, 201);
-            $categoryUrl = $this->generateUrl(
-                'get_category',
-                ['id' => $category->getId()]
-            );
-            $response->headers->set('Location', $categoryUrl);
-
-            return $response;
-        }
+        return $response;
     }
 
     /**
@@ -71,13 +68,8 @@ class CategoryController extends Controller
      */
     public function getOne($id, ApiResponse $response)
     {
-        $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
-        if (!$category) {
-            throw $this->createNotFoundException(sprintf(
-                'Nie znaleziono kategorii o id "%s"',
-                $id
-            ));
-        }
+        $userId = $this->getUser()->getId();
+        $category = $this->getDoctrine()->getRepository(Category::class)->getByIdAndUserId($id, $userId);
 
         return $response->createResponse($category);
     }
@@ -86,9 +78,10 @@ class CategoryController extends Controller
      * @Route("/categories/{id}", name="update_category", options={"utf8": true})
      * @Method("PUT")
      */
-    public function put(Category $category, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
+    public function put($id, Request $request, FormValidator $validator, FormProcessor $formProcessor, ApiResponse $response)
     {
         $userId = $this->getUser()->getId();
+        $category = $this->getDoctrine()->getRepository(Category::class)->getByIdAndUserId($id, $userId);
 
         $form = $this->createForm(CategoryType::class, $category);
         $formProcessor->processForm($form, $request, $userId);
@@ -109,10 +102,13 @@ class CategoryController extends Controller
      * @Route("/categories/{id}", name="delete_category", options={"utf8": true})
      * @Method("DELETE")
      */
-    public function delete(Category $category, DeleteProcessor $deleteProcessor, ApiResponse $response)
+    public function delete($id, DeleteProcessor $deleteProcessor, ApiResponse $response)
     {
+        $userId = $this->getUser()->getId();
+        $category = $this->getDoctrine()->getRepository(Category::class)->getByIdAndUserId($id, $userId);
         $em = $this->getDoctrine()->getManager();
-        $categoryGoals = $em->getRepository(Goal::class)->findByCategory($category->getId());
+
+        $categoryGoals = $em->getRepository(Goal::class)->findByCategory($id);
         if (!empty($categoryGoals)) {
             $deleteProcessor->throwForeignKeyException();
         }
